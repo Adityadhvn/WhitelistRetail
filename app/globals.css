@@ -1,0 +1,64 @@
+@import "tailwindcss";
+
+@theme {
+  --color-bone: #F9F8F6;
+  --color-charcoal: #1A1A1A;
+  --color-bronze: #8B735B;
+  
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Inter", sans-serif;
+}
+
+:root {
+  --background: var(--color-bone);
+  --foreground: var(--color-charcoal);
+}
+
+body {
+  background-color: var(--color-bone);
+  color: var(--color-charcoal);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-serif);
+  letter-spacing: -0.02em;
+}
+
+.glass {
+  background: rgba(249, 248, 246, 0.8);
+  backdrop-filter: blur(12px);
+  border-bottom: 1px solid rgba(26, 26, 26, 0.05);
+}
+
+.sharp-card {
+  border: 1px solid rgba(26, 26, 26, 0.1);
+  border-radius: 0px;
+  background: white;
+}
+
+.btn-bronze {
+  background-color: var(--color-bronze);
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0px;
+  transition: all 0.2s ease;
+}
+
+.btn-bronze:hover {
+  opacity: 0.9;
+}
+
+.btn-outline {
+  border: 1px solid var(--color-charcoal);
+  color: var(--color-charcoal);
+  padding: 0.75rem 1.5rem;
+  border-radius: 0px;
+  transition: all 0.2s ease;
+}
+
+.btn-outline:hover {
+  background-color: var(--color-charcoal);
+  color: white;
+}
