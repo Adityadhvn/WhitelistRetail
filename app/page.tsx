@@ -3,9 +3,11 @@
 import { motion, Variants } from "motion/react";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { Shield, Zap, Globe, ArrowRight } from "lucide-react";
+import { Shield, Zap, Globe, ArrowRight, StampIcon } from "lucide-react";
 import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
 import { useState, useRef, useEffect } from "react";
+import { Search, BadgeCheck, Handshake } from "lucide-react";
+
 
 
 const staggerContainer: Variants = {
@@ -85,7 +87,7 @@ export default function LandingPage() {
       {/* Hero Section */}
       <section 
         onMouseMove={!isMobile ? handleMouseMove : undefined}
-        className="min-h-[85vh] flex flex-col items-center justify-center px-6 text-center relative overflow-hidden"
+        className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 text-center relative overflow-hidden"
       >
       {/* Base Grid */}
           <div
@@ -163,8 +165,108 @@ export default function LandingPage() {
         </motion.div>
       </section>
 
+
+    
+            {/* 🔥 HOW WHITELIST WORKS */}
+      <section className="relative py-28 px-6 bg-[#Faf9f6] text-stone-900 overflow-hidden">
+
+        {/* Subtle Grid Background (matches your hero) */}
+        <div className="absolute inset-0 opacity-50 pointer-events-none bg-[linear-gradient(to_right,rgba(0,0,0,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.06)_1px,transparent_1px)] bg-[size:32px_32px]" />
+
+        <div className="relative max-w-6xl mx-auto text-center space-y-20">
+
+          {/* Heading */}
+          <div className="space-y-6">
+            <h2 className="text-4xl md:text-5xl font-serif tracking-tight">
+              How Whitelist Works?
+            </h2>
+
+            <p className="max-w-2xl mx-auto text-stone-600 leading-relaxed">
+              Whitelist sources and verifies retail spaces, matches them with brand
+              requirements, and coordinates the entire expansion process through
+              structured deal execution.
+            </p>
+          </div>
+
+          {/* Cards */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-10">
+
+            {/* CARD 1 */}
+            <div className="group border border-stone-300 p-10 space-y-6 bg-transparent transition hover:shadow-lg hover:-translate-y-1">
+              <div className="flex justify-center">
+                <div className="w-14 h-14 border border-stone-400 flex items-center justify-center transition group-hover:border-stone-600">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m1.6-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
+                  </svg>
+                </div>
+              </div>
+
+              <h3 className="font-serif text-xl">
+                Property Sourcing
+              </h3>
+
+              <p className="text-sm text-stone-600 leading-relaxed">
+                We source expansion-ready retail spaces through verified scouts,
+                landlords, and local market networks across high-growth cities.
+              </p>
+            </div>
+
+            {/* CARD 2 */}
+            <div className="group border border-stone-300 p-10 space-y-6 bg-transparent transition hover:shadow-lg hover:-translate-y-1">
+              <div className="flex justify-center">
+                <div className="w-14 h-14 border border-stone-400 flex items-center justify-center transition group-hover:border-stone-600">
+                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+              </div>
+
+              <h3 className="font-serif text-xl">
+                Verification and Matching
+              </h3>
+
+              <p className="text-sm text-stone-600 leading-relaxed">
+                Every property is reviewed for ownership, retail suitability, and
+                market relevance before being matched with brand-specific expansion
+                requirements and budget criteria.
+              </p>
+            </div>
+
+            {/* CARD 3 */}
+            <div className="group border border-stone-300 p-10 space-y-6 bg-transparent transition hover:shadow-lg hover:-translate-y-1">
+              <div className="flex justify-center">
+                <div className="w-14 h-14 border border-stone-400 flex items-center justify-center transition group-hover:border-stone-600">
+                  <StampIcon className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                    <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.343-3 3v1h6v-1c0-1.657-1.343-3-3-3zm0 0V6m0 6v6m0 0H9m3 0h3" />
+                  </StampIcon>
+                </div>
+              </div>
+
+              <h3 className="font-serif text-xl">
+                Coordinated Closure
+              </h3>
+
+              <p className="text-sm text-stone-600 leading-relaxed">
+                We manage site visits, negotiations, documentation, and stakeholder
+                coordination ensuring structured, transparent, and efficient retail
+                expansion from sourcing to deal closure.
+              </p>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+
+ 
+
+      
+
+
+
       {/* Network Strength Section */}
-      <section className="py-20 bg-stone-900 text-stone-100">
+      <section className="relative py-20 bg-stone-900 text-stone-100">
+  
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif mb-4">Whitelist Network Strength</h2>
@@ -191,6 +293,7 @@ export default function LandingPage() {
             ))}
           </div>
         </div>
+
       </section>
 
       {/* Stakeholders Section */}

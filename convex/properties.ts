@@ -25,10 +25,13 @@ export const getAdminInventory = query({
 export const getScoutInventory = query({
   args: { scoutId: v.id("users") },
   handler: async (ctx, args) => {
-    return await ctx.db
+    const properties = await ctx.db
       .query("properties")
       .withIndex("by_scout", (q) => q.eq("scoutId", args.scoutId))
       .collect();
+
+    // 🔥 filter approved only
+    return properties.filter((p) => p.status === "approved");
   },
 });
 
