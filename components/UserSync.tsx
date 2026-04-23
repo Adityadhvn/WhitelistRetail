@@ -12,11 +12,28 @@ export default function UserSync() {
   useEffect(() => {
     if (!user?.id) return;
 
-    createUser({
-      clerkId: user.id,
-      name: user.fullName || "",
-      email: user.primaryEmailAddress?.emailAddress || "",
-    });
+    // ⏳ slight delay ensures localStorage is ready
+    setTimeout(() => {
+      const referralCode =
+        typeof window !== "undefined"
+          ? localStorage.getItem("referralCode") || ""
+          : "";
+
+      console.log("REFERRAL SENT:", referralCode); // 👈 DEBUG
+
+      createUser({
+        clerkId: user.id,
+        name: user.fullName || "",
+        email: user.primaryEmailAddress?.emailAddress || "",
+        referralCode,
+      });
+
+      if (referralCode) {
+        localStorage.removeItem("referralCode");
+      }
+
+    }, 300); // ⏳ KEY FIX
+
   }, [user?.id]);
 
   return null;

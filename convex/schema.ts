@@ -8,6 +8,7 @@ export default defineSchema({
     email: v.string(),
     role: v.string(),
     applicationStatus: v.string(),
+    referralCode: v.optional(v.string()),
     scoutId: v.optional(v.string()),
     createdAt: v.number(),
   }).index("by_clerkId", ["clerkId"]),

@@ -38,6 +38,7 @@ export const createOrGetUser = mutation({
     clerkId: v.string(),
     name: v.string(),
     email: v.string(),
+    referralCode: v.optional(v.string()),
   },
   handler: async (ctx, args) => {
     const existing = await ctx.db
@@ -54,6 +55,7 @@ export const createOrGetUser = mutation({
       role: "",
       applicationStatus: "not_applied",
       scoutId: "",
+      referralCode: args.referralCode || "",
       createdAt: Date.now(),
     });
   },
@@ -109,5 +111,36 @@ export const rejectScout = mutation({
     await ctx.db.patch(user._id, {
       applicationStatus: "rejected",
     });
+  },
+});
+
+
+
+export const referralStats = query({
+  handler: async (ctx) => {
+    const users = await ctx.db.query("users").collect();
+
+    const stats: Record<
+      string,
+      { count: number; users: string[] }
+    > = {};
+
+    for (const user of users) {
+      if (!user.referralCode) continue;
+
+      if (!stats[user.referralCode]) {
+        stats[user.referralCode] = {
+          count: 0,
+          users: [],
+        };
+      }
+
+      stats[user.referralCode].count += 1;
+
+      // ✅ store names (you can also store emails if needed)
+      stats[user.referralCode].users.push(user.name);
+    }
+
+    return stats;
   },
 });

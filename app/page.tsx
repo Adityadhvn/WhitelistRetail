@@ -7,7 +7,7 @@ import { Shield, Zap, Globe, ArrowRight, StampIcon } from "lucide-react";
 import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
 import { useState, useRef, useEffect } from "react";
 import { Search, BadgeCheck, Handshake } from "lucide-react";
-
+import { useSearchParams } from "next/navigation";
 
 
 const staggerContainer: Variants = {
@@ -43,7 +43,39 @@ const markets = [
 
 
 
+
+
+
 export default function LandingPage() {
+
+  const searchParams = useSearchParams();
+
+  useEffect(() => {
+    const ref = searchParams.get("ref");
+
+    if (ref) {
+      const existing = localStorage.getItem("referralCode");
+
+      // ✅ only set if not already present
+      if (!existing) {
+        localStorage.setItem("referralCode", ref);
+      }
+    }
+  }, [searchParams]);
+
+
+
+  const [openSignup, setOpenSignup] = useState(false);
+  const [refCode, setRefCode] = useState("");
+  useEffect(() => {
+    if (typeof window !== "undefined") {
+      const stored = localStorage.getItem("referralCode");
+      if (stored) setRefCode(stored);
+    }
+  }, []);
+
+
+
   const [isMobile, setIsMobile] = useState(false);
   useEffect(() => {
     const checkMobile = () => setIsMobile(window.innerWidth < 768);
@@ -56,12 +88,13 @@ export default function LandingPage() {
 
   const handleMouseMove = (e: React.MouseEvent) => {
     const rect = (e.currentTarget as HTMLElement).getBoundingClientRect();
-  
     setMousePos({
       x: e.clientX - rect.left,
       y: e.clientY - rect.top,
     });
   };
+
+  const [isHovering, setIsHovering] = useState(false);
 
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
@@ -81,36 +114,41 @@ export default function LandingPage() {
   };
 
   return (
-    <main className="pt-20 bg-[#Faf9f6] text-stone-900 min-h-screen selection:bg-amber-900 selection:text-white overflow-hidden">
+    <main  onMouseMove={!isMobile ? handleMouseMove : undefined}
+    className="pt-24 md:pt-28 bg-[#Faf9f6] text-stone-900 min-h-screen selection:bg-amber-900 selection:text-white overflow-hidden">
       <Navbar />
-      
-      {/* Hero Section */}
-      <section 
-        onMouseMove={!isMobile ? handleMouseMove : undefined}
-        className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 text-center relative overflow-hidden"
-      >
+
       {/* Base Grid */}
-          <div
+      <div
             className="absolute inset-0 pointer-events-none"
             style={{
               backgroundImage: `
                 linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)
               `,
-              backgroundSize: "28px 28px",
+              backgroundSize: "24px 24px",
             }}
           />
 
+
+
           {/* 🔥 Highlighted Grid (cursor reactive) */}
-          {!isMobile &&(
+          {!isMobile && (
           <div
-            className="absolute inset-0 pointer-events-none"
+            className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-[0.22,1,0.36,1]"
             style={{
+              opacity: isHovering ? 1 : 0,
+              
+
+              transform: `scale(${isHovering ? 1 : 0.98})`,
+              transition: "opacity 0.4s ease, transform 0.4s ease",
+
+  
               backgroundImage: `
                 linear-gradient(to right, rgba(0,0,0,0.45) 1.6px, transparent 1px),
                 linear-gradient(to bottom, rgba(0,0,0,0.45) 1.6px, transparent 1px)
               `,
-              backgroundSize: "28px 28px",
+              backgroundSize: "24px 24px",
 
               maskImage: `radial-gradient(
                 180px circle at ${mousePos.x}px ${mousePos.y}px,
@@ -124,7 +162,18 @@ export default function LandingPage() {
               )`,
             }}
           />
-          )}
+        )}
+      
+      {/* Hero Section */}
+      <section 
+        onMouseEnter={() => setIsHovering(true)}
+        onMouseLeave={() => setIsHovering(false)}
+        className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 text-center overflow-hidden"
+      >
+
+          
+
+          
           
       <motion.div
           initial="hidden"
@@ -132,7 +181,7 @@ export default function LandingPage() {
           variants={staggerContainer}
           className="max-w-5xl relative z-10"
         >
-          <motion.div variants={fadeUp} className="inline-block mb-6 px-4 py-1.5 border border-stone-300 rounded-full text-xs font-semibold tracking-widest uppercase text-stone-500 bg-white/50 backdrop-blur-sm">
+          <motion.div variants={fadeUp} className="inline-block mb-6 px-4 py-1.5 border border-stone-300 rounded-2xl text-xs font-semibold tracking-widest uppercase text-stone-500 bg-white/50 backdrop-blur-sm">
             the infrastructure for offline expansion
           </motion.div>
           <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl lg:text-8xl font-serif mb-8 leading-[1.05] tracking-tight text-stone-900">
@@ -150,16 +199,18 @@ export default function LandingPage() {
               </Link>
             </SignedIn>
             <SignedOut>
-              <SignUpButton mode="modal">
-                <button className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto">
-                  Join as Scout
-                </button>
-              </SignUpButton>
-              <SignUpButton mode="modal">
-                <button className="px-8 py-4 bg-transparent border border-stone-900 text-stone-900 text-sm font-bold tracking-widest uppercase hover:bg-stone-100 transition-colors w-full sm:w-auto">
-                  List Property
-                </button>
-              </SignUpButton>
+              <button
+              onClick={() => setOpenSignup(true)}
+              className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
+            >
+              Join as Scout
+            </button>
+              <button
+              onClick={() => setOpenSignup(true)}
+              className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
+            >
+              List Property
+            </button>
             </SignedOut>
           </motion.div>
         </motion.div>
@@ -171,7 +222,7 @@ export default function LandingPage() {
       <section className="relative py-28 px-6 bg-[#Faf9f6] text-stone-900 overflow-hidden">
 
         {/* Subtle Grid Background (matches your hero) */}
-        <div className="absolute inset-0 opacity-50 pointer-events-none bg-[linear-gradient(to_right,rgba(0,0,0,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.06)_1px,transparent_1px)] bg-[size:32px_32px]" />
+        <div className="absolute inset-0 opacity-0 pointer-events-none bg-[linear-gradient(to_right,rgba(0,0,0,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(0,0,0,0.06)_1px,transparent_1px)] bg-[size:32px_32px]" />
 
         <div className="relative max-w-6xl mx-auto text-center space-y-20">
 
@@ -463,6 +514,58 @@ export default function LandingPage() {
           </div>
         </div>
       </footer>
+
+
+
+      <SignUpButton mode="modal">
+        <button id="hidden-signup" className="hidden" />
+      </SignUpButton>
+
+      {openSignup && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+          
+          <div className="bg-white rounded-xl p-8 w-[90%] max-w-md space-y-6 shadow-xl">
+            
+            <h2 className="text-lg font-semibold text-center">
+              Enter Referral Code
+            </h2>
+
+            <input
+              type="text"
+              placeholder="Optional referral code"
+              value={refCode}
+              onChange={(e) => setRefCode(e.target.value)}
+              className="w-full border border-stone-300 px-4 py-3 text-sm outline-none focus:border-stone-900"
+            />
+
+            <button
+              onClick={() => {
+              if (refCode && refCode.trim() !== "") {
+                localStorage.setItem("referralCode", refCode.trim());
+              }
+
+              setOpenSignup(false);
+              document.getElementById("hidden-signup")?.click();
+            }}
+                
+              className="w-full bg-stone-900 text-white py-3 text-sm font-bold uppercase"
+            >
+              Continue
+            </button>
+
+            <button
+              onClick={() => {
+                setOpenSignup(false);
+                document.getElementById("hidden-signup")?.click();
+              }}
+              className="w-full text-sm text-stone-500"
+            >
+              Skip
+            </button>
+
+          </div>
+        </div>
+      )}
     </main>
   );
 }

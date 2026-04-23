@@ -5,7 +5,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { SignInButton, SignedIn, SignedOut, UserButton } from "@clerk/nextjs";
 import { ChevronDown } from "lucide-react";
-import { useState } from "react";
+import { useState,useEffect } from "react";
 
 export default function Navbar() {
   const pathname = usePathname();
@@ -17,11 +17,20 @@ export default function Navbar() {
     { href: "/brands", label: "The Brand Brief" },
   ];
 
+
+  const [openSignup, setOpenSignup] = useState(false);
+    const [refCode, setRefCode] = useState("");
+    useEffect(() => {
+      if (typeof window !== "undefined") {
+        const stored = localStorage.getItem("referralCode");
+        if (stored) setRefCode(stored);
+      }
+    }, []);
+
   return (
     <>
-      <nav className="fixed top-3 left-1/2 -translate-x-1/2 z-50 w-[95%] max-w-md md:w-full md:max-w-none md:left-0 md:translate-x-0 md:top-0 md:rounded-none rounded-2xl bg-white/40 backdrop-blur-xl backdrop-saturate-150 border border-white/30 shadow-[0_4px_20px_rgba(0,0,0,0.08)] h-16">
-        <div className="max-w-7xl mx-auto px-8 h-full flex items-center justify-between relative">
-
+      <nav className=" fixed z-50 top-3 left-1/2 -translate-x-1/2 w-[95%] max-w-md rounded-2xl md:top-4 md:left-1/2 md:-translate-x-1/2 md:w-[95%] md:max-w-7xl md:rounded-2xl /* GLASS STYLE */ bg-white/10 backdrop-blur-xl backdrop-saturate-150 border border-white/30 /* DEPTH */ shadow-[0_10px_40px_rgba(0,0,0,0.12)] h-16 ">
+        <div className="w-full px-8 h-full flex items-center justify-between relative">
           {/* ✅ DESKTOP BRAND (UNCHANGED) */}
           <Link href="/" className="hidden md:block items-center text-2xl font-serif font-bold tracking-tighter z-50">
             WHITELIST
