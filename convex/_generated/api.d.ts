@@ -9,6 +9,7 @@
  */
 
 import type * as brand_leads from "../brand_leads.js";
+import type * as landlord_leads from "../landlord_leads.js";
 import type * as properties from "../properties.js";
 import type * as users from "../users.js";
 
@@ -20,6 +21,7 @@ import type {
 
 declare const fullApi: ApiFromModules<{
   brand_leads: typeof brand_leads;
+  landlord_leads: typeof landlord_leads;
   properties: typeof properties;
   users: typeof users;
 }>;

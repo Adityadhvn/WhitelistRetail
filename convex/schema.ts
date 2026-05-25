@@ -21,7 +21,7 @@ export default defineSchema({
     city: v.string(),
     sqft: v.number(),
 
-    scoutId: v.id("users"), // 🔥 important
+    scoutId: v.id("users"), 
 
     mediaStorageIds: v.array(v.string()),
     potentialCommission: v.number(),
@@ -37,4 +37,19 @@ export default defineSchema({
     contactDetails: v.string(),
     status: v.string(),
   }),
+
+  landlord_leads: defineTable({
+    fullName: v.string(),
+    email: v.string(),
+  
+    phone1: v.string(),
+    phone2: v.optional(v.string()),
+  
+    propertyAddress: v.string(),
+  
+    status: v.string(),
+  
+    createdAt: v.number(),
+  }),
 });
+
