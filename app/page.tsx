@@ -6,8 +6,9 @@ import Link from "next/link";
 import { Shield, Zap, Globe, ArrowRight, StampIcon } from "lucide-react";
 import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
 import { useState, useRef, useEffect } from "react";
-import { Search, BadgeCheck, Handshake } from "lucide-react";
 import { useSearchParams } from "next/navigation";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
 
 
 const staggerContainer: Variants = {
@@ -99,83 +100,98 @@ export default function LandingPage() {
   const [activeSlide, setActiveSlide] = useState(0);
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
+
+
+
+
+
+  const isValidReferral = useQuery(
+    api.influencers.validateReferralCode,
+    refCode
+      ? { referralCode: refCode }
+      : "skip"
+  );
+
+
+
+
   const handleScroll = () => {
     if (!scrollContainerRef.current) return;
     const container = scrollContainerRef.current;
-    
+
     // Calculate which item is closest to the center
     const scrollPosition = container.scrollLeft;
     const itemWidth = container.scrollWidth / markets.length;
     const currentIndex = Math.round(scrollPosition / itemWidth);
-    
+
     // Ensure we don't go out of bounds
     setActiveSlide(Math.min(Math.max(currentIndex, 0), markets.length - 1));
 
   };
 
   return (
-    <main  onMouseMove={!isMobile ? handleMouseMove : undefined}
-    className="pt-24 md:pt-28 bg-[#Faf9f6] text-stone-900 min-h-screen selection:bg-amber-900 selection:text-white overflow-hidden">
+    <main onMouseMove={!isMobile ? handleMouseMove : undefined}
+      className="pt-24 md:pt-28 bg-[#Faf9f6] text-stone-900 min-h-screen selection:bg-amber-900 selection:text-white overflow-hidden">
       <Navbar />
 
       {/* Base Grid */}
       <div
-            className="absolute inset-0 pointer-events-none"
-            style={{
-              backgroundImage: `
+        className="absolute inset-0 pointer-events-none"
+        style={{
+          backgroundImage: `
                 linear-gradient(to right, rgba(0,0,0,0.06) 1px, transparent 1px),
                 linear-gradient(to bottom, rgba(0,0,0,0.06) 1px, transparent 1px)
               `,
-              backgroundSize: "24px 24px",
-            }}
-          />
+          backgroundSize: "24px 24px",
+        }}
+      />
 
 
 
-          {/* 🔥 Highlighted Grid (cursor reactive) */}
-          {!isMobile && (
-          <div
-            className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-[0.22,1,0.36,1]"
-            style={{
-              opacity: isHovering ? 1 : 0,
-              
+      {/* 🔥 Highlighted Grid (cursor reactive) */}
+      {!isMobile && (
+        <div
+          className="absolute inset-0 pointer-events-none transition-opacity duration-500 ease-[0.22,1,0.36,1]"
+          style={{
+            opacity: isHovering ? 1 : 0,
 
-              transform: `scale(${isHovering ? 1 : 0.98})`,
-              transition: "opacity 0.4s ease, transform 0.4s ease",
 
-  
-              backgroundImage: `
+            transform: `scale(${isHovering ? 1 : 0.98})`,
+            transition: "opacity 0.4s ease, transform 0.4s ease",
+
+
+            backgroundImage: `
                 linear-gradient(to right, rgba(0,0,0,0.45) 1.6px, transparent 1px),
                 linear-gradient(to bottom, rgba(0,0,0,0.45) 1.6px, transparent 1px)
               `,
-              backgroundSize: "24px 24px",
+            backgroundSize: "24px 24px",
 
-              maskImage: `radial-gradient(
+            maskImage: `radial-gradient(
                 180px circle at ${mousePos.x}px ${mousePos.y}px,
                 black,
                 transparent 50%
               )`,
-              WebkitMaskImage: `radial-gradient(
+            WebkitMaskImage: `radial-gradient(
                 180px circle at ${mousePos.x}px ${mousePos.y}px,
                 black,
                 transparent 50%
               )`,
-            }}
-          />
-        )}
-      
+          }}
+        />
+      )}
+
       {/* Hero Section */}
-      <section 
+      <section
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
         className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 text-center overflow-hidden"
       >
 
-          
 
-          
-          
-      <motion.div
+
+
+
+        <motion.div
           initial="hidden"
           animate="visible"
           variants={staggerContainer}
@@ -185,10 +201,10 @@ export default function LandingPage() {
             the infrastructure for offline expansion
           </motion.div>
           <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl lg:text-8xl font-serif mb-8 leading-[1.05] tracking-tight text-stone-900">
-            Retail Expansion<br className="hidden md:block"/> <span className="italic text-stone-600">Simplified.</span>
+            Retail Expansion<br className="hidden md:block" /> <span className="italic text-stone-600">Simplified.</span>
           </motion.h1>
           <motion.p variants={fadeUp} className="text-lg md:text-xl font-serif text-stone-600 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
-            Whitelist is a retail real-estate sourcing and expansion platform that connects brands with verified, expansion-ready commercial properties across high-growth cities. 
+            Whitelist is a retail real-estate sourcing and expansion platform that connects brands with verified, expansion-ready commercial properties across high-growth cities.
             <br className="hidden md:block" /><br className="hidden md:block" />
             We bring structure, transparency, and coordination to offline retail expansion.
           </motion.p>
@@ -200,25 +216,25 @@ export default function LandingPage() {
             </SignedIn>
             <SignedOut>
               <button
-              onClick={() => setOpenSignup(true)}
-              className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
-            >
-              Join as Scout
-            </button>
-              <button
-              onClick={() => setOpenSignup(true)}
-              className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
-            >
-              List Property
-            </button>
+                onClick={() => setOpenSignup(true)}
+                className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
+              >
+                Join as Scout
+              </button>
+              <Link
+                href="/landlords#property-form"
+                className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
+              >
+                List Property
+              </Link>
             </SignedOut>
           </motion.div>
         </motion.div>
       </section>
 
 
-    
-            {/* 🔥 HOW WHITELIST WORKS */}
+
+      {/* 🔥 HOW WHITELIST WORKS */}
       <section className="relative py-28 px-6 bg-[#Faf9f6] text-stone-900 overflow-hidden">
 
         {/* Subtle Grid Background (matches your hero) */}
@@ -309,15 +325,15 @@ export default function LandingPage() {
       </section>
 
 
- 
 
-      
+
+
 
 
 
       {/* Network Strength Section */}
       <section className="relative py-20 bg-stone-900 text-stone-100">
-  
+
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif mb-4">Whitelist Network Strength</h2>
@@ -330,7 +346,7 @@ export default function LandingPage() {
               { number: "42", label: "Cities Covered" },
               { number: "25+", label: "Brands in Discussion" }
             ].map((stat, i) => (
-              <motion.div 
+              <motion.div
                 key={i}
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
@@ -361,10 +377,32 @@ export default function LandingPage() {
             className="grid grid-cols-1 md:grid-cols-3 gap-8"
           >
             {[
-              
-              { icon: Zap, title: "For Scouts", desc: "Institutionalize your local knowledge. Earn 10% commission on successful placements with full transparency.", link: "/scouts", btn: "Become a Scout" },
-              { icon: Shield, title: "For Landlords", desc: "Direct-to-brand placement with absolute discretion. No public listings, only high-intent expansion leads.", link: "/landlords", btn: "List Property" },
-              { icon: Globe, title: "For Brands", desc: "Replace unstructured brokerage with a data-driven sourcing layer. Access off-market assets vetted by local experts.", link: "/brands", btn: "Submit Requirement" },
+              {
+                icon: Zap,
+                title: "For Scouts",
+                desc: "Institutionalize your local knowledge. Earn 10% commission on successful placements with full transparency.",
+                link: "/scouts",
+                btn: "Become a Scout",
+                requiresReferral: true,
+              },
+
+              {
+                icon: Shield,
+                title: "For Landlords",
+                desc: "Direct-to-brand placement with absolute discretion. No public listings, only high-intent expansion leads.",
+                link: "/landlords#property-form",
+                btn: "List Property",
+                requiresReferral: false,
+              },
+
+              {
+                icon: Globe,
+                title: "For Brands",
+                desc: "Replace unstructured brokerage with a data-driven sourcing layer. Access off-market assets vetted by local experts.",
+                link: "/brands",
+                btn: "Submit Requirement",
+                requiresReferral: false,
+              },
             ].map((item, i) => (
               <motion.div variants={fadeUp} key={i} className="bg-white p-10 border border-stone-200 hover:shadow-xl transition-shadow duration-500 group flex flex-col h-full">
                 <div className="w-14 h-14 bg-stone-100 flex items-center justify-center rounded-full mb-8 group-hover:bg-amber-900 group-hover:text-white transition-colors duration-500">
@@ -374,10 +412,39 @@ export default function LandingPage() {
                 <p className="text-stone-600 font-serif leading-relaxed font-light mb-8 flex-grow">
                   {item.desc}
                 </p>
-                <Link href={item.link} className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-amber-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto">
+                {item.requiresReferral ? (
+                  <>
+                    <SignedIn>
+                      <Link
+                        href="/dashboard"
+                        className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-amber-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto"
+                      >
+                        <span>Go to Dashboard</span>
+
+                        <ArrowRight className="w-4 h-4" />
+                      </Link>
+                    </SignedIn>
+
+                    <SignedOut>
+                      <button
+                        onClick={() => setOpenSignup(true)}
+                        className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-amber-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto"
+                      >
+                        <span>{item.btn}</span>
+
+                        <ArrowRight className="w-4 h-4" />
+                      </button>
+                    </SignedOut>
+                  </>
+                ) : (
+                <Link
+                  href={item.link}
+                  className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-amber-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto"
+                >
                   <span>{item.btn}</span>
                   <ArrowRight className="w-4 h-4" />
                 </Link>
+              )}
               </motion.div>
             ))}
           </motion.div>
@@ -388,7 +455,7 @@ export default function LandingPage() {
       <section className="py-32 bg-[#2A2B2E] text-stone-100">
         <div className="max-w-7xl mx-auto px-0 md:px-6 relative">
           <div className="text-center mb-16 px-6 md:px-0">
-            <motion.h2 
+            <motion.h2
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -396,7 +463,7 @@ export default function LandingPage() {
             >
               Retail Markets We Operate In
             </motion.h2>
-            <motion.p 
+            <motion.p
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
@@ -408,29 +475,29 @@ export default function LandingPage() {
           </div>
 
           {/* Simple Swipe Container */}
-          <div 
+          <div
             ref={scrollContainerRef}
             onScroll={handleScroll}
             className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 md:grid md:grid-cols-3 md:gap-8 md:px-0 scroll-px-6 md:scroll-px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
           >
             {markets.map((market, index) => (
-              <div 
+              <div
                 key={index}
                 className="w-[85vw] sm:w-[60vw] md:w-auto shrink-0 snap-center bg-[#EDEDED] rounded-xl p-6 flex flex-col items-center"
               >
                 <h3 className="text-2xl font-serif text-stone-900 mb-2">{market.title}</h3>
                 <p className="text-stone-500 font-light text-sm text-center mb-6 h-10">{market.cities}</p>
-                
+
                 <div className="w-full aspect-[4/3] relative rounded-lg overflow-hidden mb-6 bg-stone-300">
-                  <img 
-                    src={market.img} 
+                  <img
+                    src={market.img}
                     alt={`${market.title} Illustration`}
                     className="object-cover w-full h-full hover:scale-105 transition-transform duration-700 pointer-events-none"
                   />
                 </div>
-                
+
                 <button className="w-full py-3.5 px-4 border border-stone-300 rounded-lg flex justify-center items-center gap-2 text-stone-600 hover:bg-stone-200 hover:text-stone-900 transition-colors text-sm uppercase tracking-wider font-semibold group">
-                  {market.title} 
+                  {market.title}
                   <div className="text-stone-400 group-hover:text-stone-900 group-hover:translate-x-1 transition-all" />
                 </button>
               </div>
@@ -444,11 +511,10 @@ export default function LandingPage() {
             {markets.map((_, idx) => (
               <div
                 key={idx}
-                className={`h-2 rounded-full transition-all duration-300 ${
-                  activeSlide === idx 
-                    ? "w-8 bg-white" 
-                    : "w-2 bg-stone-600"
-                }`}
+                className={`h-2 rounded-full transition-all duration-300 ${activeSlide === idx
+                  ? "w-8 bg-white"
+                  : "w-2 bg-stone-600"
+                  }`}
               />
             ))}
           </div>
@@ -488,6 +554,8 @@ export default function LandingPage() {
               <li><Link href="/brands" className="hover:text-white transition-colors">Brands</Link></li>
               <li><Link href="/landlords" className="hover:text-white transition-colors">Landlords</Link></li>
               <li><Link href="/scouts" className="hover:text-white transition-colors">Scouts</Link></li>
+              <li><Link href="/influencer-login" className="hover:text-white transition-colors">Influencer</Link></li>
+              <li><Link href="/dashboard/admin" className="hover:text-white transition-colors">ADMIN</Link></li>
             </ul>
           </div>
           <div>
@@ -500,14 +568,14 @@ export default function LandingPage() {
           <div>
             <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Contact Us</h4>
             <ul className="space-y-4 text-sm font-light">
-              <li>whitelist.retail@gmail.com</li>
+              <li>Email: whitelist.retail@gmail.com</li>
               <li>Care: 9654755007</li>
               <li>DM us on Instagram</li>
             </ul>
           </div>
         </div>
         <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
-          <div>© 2026 Whitelist Infrastructure Pvt Ltd. All rights reserved.</div>
+          <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
           <div className="flex space-x-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
@@ -517,54 +585,160 @@ export default function LandingPage() {
 
 
 
-      <SignUpButton mode="modal">
+      <SignUpButton
+        mode="modal"
+        forceRedirectUrl="/scout-redirect"
+      >
         <button id="hidden-signup" className="hidden" />
       </SignUpButton>
 
+
+
       {openSignup && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
-          
-          <div className="bg-white rounded-xl p-8 w-[90%] max-w-md space-y-6 shadow-xl">
-            
-            <h2 className="text-lg font-semibold text-center">
-              Enter Referral Code
-            </h2>
+        <>
+          {/*Background blur */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            transition={{ duration: 0.3, ease: "easeOut" }}
+            onClick={() => setOpenSignup(false)}
+            className="fixed inset-0 z-40 backdrop-blur-sm bg-black/5"
+          />
 
-            <input
-              type="text"
-              placeholder="Optional referral code"
-              value={refCode}
-              onChange={(e) => setRefCode(e.target.value)}
-              className="w-full border border-stone-300 px-4 py-3 text-sm outline-none focus:border-stone-900"
-            />
+          {/*Glass popup */}
+          <motion.div
+            initial={{ opacity: 0, y: -12 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -12 }}
+            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+            className="fixed inset-0 z-50 flex items-center justify-center px-4"
+          >
+            <div className="relative w-full max-w-md overflow-hidden rounded-[28px] bg-white/60 border border-white/20 shadow-[0_8px_40px_rgba(0,0,0,0.12)]">
 
-            <button
-              onClick={() => {
-              if (refCode && refCode.trim() !== "") {
-                localStorage.setItem("referralCode", refCode.trim());
-              }
+              {/* subtle reflection */}
+              <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/20 via-white/5 to-transparent" />
 
-              setOpenSignup(false);
-              document.getElementById("hidden-signup")?.click();
-            }}
-                
-              className="w-full bg-stone-900 text-white py-3 text-sm font-bold uppercase"
-            >
-              Continue
-            </button>
+              {/* CONTENT */}
+              <div className="relative z-10 p-7 md:p-8">
 
-            <button
-              onClick={() => {
-                setOpenSignup(false);
-                document.getElementById("hidden-signup")?.click();
-              }}
-              className="w-full text-sm text-stone-500"
-            >
-              Skip
-            </button>
+                {/* TOP LABEL */}
+                <div className="flex justify-center mb-6">
+                  <div className="px-4 py-1.5 rounded-full border border-white/30 bg-white/20 text-[11px] uppercase tracking-[0.25em] font-bold text-stone-700">
+                    Scout Access
+                  </div>
+                </div>
 
-          </div>
-        </div>
+                {/* HEADING */}
+                <div className="text-center mb-7">
+                  <h2 className="text-2xl md:text-3xl font-serif tracking-tight text-stone-900 mb-2">
+                    Enter Referral Code
+                  </h2>
+
+                  <p className="text-sm text-stone-600 leading-relaxed font-light">
+                    If you were invited by an existing scout,
+                    enter their referral code below.
+                  </p>
+                </div>
+
+                {/* INPUT */}
+                <input
+                  type="text"
+                  placeholder="Referral code"
+                  value={refCode}
+                  onChange={(e) => setRefCode((e.target as HTMLInputElement).value.toUpperCase().replace(/\s/g, ""))}
+                  className="
+                    w-full
+                    rounded-2xl
+                    border
+                    border-white/30
+                    bg-white/30
+                    px-5
+                    py-4
+                    text-sm
+                    font-bold
+                    text-stone-900
+                    placeholder:text-stone-500
+                    outline-none
+                    transition-all
+                    duration-300
+                    focus:border-white/50
+                    focus:bg-white/40
+                    focus:shadow-[0_0_0_4px_rgba(255,255,255,0.15)]
+                  "
+                />
+
+                {/* BUTTONS */}
+                <div className="mt-7 space-y-3">
+
+                  {/* CONTINUE */}
+                  <button
+                    onClick={() => {
+
+                    // if user entered a code but it's invalid
+                    if (refCode && !isValidReferral) {
+                      alert("Invalid referral code");
+                      return;
+                    }
+
+                    if (refCode && refCode.trim() !== "") {
+                      localStorage.setItem(
+                        "referralCode",
+                        refCode.trim().toUpperCase()
+                      );
+                    }
+
+                    setOpenSignup(false);
+                    document.getElementById("hidden-signup")?.click();
+                  }}
+                    className="
+                      w-full
+                      rounded-2xl
+                      bg-[#4b5f49]
+                      text-white
+                      py-4
+                      text-sm
+                      font-bold
+                      uppercase
+                      tracking-[0.18em]
+                      transition-all
+                      duration-300
+                      hover:bg-stone-800
+                      hover:scale-[1.01]
+                      active:scale-[0.99]
+                    "
+                  >
+                    Continue
+                  </button>
+
+                  {/* SKIP */}
+                  <button
+                    onClick={() => {
+                      setOpenSignup(false);
+                      document.getElementById("hidden-signup")?.click();
+                    }}
+                    className="
+                      w-full
+                      rounded-2xl
+                      border
+                      border-white/20
+                      bg-white/10
+                      py-4
+                      text-sm
+                      text-stone-700
+                      transition-all
+                      duration-300
+                      hover:bg-white/20
+                    "
+                  >
+                    Skip for Now
+                  </button>
+
+                </div>
+              </div>
+            </div>
+          </motion.div>
+        </>
       )}
     </main>
   );

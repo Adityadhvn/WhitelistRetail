@@ -51,5 +51,31 @@ export default defineSchema({
   
     createdAt: v.number(),
   }),
+
+  brandRequirements: defineTable({
+    brand: v.string(),
+    title: v.string(),
+    frontage: v.string(),
+    size: v.string(),
+    floors: v.string(),
+    location: v.string(),
+    priority: v.string(),
+    logo: v.string(),
+  
+    isActive: v.boolean(),
+  
+    createdAt: v.number(),
+  }),
+
+  influencers: defineTable({
+    username: v.string(),
+    password: v.string(),
+    name: v.string(),
+    instagram: v.string(),
+    referralCode: v.string(),
+    isActive: v.boolean(),
+  }).index("by_referral_code", ["referralCode"]),
+
+  
 });
 

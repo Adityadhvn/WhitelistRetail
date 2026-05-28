@@ -37,7 +37,7 @@ export default function ScoutCard({ user }: any) {
           
           {/* Header */}
           <div className="flex justify-between items-center">
-            <h2 className="text-xs tracking-[0.3em] text-white/60">
+            <h2 className="text-s tracking-[0.3em] text-white/60">
               WHITELIST
             </h2>
             <span className="text-[10px] text-green-400 tracking-widest">
@@ -47,7 +47,7 @@ export default function ScoutCard({ user }: any) {
 
           {/* Name */}
           <div className="space-y-1">
-            <p className="text-[10px] uppercase tracking-[0.2em] text-white/40">
+            <p className="text-[10px] uppercase tracking-[0.2em] text-white/50">
               Verified Scout
             </p>
             <h3 className="text-2xl font-semibold tracking-tight">
@@ -60,7 +60,7 @@ export default function ScoutCard({ user }: any) {
             
             {/* ID */}
             <div>
-              <p className="text-[10px] text-white/40 tracking-widest mb-1">
+              <p className="text-[10px] text-white/50 tracking-widest mb-1">
                 ID NUMBER
               </p>
               <p className="font-mono text-sm tracking-wider">

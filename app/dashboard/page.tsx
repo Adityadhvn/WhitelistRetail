@@ -33,7 +33,7 @@ export default function Dashboard() {
 
   // ⏳ Loading
   if (dbUser === undefined) {
-    return <div className="p-10">Loading...</div>;
+    return <div className="min-h-screen bg-[#Faf9f6]" />
   }
 
   // 👤 First time user

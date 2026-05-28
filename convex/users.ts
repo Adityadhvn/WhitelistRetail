@@ -13,6 +13,7 @@ export const getUser = query({
   },
 });
 
+
 export const updateRole = mutation({
   args: {
     clerkId: v.string(),
@@ -40,14 +41,39 @@ export const createOrGetUser = mutation({
     email: v.string(),
     referralCode: v.optional(v.string()),
   },
+
   handler: async (ctx, args) => {
+
     const existing = await ctx.db
       .query("users")
-      .withIndex("by_clerkId", (q) => q.eq("clerkId", args.clerkId))
+      .withIndex("by_clerkId", (q) =>
+        q.eq("clerkId", args.clerkId)
+      )
       .first();
 
-    if (existing) return existing;
+    // USER ALREADY EXISTS
+    if (existing) {
+      // if referralCode missing earlier,
+      // patch it now
+      if (
+        args.referralCode &&
+        (!existing.referralCode ||
+          existing.referralCode === "")
+      ) {
+        await ctx.db.patch(existing._id, {
+          referralCode:
+            args.referralCode.toUpperCase(),
+        });
+        return {
+          ...existing,
+          referralCode:
+            args.referralCode.toUpperCase(),
+        };
+      }
+      return existing;
+    }
 
+    // CREATE NEW USER
     return await ctx.db.insert("users", {
       clerkId: args.clerkId,
       name: args.name,
@@ -55,11 +81,14 @@ export const createOrGetUser = mutation({
       role: "",
       applicationStatus: "not_applied",
       scoutId: "",
-      referralCode: args.referralCode || "",
+      referralCode:
+        args.referralCode?.toUpperCase() || "",
       createdAt: Date.now(),
     });
   },
 });
+
+
 
 
 export const approveScout = mutation({

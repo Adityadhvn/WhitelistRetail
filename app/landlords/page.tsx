@@ -128,7 +128,10 @@ export default function LandlordsPage() {
               </div>
 
               {/* MOBILE/TABLET FORM */}
-              <div className="lg:hidden mt-12">
+              <div
+                id="property-form"
+                className="lg:hidden mt-12 scroll-mt-32"
+              >
                 <div className="bg-white border border-stone-200 rounded-[24px] p-6 shadow-sm">
 
                   <div className="mb-8">
@@ -275,14 +278,17 @@ export default function LandlordsPage() {
       </section>
 
       {/* DESKTOP FORM SECTION */}
-      <section className="hidden lg:block px-5 md:px-10 lg:px-14 mt-5">
+      <section
+        id="property-form"
+        className="hidden lg:block px-5 md:px-10 lg:px-14 mt-5 scroll-mt-32"
+      >
         <div className="max-w-[1500px] mx-auto">
           <div className="bg-white border border-stone-200 rounded-[28px] p-10 shadow-sm">
 
             <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
 
               {/* LEFT TEXT */}
-              <div className="max-w-xl">
+              <div className="max-w-xl pb-22">
                 <p className="text-sm uppercase tracking-[0.2em] text-[#4b5f49] font-medium">
                   List Your Property
                 </p>
@@ -387,7 +393,7 @@ export default function LandlordsPage() {
 
                       <textarea
                         rows={4}
-                        placeholder="Property Address"
+                        placeholder="Full Property Address"
                         {...register("propertyAddress")}
                         className="w-full rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 pt-5 pb-4 outline-none focus:border-[#4b5f49] transition-all resize-none"
                       />
@@ -474,7 +480,7 @@ export default function LandlordsPage() {
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-28 px-5 md:px-10 lg:px-14">
+      <section className="py-13 px-5 md:px-10 lg:px-14">
         <div className="max-w-[1400px] mx-auto text-center">
           <h2 className="font-serif text-5xl text-stone-900">
             How It Works
@@ -484,7 +490,7 @@ export default function LandlordsPage() {
             A simple process. Maximum results.
           </p>
 
-          <div className="max-w-[1500px] mx-auto bg-white border border-stone-200 rounded-[24px] px-8 py-10 mt-14">
+          <div className="max-w-[1500px] mx-auto bg-white border border-stone-200 rounded-[24px] px-8 py-8 mt-14">
             <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mt-4">
               {[
                 {

@@ -29,7 +29,7 @@ export default function Navbar() {
 
   return (
     <>
-      <nav className=" fixed z-50 top-3 left-1/2 -translate-x-1/2 w-[95%] max-w-md rounded-2xl md:top-4 md:left-1/2 md:-translate-x-1/2 md:w-[95%] md:max-w-7xl md:rounded-2xl /* GLASS STYLE */ bg-white/10 backdrop-blur-xl backdrop-saturate-150 border border-white/30 /* DEPTH */ shadow-[0_10px_40px_rgba(0,0,0,0.12)] h-16 ">
+      <nav className=" fixed z-50 top-3 left-1/2 -translate-x-1/2 w-[95%] max-w-md rounded-2xl md:top-4 md:left-1/2 md:-translate-x-1/2 md:w-[95%] md:max-w-7xl md:rounded-2xl /* GLASS STYLE */ bg-white/10 backdrop-blur-xl backdrop-saturate-150 /* DEPTH */ shadow-[0_10px_40px_rgba(0,0,0,0.12)] h-16 ">
         <div className="w-full px-8 h-full flex items-center justify-between relative">
           {/* ✅ DESKTOP BRAND (UNCHANGED) */}
           <Link href="/" className="hidden md:block items-center text-2xl font-serif font-bold tracking-tighter z-50">
