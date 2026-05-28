@@ -5,10 +5,7 @@ import { api } from "@/convex/_generated/api";
 import { useEffect, useState } from "react";
 export default function InfluencerDashboardPage() {
 
-  /*
-    TEMPORARY:
-    Replace this later with logged-in influencer referral code
-  */
+
     const [referralCode, setReferralCode] = useState("");
     console.log(referralCode);
 

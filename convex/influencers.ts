@@ -23,7 +23,6 @@ export const createInfluencer = mutation({
 });
 
 
-import { query } from "./_generated/server";
 
 export const getInfluencers = query({
   args: {},
