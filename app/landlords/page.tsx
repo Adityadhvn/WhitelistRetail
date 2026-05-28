@@ -8,29 +8,30 @@ import * as z from "zod";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Navbar from "@/components/Navbar";
+import { Turnstile } from "@marsidev/react-turnstile";
+import {ArrowRight,ShieldCheck,TrendingUp,Building2,Users,Check,User,Mail,Phone,MapPin,} from "lucide-react";
 
-import {
-  ArrowRight,
-  ShieldCheck,
-  TrendingUp,
-  Key,
-  Building2,
-  Users,
-  Check,
-  User,
-  Mail,
-  Phone,
-  MapPin,
-} from "lucide-react";
 
 const landlordSchema = z.object({
-  fullName: z.string().min(2, "Full name is required"),
+  fullName: z
+    .string()
+    .min(2, "Full name is required"),
 
-  email: z.string().email("Invalid email address"),
+  email: z
+    .string()
+    .email("Invalid email address")
+    .optional()
+    .or(z.literal("")),
 
-  phone1: z.string().min(10, "Valid phone number required"),
+  phone1: z
+    .string()
+    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits"),
 
-  phone2: z.string().optional(),
+  phone2: z
+    .string()
+    .regex(/^\d{10}$/, "Phone number must be exactly 10 digits")
+    .optional()
+    .or(z.literal("")),
 
   propertyAddress: z
     .string()
@@ -41,7 +42,7 @@ type LandlordFormValues = z.infer<typeof landlordSchema>;
 
 export default function LandlordsPage() {
   const [submitted, setSubmitted] = useState(false);
-
+  const [turnstileToken, setTurnstileToken] = useState("");
   const submitLead = useMutation(
     api.landlord_leads.submitLandlordLead
   );
@@ -57,7 +58,31 @@ export default function LandlordsPage() {
 
   const onSubmit = async (data: LandlordFormValues) => {
     try {
-      await submitLead(data);
+      if (!turnstileToken) {
+        alert("Please verify you are human.");
+        return;
+      }
+      const verification = await fetch(
+        "/api/verify-turnstile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: turnstileToken,
+          }),
+        }
+      );
+      const result = await verification.json();
+      if (!result.success) {
+        alert("Verification failed."); 
+        return;
+      }
+      await submitLead({
+        ...data,
+        email: data.email || "",
+      });
 
       setSubmitted(true);
 
@@ -68,49 +93,62 @@ export default function LandlordsPage() {
   };
 
   return (
-    <main className="min-h-screen bg-[#f8f6f2] text-stone-900 overflow-x-hidden">
+    <main className="relative min-h-screen text-stone-900 overflow-x-hidden">
+
+      {/* GLOBAL BACKGROUND */}
+      <div className="fixed inset-0 -z-10">
+        <div className="absolute inset-0 bg-gradient-to-b from-[#F8F6F2]/88 via-[#F8F6F2]/82 to-[#F8F6F2]/92 z-10" />
+
+        <div
+          className="absolute inset-0 bg-cover bg-center scale-105"
+          style={{
+            backgroundImage:
+              "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000&auto=format&fit=crop')",
+          }}
+        />
+      </div>
+
       <Navbar />
 
       {/* HERO SECTION */}
-      <section className="pt-28 px-5 md:px-10 lg:px-14">
-        <div className="max-w-[1500px] mx-auto border border-stone-200 bg-[#f8f6f2] overflow-hidden rounded-[28px]">
-          <div className="grid grid-cols-1 lg:grid-cols-2 min-h-[760px]">
+      <section className="relative overflow-hidden">
+
+        <div className="relative z-20 max-w-[1380px] mx-auto px-6 md:px-10 xl:px-16 pt-32 pb-28">
+
+          <div className="grid lg:grid-cols-[1fr_580px] gap-24 xl:gap-32 items-start">
 
             {/* LEFT CONTENT */}
             <motion.div
-              initial={{ opacity: 0, y: 25 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ duration: 0.7 }}
-              className="px-7 md:px-12 lg:px-16 py-12 md:py-16 flex flex-col justify-center"
+              initial={{ opacity: 0, x: -30 }}
+              animate={{ opacity: 1, x: 0 }}
+              transition={{ duration: 0.8, ease: "easeOut" }}
+              className="max-w-[620px]"
             >
-              {/* Badge */}
-              <div className="mb-8">
-                <div className="inline-flex items-center gap-2 border border-stone-200 bg-white px-5 py-3 rounded-xl">
-                  <ShieldCheck className="w-4 h-4 text-stone-700" />
 
-                  <span className="text-sm font-medium text-stone-700">
-                    India’s Trusted Leasing Platform
-                  </span>
-                </div>
+              <div className="mb-6 flex items-center space-x-3">
+                <span className="w-12 h-[1px] bg-[#4b5f49]"></span>
+
+                <span className="text-xs uppercase tracking-widest font-bold text-[#4b5f49]">
+                  Sourcing Partners
+                </span>
               </div>
-
               {/* Heading */}
-              <h1 className="font-serif text-[3.1rem] md:text-[4rem] leading-[0.95] tracking-tight text-stone-900">
+              <h1 className="text-[3.4rem] sm:text-6xl xl:text-7xl font-semibold tracking-[-0.06em] leading-[0.92] text-stone-950">
                 Lease Faster.
                 <br />
                 Get Better Tenants.
                 <br />
-                Earn <span className="text-[#4b5f49]">More.</span>
+                <span className="italic text-[#4b5f49]">Earn More.</span>
               </h1>
 
               {/* Subtext */}
-              <p className="mt-8 text-lg leading-8 text-stone-600 max-w-xl font-light">
+              <p className="mt-8 text-[19px] leading-9 text-stone-600 max-w-xl font-normal">
                 Whitelist connects your property with India’s top brands &
                 businesses. Zero brokerage. Maximum value.
               </p>
 
               {/* Features */}
-              <div className="flex flex-wrap gap-x-8 gap-y-4 mt-10">
+              <div className="flex flex-wrap gap-x-8 gap-y-5 mt-10">
                 {[
                   "Zero Commission",
                   "Verified Tenants",
@@ -118,63 +156,277 @@ export default function LandlordsPage() {
                 ].map((item, i) => (
                   <div
                     key={i}
-                    className="flex items-center gap-2 text-sm text-stone-700"
+                    className="flex items-center gap-2.5 text-sm text-stone-700 font-medium"
                   >
-                    <Check className="w-4 h-4 text-[#4b5f49]" />
+                    <div className="w-5 h-5 rounded-full bg-[#4b5f49] flex items-center justify-center">
+                      <Check className="w-3 h-3 text-white" />
+                    </div>
 
                     <span>{item}</span>
                   </div>
                 ))}
               </div>
 
-              {/* MOBILE/TABLET FORM */}
+              {/* TRUST STRIP */}
+              <div className="mt-16">
+                <div className="bg-white/72 backdrop-blur-md border border-white/70 rounded-[34px] shadow-[0_10px_40px_rgba(0,0,0,0.06)] overflow-hidden">
+
+                  <div className="divide-y divide-stone-200/70">
+
+                    {[
+                      {
+                        icon: Building2,
+                        title: "Premium Exposure",
+                        desc: "Your property reaches expanding retail & F&B brands actively scouting locations.",
+                      },
+                      {
+                        icon: TrendingUp,
+                        title: "Faster Closures",
+                        desc: "Reduce vacancy periods with qualified tenant introductions and faster coordination.",
+                      },
+                      {
+                        icon: ShieldCheck,
+                        title: "Verified Businesses",
+                        desc: "Connect only with serious and verified businesses through our curated network.",
+                      },
+                    ].map((item, idx) => (
+                      <div
+                        key={idx}
+                        className="flex items-start gap-5 px-7 py-7"
+                      >
+                        <div className="w-16 h-16 rounded-2xl bg-[#edf2e7] flex items-center justify-center flex-shrink-0">
+                          <item.icon className="w-7 h-7 text-[#4b5f49]" />
+                        </div>
+
+                        <div className="flex-1">
+                          <h3 className="text-[1.08rem] font-semibold text-stone-900 tracking-[-0.01em]">
+                            {item.title}
+                          </h3>
+
+                          <p className="mt-2 text-[15px] leading-7 text-stone-600 font-normal">
+                            {item.desc}
+                          </p>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+
+              {/* MOBILE FORM */}
               <div
                 id="property-form"
                 className="lg:hidden mt-12 scroll-mt-32"
               >
-                <div className="bg-white border border-stone-200 rounded-[24px] p-6 shadow-sm">
+                <div className="bg-white/88 backdrop-blur-md border border-white/70 rounded-[2.3rem] p-8 shadow-[0_15px_60px_rgba(0,0,0,0.08)]">
 
-                  <div className="mb-8">
-                    <p className="text-sm uppercase tracking-[0.2em] text-[#4b5f49] font-medium">
-                      List Your Property
-                    </p>
+                  {!submitted ? (
+                    <>
+                      <div className="mb-8 text-center">
+                        <p className="text-sm mt-3 uppercase tracking-[0.2em] text-[#4b5f49] font-semibold">
+                          List Your Property
+                        </p>
 
-                    <h3 className="mt-3 text-3xl font-serif text-stone-900">
-                      Get Started
-                    </h3>
+                        <h3 className="mt-7 text-5xl font-semibold tracking-[-0.04em] text-stone-900 leading-none">
+                          Get Started
+                        </h3>
 
-                    <p className="mt-3 text-stone-600 leading-7">
-                      Fill in your details and our team will reach out shortly.
-                    </p>
-                  </div>
-
-                  {submitted ? (
-                    <div className="text-center py-8">
-                      <div className="w-20 h-20 rounded-full bg-[#e7efe4] mx-auto flex items-center justify-center">
-                        <Check className="w-10 h-10 text-[#4b5f49]" />
+                        <p className="mt-5 text-stone-500 leading-8 text-[15px]">
+                          Fill in your property details and our leasing team will connect with you shortly.
+                        </p>
                       </div>
 
-                      <h4 className="mt-6 text-3xl font-serif text-stone-900">
-                        Details Submitted
-                      </h4>
+                      <form
+                        onSubmit={handleSubmit(onSubmit)}
+                        className="space-y-6"
+                      >
 
-                      <p className="mt-4 text-stone-600 leading-7">
-                        Our leasing team will contact you shortly.
+                        <div className="relative">
+                          <User className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
+
+                          <input
+                            type="text"
+                            placeholder="Full Name *"
+                            {...register("fullName")}
+                            className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                          />
+
+                          {errors.fullName && (
+                            <p className="text-red-500 text-xs mt-2">
+                              {errors.fullName.message}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="relative">
+                          <Phone className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
+
+                          <input
+                            type="tel"
+                            maxLength={10}
+                            inputMode="numeric"
+                            placeholder="Phone Number 1 *"
+                            {...register("phone1")}
+                            className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                          />
+
+                          {errors.phone1 && (
+                            <p className="text-red-500 text-xs mt-2">
+                              {errors.phone1.message}
+                            </p>
+                          )}
+                        </div>
+
+                        <div className="relative">
+                          <Phone className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
+
+                          <input
+                            type="tel"
+                            maxLength={10}
+                            inputMode="numeric"
+                            placeholder="Phone Number 2 (optional)"
+                            {...register("phone2")}
+                            className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                          />
+
+                        </div>
+
+                        <div className="relative">
+                          <Mail className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
+
+                          <input
+                            type="email"
+                            placeholder="Email Address (optional)"
+                            {...register("email")}
+                            className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                          />
+                        </div>
+
+                        <div className="relative">
+                          <MapPin className="w-5 h-5 text-stone-400 absolute left-5 top-6" />
+
+                          <textarea
+                            rows={4}
+                            placeholder="Full Property Address *"
+                            {...register("propertyAddress")}
+                            className="w-full rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 pt-5 pb-4 outline-none focus:border-[#4b5f49] transition-all resize-none"
+                          />
+
+                          <p className="text-xs text-stone-500 mt-2 ml-1">
+                            Please enter complete property address
+                          </p>
+
+                          {errors.propertyAddress && (
+                            <p className="text-red-500 text-xs mt-2">
+                              {errors.propertyAddress.message}
+                            </p>
+                          )}
+                        </div>
+                        
+
+                        <div className="flex justify-center pt-2">
+                          <Turnstile
+                            siteKey={
+                              process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                            }
+                            onSuccess={(token) => {
+                              setTurnstileToken(token);
+                            }}
+                          />
+                        </div>
+                        
+
+                        <div className="flex justify-center pt-2">
+                          <Turnstile
+                            siteKey={
+                              process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                            }
+                            onSuccess={(token) => {
+                              setTurnstileToken(token);
+                            }}
+                          />
+                        </div>
+
+
+                        <button
+                          type="submit"
+                          disabled={isSubmitting || !turnstileToken}
+                          className="w-full bg-[#4b5f49] hover:bg-[#394736] transition-all text-white h-[62px] rounded-2xl inline-flex items-center justify-center gap-3  font-bold text-[15px] shadow-lg shadow-[#4b5f49]/20"
+                        >
+                          <span>
+                          {isSubmitting
+                          ? "Submitting..."
+                          : !turnstileToken
+                          ? "Verifying..."
+                          : "Submit Details"}
+                          </span>
+
+                          <ArrowRight className="w-5 h-5" />
+                        </button>
+                      </form>
+                    </>
+                  ) : (
+                    <div className="text-center py-12">
+                      <div className="w-24 h-24 rounded-full bg-[#e7efe4] mx-auto flex items-center justify-center">
+                        <Check className="w-12 h-12 text-[#4b5f49]" />
+                      </div>
+
+                      <h3 className="mt-8 text-4xl font-semibold tracking-[-0.04em] text-stone-900">
+                        Details Submitted
+                      </h3>
+
+                      <p className="mt-5 text-stone-600 leading-8 text-[15px] max-w-sm mx-auto">
+                        Thank you for listing your property with Whitelist.
+                        Our leasing team will connect with you shortly.
                       </p>
                     </div>
-                  ) : (
+                  )}
+                </div>
+              </div>
+            </motion.div>
+
+            {/* DESKTOP FORM */}
+            <motion.div
+              initial={{ opacity: 0, y: 30 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{
+                duration: 0.8,
+                delay: 0.2,
+                ease: "easeOut",
+              }}
+              className="hidden lg:block lg:sticky lg:top-28"
+            >
+              <div className="bg-white/88 backdrop-blur-md p-10 md:p-12 rounded-[2.3rem] shadow-[0_15px_60px_rgba(0,0,0,0.08)] border border-white/70 relative overflow-hidden">
+
+                {!submitted ? (
+                  <>
+                    <div className="mb-10 text-center">
+                      <p className="text-sm mt-3 uppercase tracking-[0.2em] text-[#4b5f49] font-semibold">
+                        List Your Property
+                      </p>
+
+                      <h3 className="mt-7 text-5xl font-semibold tracking-[-0.04em] text-stone-900 leading-none">
+                        Get Started
+                      </h3>
+
+                      <p className="mt-7 text-stone-500 leading-8 text-[15px]">
+                        Fill in your property details and our leasing team will connect with you shortly.
+                      </p>
+                    </div>
+
                     <form
                       onSubmit={handleSubmit(onSubmit)}
-                      className="space-y-5"
+                      className="space-y-6"
                     >
+
                       <div className="relative">
-                        <User className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                        <User className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
 
                         <input
                           type="text"
-                          placeholder="Full Name"
+                          placeholder="Full Name *"
                           {...register("fullName")}
-                          className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                          className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
                         />
 
                         {errors.fullName && (
@@ -185,31 +437,18 @@ export default function LandlordsPage() {
                       </div>
 
                       <div className="relative">
-                        <Mail className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
-
-                        <input
-                          type="email"
-                          placeholder="Email Address"
-                          {...register("email")}
-                          className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
-                        />
-
-                        {errors.email && (
-                          <p className="text-red-500 text-xs mt-2">
-                            {errors.email.message}
-                          </p>
-                        )}
-                      </div>
-
-                      <div className="relative">
-                        <Phone className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                        <Phone className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
 
                         <input
                           type="tel"
-                          placeholder="Phone Number"
+                          maxLength={10}
+                          inputMode="numeric"
+                          placeholder="Phone Number 1 *"
                           {...register("phone1")}
-                          className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                          className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
                         />
+
+
 
                         {errors.phone1 && (
                           <p className="text-red-500 text-xs mt-2">
@@ -219,25 +458,43 @@ export default function LandlordsPage() {
                       </div>
 
                       <div className="relative">
-                        <Phone className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
+                        <Phone className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
 
                         <input
                           type="tel"
-                          placeholder="Phone Number 2"
+                          maxLength={10}
+                          inputMode="numeric"
+                          placeholder="Phone Number 2 (optional)"
                           {...register("phone2")}
-                          className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                          className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
+                        />
+
+                      </div>
+
+                      <div className="relative">
+                        <Mail className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2" />
+
+                        <input
+                          type="email"
+                          placeholder="Email Address (optional)"
+                          {...register("email")}
+                          className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
                         />
                       </div>
 
                       <div className="relative">
-                        <MapPin className="w-5 h-5 text-stone-400 absolute left-4 top-6" />
+                        <MapPin className="w-5 h-5 text-stone-400 absolute left-5 top-6" />
 
                         <textarea
                           rows={4}
-                          placeholder="Property Address"
+                          placeholder="Full Property Address *"
                           {...register("propertyAddress")}
-                          className="w-full rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 pt-5 pb-4 outline-none focus:border-[#4b5f49] transition-all resize-none"
+                          className="w-full rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 pt-5 pb-4 outline-none focus:border-[#4b5f49] transition-all resize-none"
                         />
+
+                        <p className="text-xs text-stone-500 mt-2 ml-1">
+                          Please enter complete property address
+                        </p>
 
                         {errors.propertyAddress && (
                           <p className="text-red-500 text-xs mt-2">
@@ -248,292 +505,169 @@ export default function LandlordsPage() {
 
                       <button
                         type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-[#4b5f49] hover:bg-[#394736] transition-all text-white h-14 rounded-xl inline-flex items-center justify-center gap-3 font-medium"
+                        disabled={isSubmitting || !turnstileToken}
+                        className="w-full mt-11 bg-[#4b5f49] hover:bg-[#394736] transition-all text-white h-[62px] rounded-2xl inline-flex items-center justify-center gap-3 font-semibold text-[15px] shadow-lg shadow-[#4b5f49]/20"
                       >
                         <span>
-                          {isSubmitting
-                            ? "Submitting..."
-                            : "Submit Details"}
+                        {isSubmitting
+                        ? "Submitting..."
+                        : !turnstileToken
+                        ? "Verifying..."
+                        : "Submit Details"}
                         </span>
 
-                        <ArrowRight className="w-4 h-4" />
+                        <ArrowRight className="w-5 h-5" />
                       </button>
                     </form>
-                  )}
-                </div>
+                  </>
+                ) : (
+                  <div className="text-center py-24">
+                    <div className="w-28 h-28 mt-25 rounded-full bg-[#e7efe4] mx-auto flex items-center justify-center">
+                      <Check className="w-14 h-14 text-[#4b5f49]" />
+                    </div>
+
+                    <h3 className="mt-15 text-5xl font-semibold tracking-[-0.05em] text-stone-900">
+                      Details Submitted
+                    </h3>
+
+                    <p className="mt-6 mb-75 text-stone-600 leading-8 text-[16px] max-w-md mx-auto">
+                      Thank you for listing your property with Whitelist.
+                      <br />
+                      Our leasing team will connect with you shortly.
+                    </p>
+                  </div>
+                )}
               </div>
             </motion.div>
-
-            {/* RIGHT IMAGE */}
-            <div className="relative h-[420px] lg:h-auto">
-              <img
-                src="https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=1800&auto=format&fit=crop"
-                alt="Commercial Property"
-                className="absolute inset-0 w-full h-full object-cover"
-              />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* DESKTOP FORM SECTION */}
-      <section
-        id="property-form"
-        className="hidden lg:block px-5 md:px-10 lg:px-14 mt-5 scroll-mt-32"
-      >
-        <div className="max-w-[1500px] mx-auto">
-          <div className="bg-white border border-stone-200 rounded-[28px] p-10 shadow-sm">
-
-            <div className="flex flex-col lg:flex-row lg:items-end lg:justify-between gap-5">
-
-              {/* LEFT TEXT */}
-              <div className="max-w-xl pb-22">
-                <p className="text-sm uppercase tracking-[0.2em] text-[#4b5f49] font-medium">
-                  List Your Property
-                </p>
-
-                <h3 className="mt-3 text-5xl font-serif text-stone-900 leading-tight">
-                  Get Started
-                </h3>
-
-                <p className="mt-5 text-stone-600 leading-8 text-lg">
-                  Fill in your property details and our leasing team will connect
-                  with you shortly.
-                </p>
-              </div>
-
-              {/* FORM */}
-              {submitted ? (
-                <div className="w-full lg:max-w-4xl text-center py-12">
-                  <div className="w-24 h-24 rounded-full bg-[#e7efe4] mx-auto flex items-center justify-center">
-                    <Check className="w-12 h-12 text-[#4b5f49]" />
-                  </div>
-
-                  <h3 className="mt-8 text-5xl font-serif text-stone-900">
-                    Details Submitted
-                  </h3>
-
-                  <p className="mt-5 text-lg text-stone-600 leading-8 max-w-xl mx-auto">
-                    Thank you for listing your property with Whitelist.
-                    Our leasing team will connect with you shortly.
-                  </p>
-                </div>
-              ) : (
-                <form
-                  onSubmit={handleSubmit(onSubmit)}
-                  className="w-full lg:max-w-4xl"
-                >
-                  <div className="grid grid-cols-2 gap-5">
-
-                    <div className="relative">
-                      <User className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
-
-                      <input
-                        type="text"
-                        placeholder="Full Name"
-                        {...register("fullName")}
-                        className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
-                      />
-
-                      {errors.fullName && (
-                        <p className="text-red-500 text-xs mt-2">
-                          {errors.fullName.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="relative">
-                      <Mail className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
-
-                      <input
-                        type="email"
-                        placeholder="Email Address"
-                        {...register("email")}
-                        className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
-                      />
-
-                      {errors.email && (
-                        <p className="text-red-500 text-xs mt-2">
-                          {errors.email.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="relative">
-                      <Phone className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
-
-                      <input
-                        type="tel"
-                        placeholder="Phone Number 1 (WhatsApp)"
-                        {...register("phone1")}
-                        className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
-                      />
-
-                      {errors.phone1 && (
-                        <p className="text-red-500 text-xs mt-2">
-                          {errors.phone1.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="relative">
-                      <Phone className="w-5 h-5 text-stone-400 absolute left-4 top-1/2 -translate-y-1/2" />
-
-                      <input
-                        type="tel"
-                        placeholder="Phone Number 2"
-                        {...register("phone2")}
-                        className="w-full h-14 rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 outline-none focus:border-[#4b5f49] transition-all"
-                      />
-                    </div>
-
-                    <div className="relative col-span-2">
-                      <MapPin className="w-5 h-5 text-stone-400 absolute left-4 top-6" />
-
-                      <textarea
-                        rows={4}
-                        placeholder="Full Property Address"
-                        {...register("propertyAddress")}
-                        className="w-full rounded-xl border border-stone-200 bg-[#faf9f6] pl-12 pr-4 pt-5 pb-4 outline-none focus:border-[#4b5f49] transition-all resize-none"
-                      />
-
-                      {errors.propertyAddress && (
-                        <p className="text-red-500 text-xs mt-2">
-                          {errors.propertyAddress.message}
-                        </p>
-                      )}
-                    </div>
-
-                    <div className="col-span-2">
-                      <button
-                        type="submit"
-                        disabled={isSubmitting}
-                        className="w-full bg-[#4b5f49] hover:bg-[#394736] transition-all text-white h-14 rounded-xl inline-flex items-center justify-center gap-3 font-medium"
-                      >
-                        <span>
-                          {isSubmitting
-                            ? "Submitting..."
-                            : "Submit Details"}
-                        </span>
-
-                        <ArrowRight className="w-4 h-4" />
-                      </button>
-                    </div>
-                  </div>
-                </form>
-              )}
-            </div>
           </div>
         </div>
       </section>
 
       {/* STATS SECTION */}
-      <section className="px-5 md:px-10 lg:px-14 mt-8">
-        <div className="max-w-[1500px] mx-auto bg-white border border-stone-200 rounded-[24px] px-8 py-10">
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-10">
-            {[
-              {
-                icon: Building2,
-                number: "500+",
-                label: "Landlords",
-              },
-              {
-                icon: Key,
-                number: "2500+",
-                label: "Properties Leased",
-              },
-              {
-                icon: ShieldCheck,
-                number: "98%",
-                label: "Landlord Satisfaction",
-              },
-              {
-                icon: TrendingUp,
-                number: "₹250 Cr+",
-                label: "Total Leased Value",
-              },
-              {
-                icon: Users,
-                number: "5000+",
-                label: "Brands & Businesses",
-              },
-            ].map((item, i) => (
-              <div key={i} className="flex items-center gap-5">
-                <div className="w-16 h-16 rounded-full bg-[#f4f3ef] flex items-center justify-center">
-                  <item.icon className="w-7 h-7 text-stone-700" />
-                </div>
+      <section className="px-6 md:px-10 xl:px-16 relative z-20">
+        <div className="max-w-[1380px] mx-auto">
 
-                <div>
-                  <h3 className="text-3xl font-serif text-stone-900">
+          <div className="bg-white/78 backdrop-blur-md border border-white/70 rounded-[34px] shadow-[0_10px_40px_rgba(0,0,0,0.06)] px-8 md:px-12 py-10">
+
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-y-10">
+
+              {[
+                {
+                  icon: Building2,
+                  number: "10,000+",
+                  label: "Properties Listed",
+                },
+                {
+                  icon: Users,
+                  number: "250+",
+                  label: "Brands Connected",
+                },
+                {
+                  icon: MapPin,
+                  number: "120+",
+                  label: "Cities Covered",
+                },
+                {
+                  icon: ShieldCheck,
+                  number: "4.9/5",
+                  label: "Landlord Rating",
+                },
+              ].map((item, i) => (
+                <div
+                  key={i}
+                  className={`flex flex-col items-center justify-center text-center relative ${i !== 3
+                    ? "lg:after:absolute lg:after:right-0 lg:after:top-1/2 lg:after:-translate-y-1/2 lg:after:w-px lg:after:h-24 lg:after:bg-stone-200"
+                    : ""
+                    }`}
+                >
+                  <div className="w-16 h-16 rounded-full bg-[#eef3e8] flex items-center justify-center mb-5">
+                    <item.icon className="w-7 h-7 text-[#4b5f49]" />
+                  </div>
+
+                  <h3 className="text-5xl font-semibold tracking-[-0.05em] text-stone-950">
                     {item.number}
                   </h3>
 
-                  <p className="text-sm text-stone-600 mt-1">
+                  <p className="mt-2 text-[15px] text-stone-600">
                     {item.label}
                   </p>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
         </div>
       </section>
 
       {/* HOW IT WORKS */}
-      <section className="py-13 px-5 md:px-10 lg:px-14">
-        <div className="max-w-[1400px] mx-auto text-center">
-          <h2 className="font-serif text-5xl text-stone-900">
-            How It Works
-          </h2>
+      <section className="pt-8 pb-24 px-6 md:px-10 xl:px-16 relative z-20">
+        <div className="max-w-[1380px] mx-auto">
 
-          <p className="mt-4 text-lg text-stone-600">
-            A simple process. Maximum results.
-          </p>
+          <div className="bg-white/78 backdrop-blur-md border border-white/70 rounded-[34px] shadow-[0_10px_40px_rgba(0,0,0,0.06)] px-8 md:px-12 py-12 md:py-14">
 
-          <div className="max-w-[1500px] mx-auto bg-white border border-stone-200 rounded-[24px] px-8 py-8 mt-14">
-            <div className="grid grid-cols-1 md:grid-cols-4 gap-12 mt-4">
+            <div className="text-center">
+              <h2 className="text-4xl md:text-5xl font-semibold tracking-[-0.05em] text-stone-950">
+                How It Works
+              </h2>
+
+              <p className="mt-4 text-[15px] md:text-base text-stone-600">
+                List your property in 3 simple steps and connect with verified tenants.
+              </p>
+            </div>
+
+            <div className="grid md:grid-cols-3 gap-8 md:gap-12 mt-14">
+
               {[
                 {
                   step: "1",
-                  title: "List Your Property",
-                  desc: "Share your property details in just a few clicks.",
+                  title: "Submit Details",
+                  desc: "Share your property details with us.",
                   icon: Building2,
                 },
                 {
                   step: "2",
-                  title: "We Market to Brands",
-                  desc: "We promote your property to verified brands & businesses.",
-                  icon: TrendingUp,
-                },
-                {
-                  step: "3",
-                  title: "Get Genuine Inquiries",
-                  desc: "Receive serious inquiries from interested tenants.",
+                  title: "We Match",
+                  desc: "We match you with the right brands & businesses.",
                   icon: Users,
                 },
                 {
-                  step: "4",
-                  title: "Close the Deal",
-                  desc: "Finalize the lease and start earning more.",
+                  step: "3",
+                  title: "Close Faster",
+                  desc: "Finalize the deal and start earning more.",
                   icon: ShieldCheck,
                 },
               ].map((item, i) => (
-                <div key={i} className="relative">
-                  <div className="w-24 h-24 rounded-full bg-[#f4f3ef] mx-auto flex items-center justify-center">
-                    <item.icon className="w-10 h-10 text-stone-700" />
+                <div
+                  key={i}
+                  className="relative"
+                >
+
+                  {/* Connector Line */}
+                  {i !== 2 && (
+                    <div className="hidden md:block absolute top-16 left-[72%] w-[60%] border-t-2 border-dashed border-[#6b855f]" />
+                  )}
+
+                  <div className="relative bg-white/60 border border-stone-200 rounded-[30px] p-8 md:p-10 text-center h-full">
+
+                    {/* Step Badge */}
+                    <div className="absolute -top-4 left-1/2 -translate-x-1/2 w-9 h-9 rounded-xl bg-[#4b5f49] text-white text-sm font-semibold flex items-center justify-center shadow-lg">
+                      {item.step}
+                    </div>
+
+                    {/* Icon */}
+                    <div className="w-24 h-24 rounded-full bg-[#eef3e8] flex items-center justify-center mx-auto">
+                      <item.icon className="w-10 h-10 text-[#4b5f49]" />
+                    </div>
+
+                    {/* Title */}
+                    <h3 className="mt-8 text-2xl font-semibold tracking-[-0.03em] text-stone-900">
+                      {item.title}
+                    </h3>
+
+                    {/* Description */}
+                    <p className="mt-4 text-[15px] leading-7 text-stone-600 max-w-xs mx-auto">
+                      {item.desc}
+                    </p>
                   </div>
-
-                  <div className="w-8 h-8 rounded-full bg-[#dfe5d8] text-[#4b5f49] text-sm font-semibold flex items-center justify-center mx-auto mt-6">
-                    {item.step}
-                  </div>
-
-                  <h3 className="mt-5 text-2xl font-serif text-stone-900">
-                    {item.title}
-                  </h3>
-
-                  <p className="mt-4 text-stone-600 leading-7 text-[15px] max-w-xs mx-auto">
-                    {item.desc}
-                  </p>
                 </div>
               ))}
             </div>
@@ -542,4 +676,4 @@ export default function LandlordsPage() {
       </section>
     </main>
   );
-}
+} 

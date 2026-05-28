@@ -9,6 +9,7 @@ import { useState, useRef, useEffect } from "react";
 import { useSearchParams } from "next/navigation";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
+import { Turnstile } from "@marsidev/react-turnstile";
 
 
 const staggerContainer: Variants = {
@@ -48,13 +49,14 @@ const markets = [
 
 
 export default function LandingPage() {
-
+  const [turnstileToken, setTurnstileToken] = useState("");
   const searchParams = useSearchParams();
 
   useEffect(() => {
     const ref = searchParams.get("ref");
 
-    if (ref) {
+   if (ref && /^[A-Z0-9_-]{3,20}$/i.test(ref)
+    ) {
       const existing = localStorage.getItem("referralCode");
 
       // ✅ only set if not already present
@@ -67,7 +69,7 @@ export default function LandingPage() {
 
 
   const [openSignup, setOpenSignup] = useState(false);
-  const [refCode, setRefCode] = useState("");
+  const [refCode, setRefCode] = useState(() => "");
   useEffect(() => {
     if (typeof window !== "undefined") {
       const stored = localStorage.getItem("referralCode");
@@ -576,6 +578,8 @@ export default function LandingPage() {
         </div>
         <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
+          
+          <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
           <div className="flex space-x-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
             <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
@@ -668,12 +672,43 @@ export default function LandingPage() {
                   "
                 />
 
+                <div className="flex justify-center mt-6">
+                  <Turnstile
+                    siteKey={
+                      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                    }
+                    onSuccess={(token) => {
+                      setTurnstileToken(token);
+                    }}
+                  />
+                </div>
                 {/* BUTTONS */}
                 <div className="mt-7 space-y-3">
 
                   {/* CONTINUE */}
                   <button
-                    onClick={() => {
+                    onClick={async () => {
+                      if (!turnstileToken) {
+                        alert("Please verify you are human.");
+                        return;
+                      }
+                      const verification = await fetch(
+                        "/api/verify-turnstile",
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            token: turnstileToken,
+                          }),
+                        }
+                      );
+                      const result = await verification.json();
+                      if (!result.success) {
+                        alert("Verification failed.");
+                        return;
+                      }
 
                     // if user entered a code but it's invalid
                     if (refCode && !isValidReferral) {
@@ -691,6 +726,7 @@ export default function LandingPage() {
                     setOpenSignup(false);
                     document.getElementById("hidden-signup")?.click();
                   }}
+                    disabled={!turnstileToken}
                     className="
                       w-full
                       rounded-2xl
@@ -708,15 +744,41 @@ export default function LandingPage() {
                       active:scale-[0.99]
                     "
                   >
-                    Continue
+                    {!turnstileToken
+                    ? "Verifying..."
+                    : "Continue"}
                   </button>
 
                   {/* SKIP */}
                   <button
-                    onClick={() => {
+                    onClick={async () => {
+                      if (!turnstileToken) {
+                        alert("Please verify you are human.");
+                      
+                        return;
+                      }
+                      const verification = await fetch(
+                        "/api/verify-turnstile",
+                        {
+                          method: "POST",
+                          headers: {
+                            "Content-Type": "application/json",
+                          },
+                          body: JSON.stringify({
+                            token: turnstileToken,
+                          }),
+                        }
+                      );
+                      const result = await verification.json();
+                      if (!result.success) {
+                        alert("Verification failed.");
+                        return;
+                      }
+
                       setOpenSignup(false);
                       document.getElementById("hidden-signup")?.click();
-                    }}
+                    }}  
+                    disabled={!turnstileToken}
                     className="
                       w-full
                       rounded-2xl

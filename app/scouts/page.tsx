@@ -1,21 +1,15 @@
 "use client";
 import { motion, AnimatePresence } from "motion/react";
 import Navbar from "@/components/Navbar";
-import {
-  ArrowRight,
-  Check,
-  Target,
-  FileText,
-  BarChart,
-} from "lucide-react";
-
+import {ArrowRight,Check,Target,FileText,BarChart,} from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
 import { useState } from "react";
 import {SignUpButton,SignedIn,SignedOut} from "@clerk/nextjs";
 
 export default function ScoutsPage() {
   const [openSignup, setOpenSignup] = useState(false);
-  const [refCode, setRefCode] = useState("");
-
+  const [refCode, setRefCode] = useState(() => "");
+  const [turnstileToken, setTurnstileToken] = useState("");
 
 
   return (
@@ -37,7 +31,7 @@ export default function ScoutsPage() {
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-serif mb-8 leading-[1.05] tracking-tight">
+            <h1 className="text-5xl md:text-7xl font-semibold font-serif mb-8 leading-[1.05] tracking-tight">
               Institutionalize Your <br className="hidden md:block" />
               <span className="italic text-[#394736]/78">
                 Local Knowledge.
@@ -150,8 +144,10 @@ export default function ScoutsPage() {
                         transparency and fair deals.
                       </p>
 
-                      <p className="text-stone-700 leading-relaxed"></p>
-                      Our commission is paid by landlords only.
+                      <p className="text-stone-700 leading-relaxed">
+                        Our commission is paid by landlords only.
+                      </p>
+
                       <p><span className="font-semibold">
                         {" "}
                         You Earn, They Pay, Everyone Wins.
@@ -265,10 +261,7 @@ export default function ScoutsPage() {
                         e.target.value.toUpperCase().replace(/\s/g, "")
                       )
                     }
-                    className="
-                  w-full
-                  rounded-2xl
-                  border
+                    className="w-full rounded-2xl border
                   border-white/30
                   bg-white/30
                   px-5
@@ -286,13 +279,42 @@ export default function ScoutsPage() {
                 "
                   />
 
+                <div className="flex justify-center mt-6">
+                  <Turnstile
+                    siteKey={
+                      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                    }
+                    onSuccess={(token) => {
+                      setTurnstileToken(token);
+                    }}
+                  />
+                </div>
                   {/* Buttons */}
                   <div className="mt-7 space-y-3">
 
                     {/* Continue */}
                     <button
-                      onClick={() => {
-
+                      onClick={async () => {
+                        if (!turnstileToken) {
+                          alert("Please verify you are human.");
+                          return;
+                        }
+                        const verification = await fetch(
+                          "/api/verify-turnstile",
+                          {method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              token: turnstileToken,
+                            }),
+                          }
+                        );
+                        const result = await verification.json();
+                        if (!result.success) {
+                          alert("Verification failed.");
+                          return;
+                        }
                         if (refCode && refCode.trim() !== "") {
                           localStorage.setItem(
                             "referralCode",
@@ -306,6 +328,7 @@ export default function ScoutsPage() {
                           .getElementById("hidden-signup")
                           ?.click();
                       }}
+                      disabled={!turnstileToken}
                       className="
                     w-full
                     rounded-2xl
@@ -323,18 +346,43 @@ export default function ScoutsPage() {
                     active:scale-[0.99]
                   "
                     >
-                      Continue
+                      {!turnstileToken
+                        ? "Verifying..."
+                        : "Continue"}
                     </button>
 
                     {/* Skip */}
                     <button
-                      onClick={() => {
+                      onClick={async () => {
+
+                        if (!turnstileToken) {
+                          alert("Please verify you are human.");
+                          return;
+                        }
+                        const verification = await fetch(
+                          "/api/verify-turnstile",
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              token: turnstileToken,
+                            }),
+                          }
+                        );
+                        const result = await verification.json();
+                        if (!result.success) {
+                          alert("Verification failed.");
+                          return;
+                        }
                         setOpenSignup(false);
 
                         document
                           .getElementById("hidden-signup")
                           ?.click();
                       }}
+                      disabled={!turnstileToken}
                       className="
                     w-full
                     rounded-2xl

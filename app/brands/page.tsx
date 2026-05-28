@@ -8,16 +8,8 @@ import * as z from "zod";
 import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
-import {
-  CheckCircle,
-  Building2,
-  MapPin,
-  Target,
-  TrendingUp,
-  ShieldCheck,
-  Clock3,
-  Store,
-} from "lucide-react";
+import { Turnstile } from "@marsidev/react-turnstile";
+import {CheckCircle,Building2,MapPin,Target,TrendingUp,ShieldCheck,Clock3,Store} from "lucide-react";
 
 const brandSchema = z.object({
   brandName: z.string().min(2, "Brand name is required"),
@@ -30,6 +22,7 @@ const brandSchema = z.object({
 type BrandFormValues = z.infer<typeof brandSchema>;
 
 export default function BrandsPage() {
+  const [turnstileToken, setTurnstileToken] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const submitLead = useMutation(api.brand_leads.submitBrandLead);
 
@@ -39,11 +32,34 @@ export default function BrandsPage() {
     formState: { errors, isSubmitting },
   } = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
-    defaultValues: { sqft: 1000 },
+    defaultValues: { sqft: 10000 },
   });
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
+      if (!turnstileToken) {
+        alert("Please verify you are human.");
+        return;
+      }
+      const verification = await fetch(
+        "/api/verify-turnstile",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            token: turnstileToken,
+          }),
+        }
+      );
+      const result = await verification.json();
+      if (!result.success) {
+        alert("Verification failed.");
+        return;
+      }
+
+
       await submitLead(data);
       setSubmitted(true);
     } catch (error) {
@@ -125,10 +141,10 @@ export default function BrandsPage() {
                 For Brands
               </div>
 
-              <h1 className="text-5xl sm:text-6xl xl:text-7xl font-serif leading-[0.98] tracking-tight">
+              <h1 className="text-5xl sm:text-6xl xl:text-7xl font-semibold font-serif leading-[0.98] tracking-tight">
                 Your Growth.
                 <br />
-                <span className="text-[#4b5f49]">Our Network.</span>
+                <span className="italic text-[#4b5f49]">Our Network.</span>
                 <br />
                 Perfect Locations.
               </h1>
@@ -143,13 +159,13 @@ export default function BrandsPage() {
               <div className="grid grid-cols-3 gap-4 mt-10 max-w-xl">
                 {stats.map((stat, idx) => (
                   <div
-                    key={idx}
-                    className="bg-white/75 backdrop-blur-sm border border-stone-200 rounded-2xl p-5 shadow-sm"
-                  >
+                  key={idx}
+                  className="bg-white/75 backdrop-blur-sm border border-stone-200 rounded-2xl px-4 py-5 sm:p-5 shadow-sm min-w-0"
+                >
                     <div className="text-2xl font-serif text-stone-900">
                       {stat.value}
                     </div>
-                    <div className="text-xs uppercase tracking-widest text-stone-500 mt-1">
+                    <div className="text-[10px] sm:text-xs uppercase tracking-[0.18em] sm:tracking-widest text-stone-500 mt-2 leading-tight break-words">
                       {stat.label}
                     </div>
                   </div>
@@ -227,8 +243,12 @@ export default function BrandsPage() {
                     onSubmit={handleSubmit(onSubmit)}
                     className="space-y-8"
                   >
-                    <div>
-                      <h2 className="text-3xl md:text-4xl font-serif tracking-tight mb-3">
+                    <div className="mb-8 text-center">
+                    <p className="text-sm uppercase tracking-[0.2em] text-[#4b5f49] font-semibold">
+                          List Your Property
+                        </p>
+
+                      <h2 className="text-3xl md:text-4xl mt-4 font-semibold font-serif tracking-tight mb-3">
                         Share Your Expansion Brief
                       </h2>
 
@@ -322,7 +342,7 @@ export default function BrandsPage() {
 
                       <input
                         {...register("contactDetails")}
-                        className="w-full rounded-xl bg-stone-50/80 border border-stone-200 px-4 py-3.5 text-stone-900 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
+                        className="w-full rounded-xl bg-stone-50/80 border mb-10 border-stone-200 px-4 py-3.5 text-stone-900 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
                         placeholder="expansion@brand.com"
                       />
 
@@ -333,14 +353,27 @@ export default function BrandsPage() {
                       )}
                     </div>
 
+                    <div className="flex justify-center pt-2">
+                    <Turnstile
+                      siteKey={
+                        process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                      }
+                      onSuccess={(token) => {
+                        setTurnstileToken(token);
+                      }}
+                    />
+                  </div>
+
                     <button
                       type="submit"
-                      disabled={isSubmitting}
+                      disabled={isSubmitting || !turnstileToken}
                       className="w-full rounded-xl bg-[#4b5f49] text-white font-bold text-sm tracking-widest uppercase py-4 hover:bg-[#394736] transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
                     >
                       {isSubmitting
-                        ? "Submitting..."
-                        : "Submit Brand Brief"}
+                      ? "Submitting..."
+                      : !turnstileToken
+                      ? "Verifying..."
+                      : "Submit Brand Brief"}
                     </button>
                   </form>
                 )}
@@ -352,10 +385,10 @@ export default function BrandsPage() {
 
         {/* Bottom Trust Strip */}
         <div className="relative z-20 max-w-7xl mx-auto px-6 md:px-12 pb-16 -mt-2">
-          <div className="max-w-7xl mx-auto bg-white border border-stone-200 rounded-[2rem]  md:p-10 shadow-sm">
+        <div className="max-w-7xl mx-auto bg-white border border-stone-200 rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm">
 
             <div className="text-center mb-10">
-              <h2 className="text-2xl md:text-3xl font-serif tracking-tight">
+              <h2 className="text-2xl font-semibold md:text-3xl font-serif tracking-tight">
                 Why Leading Brands Choose Whitelist
               </h2>
 
@@ -365,7 +398,7 @@ export default function BrandsPage() {
               </p>
             </div>
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
 
               <div className="flex gap-4">
                 <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">

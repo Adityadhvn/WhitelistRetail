@@ -26,7 +26,11 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
   if (!clerkKey) {
     return (
-      <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={`${playfair.variable} ${inter.variable}`}
+      >
         <body suppressHydrationWarning className="min-h-screen bg-bone text-charcoal font-sans flex items-center justify-center p-6 text-center">
           <div className="max-w-md space-y-4">
             <h1 className="text-2xl font-serif">Authentication Required</h1>
@@ -41,7 +45,11 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
 
   return (
     <ClerkProvider publishableKey={clerkKey}>
-      <html lang="en" className={`${playfair.variable} ${inter.variable}`}>
+      <html
+        lang="en"
+        suppressHydrationWarning
+        className={`${playfair.variable} ${inter.variable}`}
+      >
         <body suppressHydrationWarning className="min-h-screen bg-bone text-charcoal font-sans">
           <Providers>
           <UserSync /> 
