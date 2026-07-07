@@ -6,10 +6,11 @@ import Link from "next/link";
 import { Shield, Zap, Globe, ArrowRight, StampIcon } from "lucide-react";
 import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
 import { useState, useRef, useEffect } from "react";
-import { useSearchParams } from "next/navigation";
+
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Turnstile } from "@marsidev/react-turnstile";
+import { Suspense } from "react";
 
 
 const staggerContainer: Variants = {
@@ -48,23 +49,22 @@ const markets = [
 
 
 
-export default function LandingPage() {
+function LandingPageContent() {
   const [turnstileToken, setTurnstileToken] = useState("");
-  const searchParams = useSearchParams();
+  
 
   useEffect(() => {
-    const ref = searchParams.get("ref");
-
-   if (ref && /^[A-Z0-9_-]{3,20}$/i.test(ref)
-    ) {
+    const params = new URLSearchParams(window.location.search);
+    const ref = params.get("ref");
+  
+    if (ref && /^[A-Z0-9_-]{3,20}$/i.test(ref)) {
       const existing = localStorage.getItem("referralCode");
-
-      // ✅ only set if not already present
+  
       if (!existing) {
         localStorage.setItem("referralCode", ref);
       }
     }
-  }, [searchParams]);
+  }, []);
 
 
 
@@ -803,5 +803,13 @@ export default function LandingPage() {
         </>
       )}
     </main>
+  );
+}
+
+export default function LandingPage() {
+  return (
+    <Suspense fallback={null}>
+      <LandingPageContent />
+    </Suspense>
   );
 }
