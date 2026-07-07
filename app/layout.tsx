@@ -17,8 +17,12 @@ const inter = Inter({
 });
 
 export const metadata: Metadata = {
-  title: 'Whitelist | Retail Sourcing Infrastructure',
+  title: 'Whitelist',
   description: 'The specialized sourcing layer connecting Scouts, Landlords, and Brands.',
+
+  authors: [{ name: "Aditya Dhawan" }],
+  creator: "Aditya Dhawan",
+  publisher: "Aditya Dhawan",
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
