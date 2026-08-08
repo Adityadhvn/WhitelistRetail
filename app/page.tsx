@@ -11,6 +11,7 @@ import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { Suspense } from "react";
+import Image from "next/image";
 
 
 const staggerContainer: Variants = {
@@ -29,37 +30,120 @@ const fadeUp: Variants = {
 const markets = [
   {
     title: "Delhi-NCR",
-    cities: "Delhi · Gurgaon · Noida · Ghaziabad",
-    img: "https://images.unsplash.com/photo-1587474260584-136574528ed5?q=80&w=800&auto=format&fit=crop",
+    cities: "",
+    img: "/images/markets/delhi-ncr.png",
   },
   {
-    title: "Uttar Pradesh",
-    cities: "Lucknow · Noida · Varanasi · Kanpur",
-    img: "https://images.unsplash.com/photo-1627938823193-fd13c1c867dd?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: "Haryana",
+    cities: "",
+    img: "/images/markets/haryana.png",
+  },
+  {
+    title: "Punjab",
+    cities: "",
+    img: "/images/markets/punjab.png",
+  },
+  {
+    title: "Uttarakhand",
+    cities: "",
+    img: "/images/markets/uttarakhand.png",
+  },
+  {
+    title: "Himachal Pradesh",
+    cities: "",
+    img: "/images/markets/himachal-pradesh.png",
   },
   {
     title: "Rajasthan",
-    cities: "Jaipur · Jodhpur · Udaipur · Ajmer",
-    img: "https://images.unsplash.com/photo-1477587458883-47145ed94245?q=80&w=800&auto=format&fit=crop",
-  }
+    cities: "",
+    img: "/images/markets/rajasthan.png",
+  },
+  {
+    title: "Tricity",
+    cities: "",
+    img: "/images/markets/tricity.png",
+  },
+  {
+    title: "Hyderabad",
+    cities: "",
+    img: "/images/markets/hyderabad.png",
+  },
+  {
+    title: "Bengaluru",
+    cities: "",
+    img: "/images/markets/bengaluru.png",
+  },
+  {
+    title: "Maharashtra",
+    cities: "",
+    img: "/images/markets/maharashtra.png",
+  },
+  {
+    title: "Uttar Pradesh",
+    cities: "",
+    img: "/images/markets/uttar-pradesh.png",
+  },
 ];
 
-
-
-
+const brands = [
+  {
+    name: "CANTABIL",
+    logo: "/images/brands/cantabil.png",
+  },
+  {
+    name: "SNITCH",
+    logo: "/images/brands/snitch.png",
+  },
+  {
+    name: "LIBAS",
+    logo: "/images/brands/libas.png",
+  },
+  {
+    name: "SPARKY",
+    logo: "/images/brands/sparky.png",
+  },
+  {
+    name: "VALUE & VARIETY",
+    logo: "/images/brands/value-variety.png",
+  },
+  {
+    name: "LOUIS PHILIPPE",
+    logo: "/images/brands/louis-philippe.png",
+  },
+  {
+    name: "VAN HEUSEN",
+    logo: "/images/brands/van-heusen.png",
+  },
+  {
+    name: "ALLEN SOLLY",
+    logo: "/images/brands/allen-solly.png",
+  },
+  {
+    name: "WROGN",
+    logo: "/images/brands/wrogn.png",
+  },
+  {
+    name: "MR DIY",
+    logo: "/images/brands/mr-diy.png",
+  },
+  {
+    name: "OWND",
+    logo: "/images/brands/ownd.png",
+  },
+];
 
 
 function LandingPageContent() {
   const [turnstileToken, setTurnstileToken] = useState("");
-  
+
 
   useEffect(() => {
     const params = new URLSearchParams(window.location.search);
     const ref = params.get("ref");
-  
+
     if (ref && /^[A-Z0-9_-]{3,20}$/i.test(ref)) {
       const existing = localStorage.getItem("referralCode");
-  
+
       if (!existing) {
         localStorage.setItem("referralCode", ref);
       }
@@ -133,7 +217,7 @@ function LandingPageContent() {
 
   return (
     <main onMouseMove={!isMobile ? handleMouseMove : undefined}
-      className="pt-24 md:pt-28 bg-[#Faf9f6] text-stone-900 min-h-screen selection:bg-amber-900 selection:text-white overflow-hidden">
+      className="pt-24 md:pt-28 bg-[#Faf9f6] text-stone-900 min-h-screen selection:bg-stone-900 selection:text-white overflow-hidden">
       <Navbar />
 
       {/* Base Grid */}
@@ -182,61 +266,197 @@ function LandingPageContent() {
         />
       )}
 
+
       {/* Hero Section */}
       <section
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
-        className="relative min-h-[85vh] flex flex-col items-center justify-center px-6 text-center overflow-hidden"
+        className="relative min-h-[85vh] overflow-hidden"
       >
+        <div className="relative z-10 grid grid-cols-1 md:grid-cols-[60%_40%] items-center">
 
+          {/* LEFT SIDE — HERO CONTENT */}
+          <motion.div
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="
+              flex
+              flex-col
+              justify-center
+              px-6
+              sm:px-10
+              md:px-12
+              lg:px-16
+              xl:px-20
+              py-10
+              md:py-14
+              text-left
+              "
+          >
 
+            {/* Badge */}
+            <motion.div
+              variants={fadeUp}
+              className="
+                  inline-flex
+                  w-fit
+                  mb-6
+                  px-4
+                  py-1.5
+                  border
+                  border-stone-300
+                  rounded-2xl
+                  text-xs
+                  font-semibold
+                  tracking-widest
+                  uppercase
+                  text-stone-500
+                  bg-white/50
+                  backdrop-blur-sm
+                "
+            >
+              The infrastructure for offline expansion
+            </motion.div>
 
+            {/* Main Heading */}
+            <motion.h1
+              variants={fadeUp}
+              className="
+                  text-5xl
+                  sm:text-6xl
+                  md:text-6xl
+                  lg:text-7xl
+                  xl:text-8xl
+                  font-serif
+                  mb-7
+                  leading-[1.02]
+                  tracking-tight
+                  text-stone-900
+                "
+            >
+              Retail Expansion
+              <br />
+              <span className="italic text-stone-600">
+                Simplified.
+              </span>
+            </motion.h1>
 
-
-        <motion.div
-          initial="hidden"
-          animate="visible"
-          variants={staggerContainer}
-          className="max-w-5xl relative z-10"
-        >
-          <motion.div variants={fadeUp} className="inline-block mb-6 px-4 py-1.5 border border-stone-300 rounded-2xl text-xs font-semibold tracking-widest uppercase text-stone-500 bg-white/50 backdrop-blur-sm">
-            the infrastructure for offline expansion
-          </motion.div>
-          <motion.h1 variants={fadeUp} className="text-5xl md:text-7xl lg:text-8xl font-serif mb-8 leading-[1.05] tracking-tight text-stone-900">
-            Retail Expansion<br className="hidden md:block" /> <span className="italic text-stone-600">Simplified.</span>
-          </motion.h1>
-          <motion.p variants={fadeUp} className="text-lg md:text-xl font-serif text-stone-600 max-w-2xl mx-auto mb-12 font-light leading-relaxed">
-            Whitelist is a retail real-estate sourcing and expansion platform that connects brands with verified, expansion-ready commercial properties across high-growth cities.
-            <br className="hidden md:block" /><br className="hidden md:block" />
-            We bring structure, transparency, and coordination to offline retail expansion.
-          </motion.p>
-          <motion.div variants={fadeUp} className="flex flex-col sm:flex-row items-center justify-center gap-4 mb-12 sm:mb-0">
-            <SignedIn>
-              <Link href="/dashboard" className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors">
-                Go to Dashboard
-              </Link>
-            </SignedIn>
-            <SignedOut>
-              <button
-                onClick={() => setOpenSignup(true)}
-                className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
+            {/* Subtext */}
+            <motion.div
+              variants={fadeUp}
+              className="
+                  max-w-xl
+                  mb-9
+                "
+            >
+              <p
+                className="
+                    text-base
+                    sm:text-lg
+                    md:text-lg
+                    lg:text-xl
+                    text-stone-600
+                    font-medium
+                    leading-relaxed
+                  "
               >
-                Join as Scout
-              </button>
+                Whitelist is a retail real-estate sourcing and expansion platform
+                that connects brands with verified, expansion-ready commercial
+                properties across high-growth cities.
+              </p>
+
+              <p
+                className="
+                    mt-5
+                    text-base
+                    sm:text-lg
+                    md:text-lg
+                    lg:text-xl
+                    text-stone-600
+                    font-medium
+                    leading-relaxed
+                  "
+              >
+                We bring structure, transparency, and coordination to offline
+                retail expansion.
+              </p>
+            </motion.div>
+
+            {/* CTA */}
+            <motion.div variants={fadeUp}>
               <Link
                 href="/landlords#property-form"
-                className="px-8 py-4 bg-stone-900 text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-800 transition-colors w-full sm:w-auto"
+                className="
+                    inline-flex
+                    items-center
+                    justify-center
+                    gap-3
+                    px-7
+                    sm:px-8
+                    py-4
+                    bg-stone-900
+                    text-white
+                    text-sm
+                    font-bold
+                    tracking-widest
+                    uppercase
+                    transition-all
+                    duration-300
+                    hover:bg-stone-800
+                    hover:-translate-y-0.5
+                    w-full
+                    sm:w-fit
+                  "
               >
-                List Property
+                <span>List a Property</span>
+
+                <ArrowRight className="w-4 h-4" />
               </Link>
-            </SignedOut>
+            </motion.div>
+
           </motion.div>
-        </motion.div>
+
+
+          {/* RIGHT SIDE — HERO IMAGE */}
+          <motion.div
+          initial={{ opacity: 0, scale: 1.02 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{
+            duration: 1,
+            ease: [0.22, 1, 0.36, 1],
+          }}
+          className="
+            relative
+            w-full
+            aspect-[4/3]
+            overflow-hidden
+            rounded-[28px]
+            border
+            border-stone-300/70
+            bg-stone-200
+          "
+        >
+            <Image
+            src="/images/retail-hero.jpeg"
+            alt="Modern retail commercial property"
+            fill
+            priority
+            sizes="(max-width: 768px) 100vw, 40vw"
+            className="
+              object-cover
+              scale-[1.01]
+            "
+          />
+  
+          </motion.div>
+
+        </div>
       </section>
 
 
 
-      {/* 🔥 HOW WHITELIST WORKS */}
+      {/* HOW WHITELIST WORKS */}
       <section className="relative py-28 px-6 bg-[#Faf9f6] text-stone-900 overflow-hidden">
 
         {/* Subtle Grid Background (matches your hero) */}
@@ -250,7 +470,7 @@ function LandingPageContent() {
               How Whitelist Works?
             </h2>
 
-            <p className="max-w-2xl mx-auto text-stone-600 leading-relaxed">
+            <p className="max-w-2xl text-xl mx-auto font-medium text-stone-600 leading-relaxed">
               Whitelist sources and verifies retail spaces, matches them with brand
               requirements, and coordinates the entire expansion process through
               structured deal execution.
@@ -264,17 +484,17 @@ function LandingPageContent() {
             <div className="group border border-stone-300 p-10 space-y-6 bg-transparent transition hover:shadow-lg hover:-translate-y-1">
               <div className="flex justify-center">
                 <div className="w-14 h-14 border border-stone-400 flex items-center justify-center transition group-hover:border-stone-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M21 21l-4.35-4.35m1.6-5.15a7 7 0 11-14 0 7 7 0 0114 0z" />
                   </svg>
                 </div>
               </div>
 
-              <h3 className="font-serif text-xl">
+              <h3 className="font-serif font-semibold text-2xl">
                 Property Sourcing
               </h3>
 
-              <p className="text-sm text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed">
                 We source expansion-ready retail spaces through verified scouts,
                 landlords, and local market networks across high-growth cities.
               </p>
@@ -284,17 +504,17 @@ function LandingPageContent() {
             <div className="group border border-stone-300 p-10 space-y-6 bg-transparent transition hover:shadow-lg hover:-translate-y-1">
               <div className="flex justify-center">
                 <div className="w-14 h-14 border border-stone-400 flex items-center justify-center transition group-hover:border-stone-600">
-                  <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <svg className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                 </div>
               </div>
 
-              <h3 className="font-serif text-xl">
+              <h3 className="font-serif font-semibold text-2xl">
                 Verification and Matching
               </h3>
 
-              <p className="text-sm text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed">
                 Every property is reviewed for ownership, retail suitability, and
                 market relevance before being matched with brand-specific expansion
                 requirements and budget criteria.
@@ -305,17 +525,17 @@ function LandingPageContent() {
             <div className="group border border-stone-300 p-10 space-y-6 bg-transparent transition hover:shadow-lg hover:-translate-y-1">
               <div className="flex justify-center">
                 <div className="w-14 h-14 border border-stone-400 flex items-center justify-center transition group-hover:border-stone-600">
-                  <StampIcon className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
+                  <StampIcon className="w-10 h-10" fill="none" stroke="currentColor" strokeWidth="1.5" viewBox="0 0 24 24">
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 8c-1.657 0-3 1.343-3 3v1h6v-1c0-1.657-1.343-3-3-3zm0 0V6m0 6v6m0 0H9m3 0h3" />
                   </StampIcon>
                 </div>
               </div>
 
-              <h3 className="font-serif text-xl">
+              <h3 className="font-serif font-semibold text-2xl">
                 Coordinated Closure
               </h3>
 
-              <p className="text-sm text-stone-600 leading-relaxed">
+              <p className="text-base text-stone-600 leading-relaxed">
                 We manage site visits, negotiations, documentation, and stakeholder
                 coordination ensuring structured, transparent, and efficient retail
                 expansion from sourcing to deal closure.
@@ -339,14 +559,14 @@ function LandingPageContent() {
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-16">
             <h2 className="text-3xl md:text-5xl font-serif mb-4">Whitelist Network Strength</h2>
-            <p className="text-stone-400 font-light text-2xl font-serif tracking-wide">Inventory sourced through Verified Landlords and On-Ground Scouts</p>
+            <p className="text-stone-400 font-light text-[22px] leading-relaxed tracking-wide">Inventory sourced through Verified Landlords and On-Ground Scouts</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-stone-800 border-y border-stone-800 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-stone-700 border-y border-stone-700 py-12">
             {[
-              { number: "4,250+", label: "Properties Listed" },
-              { number: "850+", label: "Active Scouts" },
-              { number: "42", label: "Cities Covered" },
-              { number: "25+", label: "Brands in Discussion" }
+              { number: "175+", label: "Properties Listed" },
+              { number: "57", label: "Active Scouts" },
+              { number: "75+", label: "Cities Covered" },
+              { number: "35+", label: "Brands in Discussion" }
             ].map((stat, i) => (
               <motion.div
                 key={i}
@@ -356,8 +576,8 @@ function LandingPageContent() {
                 transition={{ delay: i * 0.1, duration: 0.8 }}
                 className="text-center px-4"
               >
-                <div className="text-4xl md:text-5xl font-serif font-medium mb-2 text-white">{stat.number}</div>
-                <div className="text-xs font-bold tracking-widest uppercase text-stone-500">{stat.label}</div>
+                <div className="text-4xl md:text-5xl font-medium mb-2 text-white">{stat.number}</div>
+                <div className="text-s py-2 font-bold tracking-widest uppercase text-stone-500">{stat.label}</div>
               </motion.div>
             ))}
           </div>
@@ -382,7 +602,7 @@ function LandingPageContent() {
               {
                 icon: Zap,
                 title: "For Scouts",
-                desc: "Institutionalize your local knowledge. Earn 10% commission on successful placements with full transparency.",
+                desc: "Institutionalize your local knowledge. Earn a commission on successful placements with full transparency.",
                 link: "/scouts",
                 btn: "Become a Scout",
                 requiresReferral: true,
@@ -407,11 +627,11 @@ function LandingPageContent() {
               },
             ].map((item, i) => (
               <motion.div variants={fadeUp} key={i} className="bg-white p-10 border border-stone-200 hover:shadow-xl transition-shadow duration-500 group flex flex-col h-full">
-                <div className="w-14 h-14 bg-stone-100 flex items-center justify-center rounded-full mb-8 group-hover:bg-amber-900 group-hover:text-white transition-colors duration-500">
-                  <item.icon className="w-6 h-6" />
+                <div className="w-15 h-15 bg-stone-100 flex items-center justify-center rounded-full mb-8 group-hover:bg-stone-900 group-hover:text-white transition-colors duration-500">
+                  <item.icon className="w-9 h-9 " />
                 </div>
-                <h3 className="text-2xl font-bold font-serif mb-4">{item.title}</h3>
-                <p className="text-stone-600 font-serif leading-relaxed font-light mb-8 flex-grow">
+                <h3 className="text-2xl font-semibold font-serif mb-4">{item.title}</h3>
+                <p className="text-stone-600 leading-relaxed text-base font-medium mb-8 flex-grow">
                   {item.desc}
                 </p>
                 {item.requiresReferral ? (
@@ -419,7 +639,7 @@ function LandingPageContent() {
                     <SignedIn>
                       <Link
                         href="/dashboard"
-                        className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-amber-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto"
+                        className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-stone-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto"
                       >
                         <span>Go to Dashboard</span>
 
@@ -439,107 +659,209 @@ function LandingPageContent() {
                     </SignedOut>
                   </>
                 ) : (
-                <Link
-                  href={item.link}
-                  className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-amber-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto"
-                >
-                  <span>{item.btn}</span>
-                  <ArrowRight className="w-4 h-4" />
-                </Link>
-              )}
+                  <Link
+                    href={item.link}
+                    className="inline-flex items-center space-x-2 text-s font-bold uppercase tracking-widest text-stone-900 hover:text-amber-700 transition-colors pt-6 border-t border-stone-100 w-full mt-auto"
+                  >
+                    <span>{item.btn}</span>
+                    <ArrowRight className="w-4 h-4" />
+                  </Link>
+                )}
               </motion.div>
             ))}
           </motion.div>
         </div>
       </section>
 
-      {/* RETAIL MARKETS SECTION - SIMPLE SWIPE CAROUSEL */}
-      <section className="py-32 bg-[#2A2B2E] text-stone-100">
-        <div className="max-w-7xl mx-auto px-0 md:px-6 relative">
-          <div className="text-center mb-16 px-6 md:px-0">
-            <motion.h2
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              className="text-4xl md:text-5xl font-serif mb-4 text-white"
-            >
-              Retail Markets We Operate In
-            </motion.h2>
-            <motion.p
-              initial={{ opacity: 0, y: 20 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: 0.1 }}
-              className="text-stone-400 font-serif font-light text-lg"
-            >
-              Whitelist focuses on high-growth retail markets across key regions.
-            </motion.p>
-          </div>
+      {/* RETAIL MARKETS SECTION */}
+<section className="relative py-24 md:py-28 bg-[#111214] text-stone-100 overflow-hidden">
+  {/* Subtle ambient background */}
+  <div className="absolute inset-0 pointer-events-none">
+    <div className="absolute -top-40 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-stone-500/5 blur-3xl" />
+  </div>
 
-          {/* Simple Swipe Container */}
-          <div
-            ref={scrollContainerRef}
-            onScroll={handleScroll}
-            className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 md:grid md:grid-cols-3 md:gap-8 md:px-0 scroll-px-6 md:scroll-px-0 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+  <div className="relative max-w-7xl mx-auto px-0 md:px-6">
+    {/* SECTION HEADER */}
+    <div className="text-center mb-14 md:mb-16 px-6">
+      <motion.h2 
+        initial={{ opacity: 0, y: 20 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
+        viewport={{ once: true }} 
+        className="text-4xl sm:text-5xl md:text-5xl font-serif tracking-tight text-white mb-4"
+      >
+        Retail Markets We Operate In
+      </motion.h2>
+      <motion.p 
+        initial={{ opacity: 0, y: 20 }} 
+        whileInView={{ opacity: 1, y: 0 }} 
+        viewport={{ once: true }} 
+        transition={{ delay: 0.1 }} 
+        className="max-w-2xl mx-auto text-stone-400  font-medium text-base md:text-lg leading-relaxed"
+      >
+        Whitelist focuses on high-growth retail markets across key regions.
+      </motion.p>
+    </div>
+
+
+
+
+
+
+
+
+
+
+
+      {/* MARKETS CAROUSEL / DESKTOP GRID */}
+      <div 
+        ref={scrollContainerRef} 
+        onScroll={handleScroll} 
+        className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 pb-4 md:grid md:grid-cols-4 md:gap-4 md:px-0 md:pb-0 scroll-px-6 md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+      >
+        {markets.map((market, index) => (
+          <motion.div 
+            key={market.title} 
+            initial={{ opacity: 0, y: 20 }} 
+            whileInView={{ opacity: 1, y: 0 }} 
+            viewport={{ once: true }} 
+            transition={{ delay: index * 0.06, duration: 0.6 }} 
+            className="group relative shrink-0 snap-center w-[86vw] sm:w-[60vw] md:w-auto h-full flex flex-col overflow-hidden rounded-[14px] border border-white/[0.10] bg-white/[0.045] backdrop-blur-md p-3 transition-all duration-500 hover:border-white/[0.18] hover:bg-white/[0.065] hover:-translate-y-1"
           >
-            {markets.map((market, index) => (
-              <div
-                key={index}
-                className="w-[85vw] sm:w-[60vw] md:w-auto shrink-0 snap-center bg-[#EDEDED] rounded-xl p-6 flex flex-col items-center"
-              >
-                <h3 className="text-2xl font-serif text-stone-900 mb-2">{market.title}</h3>
-                <p className="text-stone-500 font-light text-sm text-center mb-6 h-10">{market.cities}</p>
-
-                <div className="w-full aspect-[4/3] relative rounded-lg overflow-hidden mb-6 bg-stone-300">
-                  <img
-                    src={market.img}
-                    alt={`${market.title} Illustration`}
-                    className="object-cover w-full h-full hover:scale-105 transition-transform duration-700 pointer-events-none"
-                  />
-                </div>
-
-                <button className="w-full py-3.5 px-4 border border-stone-300 rounded-lg flex justify-center items-center gap-2 text-stone-600 hover:bg-stone-200 hover:text-stone-900 transition-colors text-sm uppercase tracking-wider font-semibold group">
+            {/* CARD CONTENT */}
+            <div className="flex flex-col h-full">
+              {/* TITLE */}
+              <div className="px-2 pt-2 pb-3 text-center">
+                <h3 className="font-sans text-xl md:text-2xl text-stone-100 leading-relaxed font-medium">
                   {market.title}
-                  <div className="text-stone-400 group-hover:text-stone-900 group-hover:translate-x-1 transition-all" />
-                </button>
+                </h3>
+                <p className="font-sans mt-1.5 text-[11px] md:text-xs text-stone-400 font-medium leading-relaxed whitespace-nowrap overflow-hidden text-ellipsis">
+                  {market.cities}
+                </p>
               </div>
-            ))}
-            {/* Invisible spacer to prevent the last card from getting cut off or leaving a void */}
-            <div className="w-[1px] shrink-0 md:hidden block"></div>
-          </div>
 
-          {/* Pagination Dots (Mobile Only) */}
-          <div className="flex md:hidden justify-center items-center gap-3 mt-8">
-            {markets.map((_, idx) => (
-              <div
-                key={idx}
-                className={`h-2 rounded-full transition-all duration-300 ${activeSlide === idx
-                  ? "w-8 bg-white"
-                  : "w-2 bg-stone-600"
-                  }`}
-              />
-            ))}
-          </div>
-
-        </div>
-      </section>
-
-      {/* Brands Grid */}
-      <section className="py-24 bg-white border-y border-stone-200">
-        <div className="max-w-5xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl font-serif mb-4">Brands We Currently Work With</h2>
-            <p className="text-stone-500 font-serif font-light">Partnering with growth-focused retail brands for their expansion needs.</p>
-          </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-x-8 gap-y-12 items-center justify-items-center opacity-70 grayscale hover:grayscale-0 transition-all duration-700">
-            {["Allen Solly", "OWND", "VAN HEUSEN", "CANTABIL", "COBB", "LOUIS PHILIPPE", "Sparky", "SKECHERS"].map((brand, i) => (
-              <div key={i} className="text-xl md:text-2xl font-serif font-bold tracking-tight text-stone-800 text-center">
-                {brand}
+              {/* IMAGE */}
+              <div className="relative w-full aspect-[1/1] overflow-hidden rounded-[11px] bg-stone-800">
+                <img 
+                  src={market.img} 
+                  alt={`${market.title} retail market`} 
+                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" 
+                />
+                {/* Very subtle image overlay */}
+                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-white/[0.03]" />
               </div>
-            ))}
+              
+            </div>
+          </motion.div>
+        ))}
+
+        {/* DON'T SEE YOUR CITY CARD */}
+        <motion.div 
+          initial={{ opacity: 0, y: 20 }} 
+          whileInView={{ opacity: 1, y: 0 }} 
+          viewport={{ once: true }} 
+          transition={{ delay: markets.length * 0.06, duration: 0.6 }} 
+          className="group relative shrink-0 snap-center w-[86vw] sm:w-[60vw] md:w-auto min-h-full overflow-hidden rounded-[14px] border border-white/[0.10] bg-white/[0.045] backdrop-blur-md p-6 md:p-7 flex flex-col items-center justify-center text-center transition-all duration-500 hover:border-white/[0.18] hover:bg-white/[0.065] hover:-translate-y-1"
+        >
+          {/* MAIL ICON */}
+          <div className="flex items-center justify-center w-8 h-8 mb-2 text-[#d5b85a]">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+              <rect x="3" y="3" width="18" height="14" rx="2" />
+              <path d="m3 7 9 6 9-6" />
+            </svg>
           </div>
+
+          {/* TITLE */}
+          <h3 className="text-xl md:text-2xl text-stone-100 tracking-tight">
+            Don't See Your City?
+          </h3>
+
+          {/* DESCRIPTION */}
+          <p className="mt-3 max-w-[260px] text-sm md:text-sm leading-relaxed text-stone-400">
+            We are continuously expanding our sourcing network across India.
+          </p>
+          <p className="mt-3 mb-2 max-w-[280px] text-sm md:text-sm leading-relaxed text-stone-400">
+            If your city isn't listed yet, share your details with us and we'll notify you as soon as Whitelist starts operating in your market.
+          </p>
+
+          {/* MAIL CTA */}
+          <Link 
+            href="mailto:contact@whitelistretail.com" 
+            className="group/mail mt-6 w-full h-10 rounded-[10px] border border-white/[0.10] flex items-center justify-between px-4 text-[11px] md:text-xs font-semibold tracking-[0.16em] uppercase text-[#d5b85a] transition-all duration-300 hover:bg-white/[0.06] hover:border-[#d5b85a]/40"
+          >
+            <span>Mail Us</span>
+            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/mail:translate-x-1" />
+          </Link>
+        </motion.div>
+      </div>
+
+      {/* MOBILE PAGINATION */}
+      <div className="flex md:hidden justify-center items-center gap-2.5 mt-7 px-6">
+        {markets.map((_, idx) => (
+          <div 
+            key={idx} 
+            className={`h-1.5 rounded-full transition-all duration-300 ${activeSlide === idx ? "w-7 bg-[#d5b85a]" : "w-1.5 bg-stone-700"}`} 
+          />
+        ))}
+        {/* CTA card indicator */}
+        <div className={`h-1.5 rounded-full transition-all duration-300 ${activeSlide === markets.length ? "w-7 bg-[#d5b85a]" : "w-1.5 bg-stone-700"}`} />
+      </div>
+    </div>
+  </section>
+
+
+
+
+
+
+
+
+
+
+
+  {/* Brands Grid */}
+    <section className="border-y border-stone-200 bg-white py-18 md:py-28">
+      <div className="mx-auto max-w-6xl px-6">
+        {/* HEADING */}
+        <div className="mb-16 text-center md:mb-12">
+          <h2 className="mb-4 font-serif font-semibold text-3xl md:text-4xl">
+            Brands We Currently Work With
+          </h2>
+          <p className="text-base font-medium text-stone-500 md:text-lg">
+            Partnering with growth-focused retail brands for their expansion needs.
+          </p>
         </div>
-      </section>
+
+        {/* LOGO GRID */}
+        <div className="grid grid-cols-2 py-5 gap-x-10 gap-y-16 md:grid-cols-4 md:gap-x-16 md:gap-y-20">
+          {brands.map((brand, i) => (
+            <motion.div
+              key={brand.name}
+              initial={{ opacity: 0, y: 15 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: i * 0.05, duration: 0.5 }}
+              className="group flex flex-col items-center justify-center text-center"
+            >
+              {/* LOGO */}
+              <div className="relative mb-3 flex h-20 w-full items-center justify-center transition-transform duration-500 group-hover:-translate-y-1 md:h-24">
+                <Image
+                  src={brand.logo}
+                  alt={`${brand.name} logo`}
+                  width={180}
+                  height={80}
+                  className="max-h-23 max-w-[180px] object-contain opacity-100  md:max-h-24 md:max-w-[220px]"
+                />
+              </div>
+
+              {/* BRAND NAME */}
+              <div className="font-sans text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 transition-colors duration-300 group-hover:text-stone-900 md:text-sm">
+                {brand.name}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      </div>
+    </section>
 
       {/* Footer */}
       <footer className="bg-stone-950 text-stone-400 py-20 px-6 border-t border-stone-900">
@@ -578,7 +900,7 @@ function LandingPageContent() {
         </div>
         <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
-          
+
           <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
           <div className="flex space-x-6">
             <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
@@ -710,22 +1032,22 @@ function LandingPageContent() {
                         return;
                       }
 
-                    // if user entered a code but it's invalid
-                    if (refCode && !isValidReferral) {
-                      alert("Invalid referral code");
-                      return;
-                    }
+                      // if user entered a code but it's invalid
+                      if (refCode && !isValidReferral) {
+                        alert("Invalid referral code");
+                        return;
+                      }
 
-                    if (refCode && refCode.trim() !== "") {
-                      localStorage.setItem(
-                        "referralCode",
-                        refCode.trim().toUpperCase()
-                      );
-                    }
+                      if (refCode && refCode.trim() !== "") {
+                        localStorage.setItem(
+                          "referralCode",
+                          refCode.trim().toUpperCase()
+                        );
+                      }
 
-                    setOpenSignup(false);
-                    document.getElementById("hidden-signup")?.click();
-                  }}
+                      setOpenSignup(false);
+                      document.getElementById("hidden-signup")?.click();
+                    }}
                     disabled={!turnstileToken}
                     className="
                       w-full
@@ -736,17 +1058,12 @@ function LandingPageContent() {
                       text-sm
                       font-bold
                       uppercase
-                      tracking-[0.18em]
-                      transition-all
-                      duration-300
-                      hover:bg-stone-800
-                      hover:scale-[1.01]
-                      active:scale-[0.99]
+                      tracking-[0.18em] ransition-all duration-300 hover:bg-stone-800 hover:scale-[1.01] active:scale-[0.99]
                     "
                   >
                     {!turnstileToken
-                    ? "Verifying..."
-                    : "Continue"}
+                      ? "Verifying..."
+                      : "Continue"}
                   </button>
 
                   {/* SKIP */}
@@ -754,7 +1071,7 @@ function LandingPageContent() {
                     onClick={async () => {
                       if (!turnstileToken) {
                         alert("Please verify you are human.");
-                      
+
                         return;
                       }
                       const verification = await fetch(
@@ -777,7 +1094,7 @@ function LandingPageContent() {
 
                       setOpenSignup(false);
                       document.getElementById("hidden-signup")?.click();
-                    }}  
+                    }}
                     disabled={!turnstileToken}
                     className="
                       w-full
