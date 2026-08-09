@@ -21,7 +21,7 @@ export default defineSchema({
     city: v.string(),
     sqft: v.number(),
 
-    scoutId: v.id("users"), 
+    scoutId: v.id("users"),
 
     mediaStorageIds: v.array(v.string()),
     potentialCommission: v.number(),
@@ -31,24 +31,30 @@ export default defineSchema({
 
   brand_leads: defineTable({
     brandName: v.string(),
-    requirementSpecs: v.string(),
-    city: v.string(),
-    sqft: v.number(),
+    fullName: v.string(),
     contactDetails: v.string(),
+    phoneNumber: v.string(),
+    currentStoreCount: v.string(),
+    expansionTarget: v.string(),
+    targetMarkets: v.string(),
+    preferredPropertyType: v.string(),
+    requirementSpecs: v.string(),
     status: v.string(),
   }),
 
   landlord_leads: defineTable({
     fullName: v.string(),
     email: v.string(),
-  
     phone1: v.string(),
-    phone2: v.optional(v.string()),
-  
     propertyAddress: v.string(),
-  
+    propertyType: v.string(),
+    totalArea: v.number(),
+    rentExpected: v.number(),
+    frontage: v.number(),
+    floors: v.string(),
+    preferredTenantType: v.string(),
+    additionalDetails: v.optional(v.string()),
     status: v.string(),
-  
     createdAt: v.number(),
   }),
 
@@ -61,9 +67,13 @@ export default defineSchema({
     location: v.string(),
     priority: v.string(),
     logo: v.string(),
-  
+
+    category: v.union(
+      v.literal("live_brand"),
+      v.literal("size_based")
+    ),
+
     isActive: v.boolean(),
-  
     createdAt: v.number(),
   }),
 
@@ -74,8 +84,9 @@ export default defineSchema({
     instagram: v.string(),
     referralCode: v.string(),
     isActive: v.boolean(),
-  }).index("by_referral_code", ["referralCode"]),
+  })
+    .index("by_referral_code", ["referralCode"])
+    .index("by_username", ["username"]),
 
-  
 });
 

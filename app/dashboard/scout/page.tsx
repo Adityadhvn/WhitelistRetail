@@ -7,7 +7,7 @@ import ScoutCard from "@/components/ScoutCard";
 import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
-
+import { FaWhatsapp } from "react-icons/fa";
 import {
   ChevronDown,
   ChevronUp,
@@ -22,6 +22,10 @@ export default function ScoutDashboard() {
   const [approvedOpen, setApprovedOpen] = useState(false);
   const [requirementsOpen, setRequirementsOpen] = useState(true);
 
+  const [requirementCategory, setRequirementCategory] = useState<
+    "live" | "size"
+  >("live");
+
   const dbUser = useQuery(
     api.users.getUser,
     user ? { clerkId: user.id } : "skip"
@@ -35,6 +39,42 @@ export default function ScoutDashboard() {
   const requirements = useQuery(
     api.requirements.getRequirements
   );
+
+  const filteredRequirements = requirements?.filter(
+    (req) =>
+      req.category ===
+      (requirementCategory === "live"
+        ? "live_brand"
+        : "size_based")
+  );
+
+  const WHATSAPP_NUMBER = "919654755007";
+
+  const handleSubmitProperty = (req: any) => {
+    const message = 
+`Hi, I am interested in submitting a property for the ${req.brand} requirement.
+  
+Requirement: ${req.title}
+Location: ${req.location}
+Size: ${req.size}
+Frontage: ${req.frontage}`;
+  
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+      message
+    )}`;
+  
+    window.open(whatsappUrl, "_blank");
+  };
+  
+  const handleSubmitAnyProperty = () => {
+    const message = `Hi, I am a Whitelist Scout and I would like to submit a property that may not currently match a listed requirement. I would like to share the property details with you.`;
+  
+    const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
+      message
+    )}`;
+  
+    window.open(whatsappUrl, "_blank");
+  };
 
   if (!user) return null;
 
@@ -63,8 +103,10 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
 
         {/* SCOUT CARD */}
         {dbUser.applicationStatus === "approved" && (
-          <div className="w-full flex justify-center">
-            <ScoutCard user={dbUser} />
+          <div className="w-full flex justify-center px-1 md:px-0">
+            <div className="w-full">
+              <ScoutCard user={dbUser} />
+            </div>
           </div>
         )}
 
@@ -108,11 +150,11 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                 className="w-full flex items-center justify-between gap-4 px-5 md:px-8 py-6 md:py-8 bg-gradient-to-r from-[#f8fbf8] via-white to-[#f3f8f3] transition-all duration-300 hover:bg-[#f7faf7]"
               >
                 <div className="text-left">
-                  <h2 className="text-2xl md:text-4xl font-serif text-stone-900">
+                  <h2 className="text-2xl md:text-4xl !font-sans font-semibold uppercase text-stone-900">
                     Approved Listings
                   </h2>
 
-                  <p className="text-sm md:text-base text-stone-500 mt-2 max-w-xl">
+                  <p className="text-base font-medium md:text-base text-stone-500 mt-2 max-w-xl">
                     Your approved commercial inventory.
                   </p>
                 </div>
@@ -184,11 +226,11 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                                   </div>
                                 </div>
 
-                                <h3 className="mt-4 text-xl md:text-2xl font-serif text-stone-900">
+                                <h3 className="mt-4 text-xl md:text-2xl font-serif font-medium  text-stone-900">
                                   {p.title}
                                 </h3>
 
-                                <p className="mt-3 text-stone-500 text-sm leading-6 max-w-2xl">
+                                <p className="mt-3 text-stone-500 text-sm font-medium leading-6 max-w-2xl">
                                   {p.teaser}
                                 </p>
                               </div>
@@ -254,18 +296,13 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                 className="w-full flex items-start md:items-center justify-between gap-4 px-5 md:px-8 py-6 md:py-8 bg-gradient-to-r from-[#f8fbf8] via-[#fcfdfc] to-[#f3f8f3] transition-colors duration-300"
               >
                 <div className="text-left">
-                  <h2 className="text-3xl md:text-5xl font-serif font-bold text-stone-900">
+                  <h2 className="text-2xl md:text-4xl uppercase !font-sans font-semibold text-stone-900">
                     Requirements
                   </h2>
 
-                  <p className="text-sm md:text-base text-stone-500 mt-4 max-w-2xl leading-6 md:leading-7">
+                  <p className="text-base md:text-base text-stone-500 mt-2 max-w-2xl font-medium leading-6 md:leading-7">
                     Current retail space requirements from brand partners.
                   </p>
-
-                  <div className="mt-4 inline-flex items-center gap-2 bg-[#f7faf7] text-[#4b5f49] px-4 py-2 rounded-full text-xs md:text-sm font-medium border border-[#dfe7de] shadow-sm">
-                    <div className="w-2 h-2 rounded-full bg-[#4b5f49]" />
-                    Live Brand Requirements
-                  </div>
                 </div>
 
                 <motion.div
@@ -292,6 +329,98 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                   >
                     <div className="px-4 md:px-8 pb-8">
 
+
+
+                      {/* REQUIREMENT CATEGORY TABS */}
+                      <div className="mb-6">
+
+                        <div className="grid grid-cols-2 w-full max-w-2xl mx-auto md:mx-0 bg-[#eef3ee] p-1 rounded-2xl border border-[#dfe7de]">
+
+                          {/* LIVE BRAND REQUIREMENTS */}
+                          <button
+                            onClick={() => setRequirementCategory("live")}
+                            className="relative px-3 py-3 md:px-6 uppercase md:py-3.5 rounded-xl text-xs sm:text-sm md:text-base font-medium text-center transition-colors duration-300"
+                          >
+                            {requirementCategory === "live" && (
+                              <motion.div
+                                layoutId="requirement-tab"
+                                className="absolute inset-0 bg-[#4b5f49] rounded-xl shadow-[0_4px_14px_rgba(75,95,73,0.20)]"
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 400,
+                                  damping: 30,
+                                }}
+                              />
+                            )}
+
+                          <motion.span
+                            layout
+                            className={`relative z-10 inline-block ${
+                              requirementCategory === "size"
+                                ? "text-stone-600 font-bold normal-case"
+                                : "text-white font-bold uppercase"
+                            }`}
+                            animate={{
+                              letterSpacing:
+                                requirementCategory === "size" ? "0.02em" : "0em",
+                              scale:
+                                requirementCategory === "size" ? 1.01 : 1,
+                            }}
+                            transition={{
+                              duration: 0.25,
+                              ease: "easeOut",
+                            }}
+                          >
+                            Live Brand Requirements
+                          </motion.span>
+                          </button>
+
+
+                          {/* SIZE BASED REQUIREMENTS */}
+                          <button
+                            onClick={() => setRequirementCategory("size")}
+                            className="relative px-3 py-3 md:px-6 md:py-3.5 rounded-xl text-xs sm:text-sm md:text-base font-medium text-center transition-colors duration-300"
+                          >
+                            {requirementCategory === "size" && (
+                              <motion.div
+                                layoutId="requirement-tab"
+                                className="absolute inset-0 bg-[#4b5f49] rounded-xl shadow-[0_4px_14px_rgba(75,95,73,0.20)]"
+                                transition={{
+                                  type: "spring",
+                                  stiffness: 400,
+                                  damping: 30,
+                                }}
+                              />
+                            )}
+
+                          <motion.span
+                            layout
+                            className={`relative z-10 inline-block  ${
+                              requirementCategory === "size"
+                                ? "text-white font-bold uppercase"
+                                : "text-stone-600 font-bold normal-case"
+                            }`}
+                            animate={{
+                              letterSpacing:
+                                requirementCategory === "size" ? "0.02em" : "0em",
+                              scale:
+                                requirementCategory === "size" ? 1.01 : 1,
+                            }}
+                            transition={{
+                              duration: 0.25,
+                              ease: "easeOut",
+                            }}
+                          >
+                            Size Based Requirements
+                          </motion.span>
+                          </button>
+
+                        </div>
+
+                      </div>
+
+
+
                       {/* REQUIREMENT CARDS */}
                       <div className="space-y-4">
 
@@ -302,12 +431,15 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                         )}
 
                         {requirements?.length === 0 && (
-                          <p className="text-stone-500">
-                            No live requirements yet.
+                          <p className="text-stone-500 uppercase text-center py-10">
+                            {requirementCategory === "live"
+                              ? "No live brand requirements yet."
+                              : "No size based requirements yet."
+                            }
                           </p>
                         )}
 
-                        {requirements?.map((req, index) => (
+                        {filteredRequirements?.map((req, index) => (
                           <motion.div
                             key={req._id}
                             initial={{ opacity: 0, y: 14 }}
@@ -328,11 +460,17 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
 
                                   {/* LOGO */}
                                   <div className="w-full sm:w-[170px] h-[90px] bg-[#fcfdfc] border border-stone-200 rounded-xl flex items-center justify-center overflow-hidden mx-auto lg:mx-0">
-                                    <img
-                                      src={req.logo}
-                                      alt={req.brand}
-                                      className="max-w-[120px] max-h-[50px] object-contain"
-                                    />
+                                  {req.logo ? (
+                                      <img
+                                        src={req.logo}
+                                        alt={req.brand}
+                                        className="max-w-[120px] max-h-[50px] object-contain"
+                                      />
+                                    ) : (
+                                      <span className="text-sm font-medium text-stone-400">
+                                        {req.brand}
+                                      </span>
+                                    )}
                                   </div>
 
                                   {/* DETAILS */}
@@ -344,7 +482,7 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                                       </p>
 
                                       <div className="mt-4">
-                                        <p className="text-xs uppercase tracking-wide text-stone-400">
+                                        <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
                                           Front Width
                                         </p>
 
@@ -355,7 +493,7 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                                     </div>
 
                                     <div>
-                                      <p className="text-xs uppercase tracking-wide text-stone-400">
+                                      <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
                                         Size Required
                                       </p>
 
@@ -365,7 +503,7 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                                     </div>
 
                                     <div>
-                                      <p className="text-xs uppercase tracking-wide text-stone-400">
+                                      <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
                                         Floors
                                       </p>
 
@@ -375,11 +513,11 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                                     </div>
 
                                     <div>
-                                      <p className="text-xs uppercase tracking-wide text-stone-400">
+                                      <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
                                         Location Preference
                                       </p>
 
-                                      <p className="mt-6 text-stone-800">
+                                      <p className="mt-6 font-medium text-stone-800">
                                         {req.location}
                                       </p>
                                     </div>
@@ -391,16 +529,19 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
 
                                   <div
                                     className={`px-4 py-2 rounded-lg text-sm font-medium ${req.priority === "High Priority"
-                                        ? "bg-[#4b5f49]/10 text-[#4b5f49]"
-                                        : "bg-[#f3f5f3] text-stone-700"
+                                      ? "bg-[#4b5f49]/10 text-[#4b5f49]"
+                                      : "bg-[#f3f5f3] text-stone-700"
                                       }`}
                                   >
                                     {req.priority}
                                   </div>
 
-                                  <button className="w-full sm:w-auto px-6 py-3 bg-[#4b5f49] text-white rounded-xl hover:bg-[#42533f] transition flex items-center justify-center gap-2">
+                                  <button
+                                    onClick={() => handleSubmitProperty(req)}
+                                    className="w-full mt-5 px-4 py-3 bg-[#4b5f49] text-white rounded-xl hover:bg-[#42533f] transition flex items-center justify-center gap-2 text-sm"
+                                  >
                                     Submit Property
-                                    <ArrowRight className="w-4 h-4" />
+                                    <FaWhatsapp className="w-4 h-4" />
                                   </button>
                                 </div>
                               </div>
@@ -413,12 +554,15 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
 
                           <p className="text-stone-700 text-center lg:text-left leading-7">
                             Don’t see a matching requirement?
-                            Submit your property anyway.
+                            Submit a property anyway.
                           </p>
 
-                          <button className="w-full lg:w-auto px-6 py-3 border border-stone-300 rounded-xl hover:bg-stone-100 transition flex items-center justify-center gap-2">
+                          <button
+                            onClick={handleSubmitAnyProperty}
+                            className="w-full lg:w-auto px-6 py-3 border border-stone-300 rounded-xl hover:bg-stone-100 transition flex items-center justify-center gap-2"
+                          >
                             Submit Any Property
-                            <ArrowRight className="w-4 h-4" />
+                            <FaWhatsapp className="w-4 h-4" />
                           </button>
                         </div>
 

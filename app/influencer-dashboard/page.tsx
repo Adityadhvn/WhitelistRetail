@@ -1,5 +1,5 @@
 "use client";
-
+import Navbar from "@/components/Navbar";
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useEffect, useState } from "react";
@@ -7,7 +7,7 @@ export default function InfluencerDashboardPage() {
 
 
     const [referralCode, setReferralCode] = useState("");
-    console.log(referralCode);
+
 
     useEffect(() => {
     
@@ -41,7 +41,9 @@ export default function InfluencerDashboardPage() {
 
 
   return (
-    <main className="min-h-screen bg-[#f7f7f5] p-6 md:p-10">
+    <>
+    <Navbar />
+    <main className="min-h-screen mt-14 bg-[#f7f7f5] p-6 md:p-10">
 
       <div className="max-w-6xl mx-auto">
 
@@ -52,7 +54,7 @@ export default function InfluencerDashboardPage() {
             Influencer Dashboard
           </h1>
 
-          <p className="mt-2 text-stone-500">
+          <p className="mt-2 font-medium text-stone-500">
             Scouts and property performance linked to your referral code.
           </p>
 
@@ -151,5 +153,6 @@ export default function InfluencerDashboardPage() {
         </div>
       </div>
     </main>
+    </>
   );
 }

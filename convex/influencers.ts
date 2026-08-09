@@ -1,5 +1,15 @@
-import { mutation, query } from "./_generated/server";
+import {
+  mutation,
+  query,
+  action,
+  internalQuery,
+} from "./_generated/server";
+
+import { internal } from "./_generated/api";
+
 import { v } from "convex/values";
+
+import bcrypt from "bcryptjs";
 
 export const createInfluencer = mutation({
   args: {
@@ -11,12 +21,79 @@ export const createInfluencer = mutation({
   },
 
   handler: async (ctx, args) => {
+    // ==========================================
+    // 1. CHECK AUTHENTICATION
+    // ==========================================
+
+    const identity = await ctx.auth.getUserIdentity();
+
+    if (identity === null) {
+      throw new Error("Unauthenticated");
+    }
+
+    // ==========================================
+    // 2. CHECK ADMIN ROLE
+    // ==========================================
+
+    const customClaims = identity.customClaims as {
+      metadata?: {
+        role?: string;
+      };
+    };
+
+    if (customClaims?.metadata?.role !== "admin") {
+      throw new Error("Forbidden");
+    }
+
+    // ==========================================
+    // 3. NORMALIZE INPUT
+    // ==========================================
+
+    const username = args.username.trim();
+    const name = args.name.trim();
+    const instagram = args.instagram.trim();
+    const referralCode = args.referralCode.trim().toUpperCase();
+
+    // ==========================================
+    // 4. CHECK DUPLICATE USERNAME
+    // ==========================================
+
+    const existingUsername = await ctx.db
+      .query("influencers")
+      .withIndex("by_username", (q) =>
+        q.eq("username", username)
+      )
+      .first();
+
+    if (existingUsername) {
+      throw new Error("Username already exists");
+    }
+
+    // ==========================================
+    // 5. CHECK DUPLICATE REFERRAL CODE
+    // ==========================================
+
+    const existingReferralCode = await ctx.db
+      .query("influencers")
+      .withIndex("by_referral_code", (q) =>
+        q.eq("referralCode", referralCode)
+      )
+      .first();
+
+    if (existingReferralCode) {
+      throw new Error("Referral code already exists");
+    }
+
+    // ==========================================
+    // 6. CREATE INFLUENCER
+    // ==========================================
+
     return await ctx.db.insert("influencers", {
-      username: args.username,
+      username,
       password: args.password,
-      name: args.name,
-      instagram: args.instagram,
-      referralCode: args.referralCode.toUpperCase(),
+      name,
+      instagram,
+      referralCode,
       isActive: true,
     });
   },
@@ -105,23 +182,25 @@ export const getInfluencerStats = query({
 
 
 export const validateReferralCode = query({
-    args: {
-      referralCode: v.string(),
-    },
-  
-    handler: async (ctx, args) => {
-      const influencer = await ctx.db
-        .query("influencers")
-        .withIndex("by_referral_code", (q) =>
-          q.eq("referralCode", args.referralCode.toUpperCase())
-        )
-        .first();
-  
-      return influencer !== null;
-    },
-  });
+  args: {
+    referralCode: v.string(),
+  },
 
-export const getInfluencer = query({
+  handler: async (ctx, args) => {
+    const code = args.referralCode.trim().toUpperCase();
+
+    const influencer = await ctx.db
+      .query("influencers")
+      .withIndex("by_referral_code", (q) =>
+        q.eq("referralCode", code)
+      )
+      .first();
+
+    return !!influencer && influencer.isActive;
+  },
+});
+
+export const getInfluencerForLogin = internalQuery({
   args: {
     username: v.string(),
   },
@@ -129,9 +208,93 @@ export const getInfluencer = query({
   handler: async (ctx, args) => {
     return await ctx.db
       .query("influencers")
-      .filter((q) =>
-        q.eq(q.field("username"), args.username)
+      .withIndex("by_username", (q) =>
+        q.eq("username", args.username.trim())
       )
       .first();
+  },
+});
+
+export const loginInfluencer = action({
+  args: {
+    username: v.string(),
+    password: v.string(),
+  },
+
+  handler: async (
+    ctx,
+    args
+  ): Promise<{
+    success: boolean;
+    referralCode: string;
+    username: string;
+    name: string;
+  }> => {
+    const username = args.username.trim();
+
+    if (!username || !args.password) {
+      throw new Error("Invalid credentials");
+    }
+
+    const influencer = await ctx.runQuery(
+      internal.influencers.getInfluencerForLogin,
+      {
+        username,
+      }
+    );
+
+    if (!influencer) {
+      throw new Error("Invalid credentials");
+    }
+
+    if (!influencer.isActive) {
+      throw new Error("Account inactive");
+    }
+
+    const validPassword = await bcrypt.compare(
+      args.password,
+      influencer.password
+    );
+
+    if (!validPassword) {
+      throw new Error("Invalid credentials");
+    }
+
+    return {
+      success: true,
+      referralCode: influencer.referralCode,
+      username: influencer.username,
+      name: influencer.name,
+    };
+  },
+});
+
+export const resetInfluencerPassword = mutation({
+  args: {
+    username: v.string(),
+    password: v.string(),
+  },
+
+  handler: async (ctx, args) => {
+    const username = args.username.trim();
+
+    const influencer = await ctx.db
+      .query("influencers")
+      .withIndex("by_username", (q) =>
+        q.eq("username", username)
+      )
+      .first();
+
+    if (!influencer) {
+      throw new Error("Influencer not found");
+    }
+
+    await ctx.db.patch(influencer._id, {
+      password: args.password,
+    });
+
+    return {
+      success: true,
+    };
   },
 });

@@ -4,11 +4,16 @@ import { v } from "convex/values";
 export const submitBrandLead = mutation({
   args: {
     brandName: v.string(),
-    requirementSpecs: v.string(),
-    city: v.string(),
-    sqft: v.number(),
+    fullName: v.string(),
     contactDetails: v.string(),
+    phoneNumber: v.string(),
+    currentStoreCount: v.string(),
+    expansionTarget: v.string(),
+    targetMarkets: v.string(),
+    preferredPropertyType: v.string(),
+    requirementSpecs: v.string(),
   },
+
   handler: async (ctx, args) => {
     return await ctx.db.insert("brand_leads", {
       ...args,

@@ -1,201 +1,661 @@
 "use client";
+
 import { motion, AnimatePresence } from "motion/react";
 import Navbar from "@/components/Navbar";
-import {ArrowRight,Check,Target,FileText,BarChart,} from "lucide-react";
+import {
+  ArrowRight,
+  Check,
+  Target,
+  FileText,
+  BarChart3,
+  MapPin,
+  Users,
+  Clock1,
+  Clock3,
+  ClockAlert,
+  Building2,
+  Car,
+  Ruler,
+  UserPlus,
+  Upload,
+  WalletCards,
+  Plus,
+  X,
+} from "lucide-react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useState } from "react";
-import {SignUpButton,SignedIn,SignedOut} from "@clerk/nextjs";
+import {
+  SignUpButton,
+  SignedIn,
+  SignedOut,
+} from "@clerk/nextjs";
+import { ClockFading } from "lucide-react";
+import { useQuery } from "convex/react";
+import { api } from "@/convex/_generated/api";
+
 
 export default function ScoutsPage() {
   const [openSignup, setOpenSignup] = useState(false);
-  const [refCode, setRefCode] = useState(() => "");
+  const [refCode, setRefCode] = useState("");
   const [turnstileToken, setTurnstileToken] = useState("");
+  const [openFaq, setOpenFaq] = useState<number[]>([]);
 
+  const referralCheck = useQuery(
+    api.influencers.validateReferralCode,
+    refCode.trim()
+      ? {
+        referralCode: refCode.trim().toUpperCase(),
+      }
+      : "skip"
+  );
+
+  const referralValid = referralCheck === true;
+
+  const checkingReferral =
+    refCode.trim() !== "" && referralCheck === undefined;
+
+  const benefits = [
+    {
+      title: "Performance-Based Rewards",
+      description:
+        "Earn attractive incentives every time a property you source is successfully leased to a retail brand.",
+      icon: WalletCards,
+    },
+    {
+      title: "Work In Your Own City",
+      description:
+        "Discover commercial properties around you. No office, fixed hours, or prior real estate experience required.",
+      icon: MapPin,
+    },
+    {
+      title: "Live Dashboard",
+      description:
+        "Track every property submission, monitor approvals, and stay updated on deal progress   -all in one place.",
+      icon: BarChart3,
+    },
+    {
+      title: "Work Directly With Whitelist",
+      description:
+        "We don't rely on brokers or middlemen. Every verified property is reviewed and presented directly through our structured sourcing process.",
+      icon: Users,
+    },
+  ];
+
+  const propertyQualities = [
+    {
+      title: "Prime High Street Location",
+      description:
+        "Properties in high-footfall areas with strong visibility and accessibility.",
+      icon: MapPin,
+    },
+    {
+      title: "Strong Commercial Surroundings",
+      description:
+        "Surrounded by popular retail brands, markets, and growing infrastructure.",
+      icon: Building2,
+    },
+    {
+      title: "Easy Accessibility & Visibility",
+      description:
+        "Good road connectivity, parking availability, and easy access for customers.",
+      icon: Car,
+    },
+    {
+      title: "Meets Brand Requirements",
+      description:
+        "The right size, frontage, and layout as per the brand's needs.",
+      icon: Ruler,
+    },
+  ];
+
+  const steps = [
+    {
+      number: "1",
+      title: "Register",
+      description:
+        "Create your scout profile in less than 2 minutes.",
+      icon: UserPlus,
+    },
+    {
+      number: "2",
+      title: "Find a Property",
+      description:
+        "Discover high-potential retail spaces in your city.",
+      icon: Building2,
+    },
+    {
+      number: "3",
+      title: "Upload Details",
+      description:
+        "Submit accurate property details and photos.",
+      icon: Upload,
+    },
+    {
+      number: "4",
+      title: "Get Rewarded",
+      description:
+        "Earn rewards when your property is successfully leased.",
+      icon: WalletCards,
+    },
+  ];
+
+  const faqs = [
+    {
+      question: "How do I earn?",
+      answer:
+        "You earn a commission when a property you submit is successfully leased to a retail brand through Whitelist.",
+    },
+    {
+      question: "How long does approval take?",
+      answer:
+        "Once your property is submitted, our team reviews the information and updates its status through your dashboard.",
+    },
+    {
+      question: "Who pays the commission?",
+      answer:
+        "The commission is paid by the landlord. Scouts do not have to pay to submit properties.",
+    },
+    {
+      question: "Can I submit multiple properties?",
+      answer:
+        "Yes. You can submit multiple properties and track each submission through your Scout Dashboard.",
+    },
+    {
+      question: "Do I need experience?",
+      answer:
+        "No prior real estate experience is required. Local knowledge and the ability to identify suitable properties are what matter.",
+    },
+    {
+      question: "What types of properties should I submit?",
+      answer:
+        "Focus on high-visibility retail spaces in strong commercial locations that match the requirements of growing retail brands.",
+    },
+  ];
+
+  const handleSignup = async (saveReferral: boolean) => {
+    if (!referralValid) {
+      alert("Please enter a valid referral code.");
+      return;
+    }
+
+    if (!turnstileToken) {
+      alert("Please verify you are human.");
+      return;
+    }
+
+    const verification = await fetch("/api/verify-turnstile", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: turnstileToken,
+      }),
+    });
+
+    const result = await verification.json();
+
+    if (!result.success) {
+      alert("Verification failed.");
+      return;
+    }
+
+    if (saveReferral) {
+      localStorage.setItem(
+        "referralCode",
+        refCode.trim().toUpperCase()
+      );
+    }
+
+    setOpenSignup(false);
+
+    document.getElementById("hidden-signup")?.click();
+  };
 
   return (
-    <main className="min-h-screen bg-[#Faf9f6] text-stone-900">
+    <main className="min-h-screen overflow-x-hidden bg-[#Faf9f6] text-stone-900 selection:bg-stone-900 selection:text-white">
       <Navbar />
 
-      <section className="pt-32 pb-24 px-6 md:px-12">
-        <div className="max-w-6xl mx-auto">
+      {/* HERO */}
+      <section className="relative overflow-hidden pt-10 md:pt-14">
+        <div className="mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center md:grid-cols-[58%_42%]">
+          {/* LEFT */}
           <motion.div
-            initial={{ opacity: 0, y: 20 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.8, ease: "easeOut" }}
+            transition={{
+              duration: 0.8,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="flex flex-col justify-center px-6 py-14 sm:px-8 md:px-10 lg:px-16 xl:px-20 md:-translate-y-4"
           >
-            <div className="mb-6 flex items-center space-x-3">
-              <span className="w-12 h-[1px] bg-[#4b5f49]"></span>
+            <div className="mb-6 flex w-fit items-center gap-3">
+              <span className="h-px w-12 bg-[#4b5f49]" />
 
-              <span className="text-xs uppercase tracking-widest font-bold text-[#4b5f49]">
-                Sourcing Partners
+              <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
+                For Scouts
               </span>
             </div>
 
-            <h1 className="text-5xl md:text-7xl font-semibold font-serif mb-8 leading-[1.05] tracking-tight">
-              Institutionalize Your <br className="hidden md:block" />
-              <span className="italic text-[#394736]/78">
-                Local Knowledge.
+            <h1 className="mb-7 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-stone-900 sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
+              Turn Local Knowledge
+              <br />
+              <span className="italic text-[#4b5f49]">
+                Into Real Earnings.
               </span>
             </h1>
 
-            <p className="text-stone-600 font-light max-w-2xl mb-16">
-              Turn your deep understanding of local high-street retail and
-              premium mall developments into a scalable, highly-rewarding
-              business.
+            <p className="max-w-2xl text-base font-medium leading-relaxed text-stone-600 sm:text-lg md:text-lg lg:text-xl">
+              Become part of Whitelist&apos;s nationwide sourcing network.
+              Submit verified retail properties, track your progress, and
+              earn rewards on successful closures.
             </p>
 
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 lg:gap-16 mb-20 items-start">
-
-              {/* Left Side */}
-              <div className="space-y-10 bg-white p-10 border border-stone-200 rounded-3xl shadow-sm">
-                <h3 className="text-2xl font-serif text-stone-900 border-b border-stone-100 pb-6">
-                  Why Become a Whitelist Scout?
-                </h3>
-
-                <ul className="space-y-6">
-                  {[
-                    {
-                      title: "10% Commission",
-                      desc: "Transparent, guaranteed payouts on successful placements.",
-                      icon: BarChart,
-                    },
-                    {
-                      title: "Direct Brand Access",
-                      desc: "Skip the middlemen and present to global expansion teams.",
-                      icon: Target,
-                    },
-                    {
-                      title: "Legal & Admin Support",
-                      desc: "We handle the institutional credibility and paperwork.",
-                      icon: FileText,
-                    },
-                    {
-                      title: "Real-time Tracking",
-                      desc: "Monitor the status of your property submissions via dashboard.",
-                      icon: Check,
-                    },
-                    {
-                      title: "Real-time Tracking",
-                      desc: "Monitor the status of your property submissions via dashboard.",
-                      icon: Check,
-                    },
-                  ].map((item, i) => (
-                    <li key={i} className="flex items-start space-x-4">
-                      <div className="w-8 h-8 rounded bg-stone-50 flex items-center justify-center flex-shrink-0 border border-stone-200 mt-1">
-                        <item.icon className="w-4 h-4 text-[#4b5f49]" />
-                      </div>
-
-                      <div>
-                        <span className="block text-sm font-bold uppercase tracking-widest text-stone-900 mb-1">
-                          {item.title}
-                        </span>
-
-                        <span className="block text-sm text-stone-500 font-light leading-relaxed">
-                          {item.desc}
-                        </span>
-                      </div>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-
-              {/* Right Side Cards */}
-              <div className="flex flex-col gap-6">
-
-                {/* Card 1 */}
-                <div className="bg-white border border-amber-900/10 rounded-3xl p-8 shadow-sm">
-                  <div className="flex items-start gap-5">
-
-                    <div className="w-14 h-14 rounded-full border border-amber-900/20 bg-white flex items-center justify-center flex-shrink-0">
-                      <Target className="w-6 h-6 text-[#4b5f49]" />
-                    </div>
-
-                    <div>
-                      <h3 className="text-2xl font-serif leading-snug text-stone-900 mb-4">
-                        Post your property faster
-                        <br />
-                        or someone else will post it.
-                      </h3>
-
-                      <p className="text-stone-600 leading-relaxed font-light">
-                        Great retail spaces get taken quickly.
-                        <br />
-                        Be the first to submit and earn the rewards.
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                {/* Card 2 */}
-                <div className="bg-white border border-stone-200 rounded-3xl p-8 mt-4 shadow-sm">
-                  <div className="flex items-start gap-5">
-
-                    <div className="w-14 h-14 rounded-full border border-stone-200 bg-stone-50 flex items-center justify-center flex-shrink-0">
-                      <Check className="w-6 h-6 text-[#4b5f49]" />
-                    </div>
-
-                    <div>
-                      <h3 className="text-2xl font-serif leading-snug text-stone-900 mb-4">
-                        We don&apos;t work with brokers or middlemen.
-                      </h3>
-
-                      <p className="text-stone-600 leading-relaxed font-light mb-5">
-                        We work directly with landlords, because we believe in
-                        transparency and fair deals.
-                      </p>
-
-                      <p className="text-stone-700 leading-relaxed">
-                        Our commission is paid by landlords only.
-                      </p>
-
-                      <p><span className="font-semibold">
-                        {" "}
-                        You Earn, They Pay, Everyone Wins.
-                      </span></p>
-
-                    </div>
-                  </div>
-                </div>
-
-              </div>
-            </div>
-
-            {/* CTA */}
-            <div className="bg-amber-50 border border-amber-900/10 rounded-3xl p-10 flex flex-col md:flex-row items-center justify-between gap-8">
-              <p className="text-lg text-[#4b5f49] leading-relaxed max-w-2xl">
-                If you hold the keys to prime real estate in high-growth
-                markets, we hold the mandates for the fastest-growing brands.
-                Let&apos;s build.
-              </p>
-
-              <>
+            <div className="mt-9 flex w-full flex-col gap-3 sm:w-fit sm:flex-row">
               <SignedIn>
                 <a
                   href="/dashboard"
-                  className="px-8 py-5 bg-[#4b5f49] text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-900 transition-colors inline-flex items-center space-x-4 flex-shrink-0 rounded-xl"
+                  className="inline-flex min-h-[54px] items-center justify-center gap-3 bg-[#4b5f49] px-8 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-900"
                 >
-                  <span>Go to Dashboard</span>
-
-                  <ArrowRight className="w-4 h-4" />
+                  Go to Dashboard
+                  <ArrowRight className="h-4 w-4" />
                 </a>
               </SignedIn>
 
               <SignedOut>
                 <button
                   onClick={() => setOpenSignup(true)}
-                  className="px-8 py-5 bg-[#4b5f49] text-white text-sm font-bold tracking-widest uppercase hover:bg-stone-900 transition-colors inline-flex items-center space-x-4 flex-shrink-0 rounded-xl"
+                  className="inline-flex min-h-[54px] items-center justify-center gap-3 bg-[#3b4c39] px-8 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-900"
                 >
-                  <span>Register As Scout</span>
-
-                  <ArrowRight className="w-4 h-4" />
+                  Register As A Scout
+                  <ArrowRight className="h-4 w-4" />
                 </button>
               </SignedOut>
-            </>
+
+              <a
+                href="#how-it-works"
+                className="inline-flex min-h-[54px] items-center justify-center gap-3 border border-stone-300 bg-white px-8 text-sm font-bold uppercase tracking-widest text-stone-900 transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-50"
+              >
+                Learn How It Works
+                <ArrowRight className="h-4 w-4" />
+              </a>
             </div>
+
+
+          </motion.div>
+
+          {/* RIGHT IMAGE */}
+          <motion.div
+            initial={{
+              opacity: 0,
+              scale: 1.02,
+            }}
+            animate={{
+              opacity: 1,
+              scale: 1,
+            }}
+            transition={{
+              duration: 1,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="relative min-h-[400px] overflow-hidden md:min-h-[620px]"
+          >
+            <img
+              src="/images/scout-hero.jpeg"
+              alt="Scout documenting a retail property"
+              className="absolute inset-0 h-full w-full object-cover"
+            />
           </motion.div>
         </div>
       </section>
 
+      {/* WHY BECOME A SCOUT */}
+      <section className="relative py-24 sm:py-28">
+        <div className="mx-auto max-w-[85rem] px-6 sm:px-8 lg:px-12">
+          <div className="mb-14 text-center">
+            <h2 className="font-serif text-4xl tracking-tight sm:text-5xl">
+              Why Become a Whitelist Scout?
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
+            {benefits.map((item, index) => {
+              const Icon = item.icon;
+
+              return (
+                <motion.div
+                  key={item.title}
+                  initial={{
+                    opacity: 0,
+                    y: 25,
+                  }}
+                  whileInView={{
+                    opacity: 1,
+                    y: 0,
+                  }}
+                  viewport={{
+                    once: true,
+                    amount: 0.15,
+                  }}
+                  transition={{
+                    duration: 0.6,
+                    delay: index * 0.08,
+                  }}
+                  className="group min-h-[310px] border border-stone-300 bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
+                >
+                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#eef1eb] text-[#4b5f49] transition-colors duration-500 group-hover:bg-[#4b5f49] group-hover:text-white">
+                    <Icon
+                      className="h-7 w-7"
+                      strokeWidth={1.5}
+                    />
+                  </div>
+
+                  <h3 className="mt-7 text-center font-serif font-medium text-2xl leading-tight text-stone-900">
+                    {item.title}
+                  </h3>
+
+                  <p className="mt-4 text-base font-medium leading-relaxed text-stone-600">
+                    {item.description}
+                  </p>
+                </motion.div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+
+      {/* HOW IT WORKS */}
+      <section
+        id="how-it-works"
+        className="scroll-mt-24 pb-24 sm:pb-28"
+      >
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+          <div className="mb-14 text-center">
+            <h2 className="font-serif text-4xl tracking-tight sm:text-5xl">
+              How It Works
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-5">
+            {steps.map((step, index) => {
+              const Icon = step.icon;
+
+              return (
+                <div
+                  key={step.number}
+                  className="relative flex flex-col items-center text-center"
+                >
+                  <div className="relative">
+                    <div className="absolute -left-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#4b5f49] text-xs font-bold text-white">
+                      {step.number}
+                    </div>
+
+                    <div className="flex h-24 w-24 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-800 shadow-sm">
+                      <Icon
+                        className="h-10 w-10"
+                        strokeWidth={1.4}
+                      />
+                    </div>
+                  </div>
+
+                  <h3 className="mt-6 font-serif font-medium text-2xl text-stone-900">
+                    {step.title}
+                  </h3>
+
+                  <p className="mt-3 max-w-[220px] text-base font-medium leading-relaxed text-stone-600">
+                    {step.description}
+                  </p>
+
+                  {index < steps.length - 1 && (
+                    <ArrowRight className="absolute -right-7 top-10 hidden h-6 w-6 text-stone-800 md:block" />
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* URGENCY BANNER */}
+      <section className="pb-24 sm:pb-28">
+        <div className="mx-auto max-w-7xl px-0 sm:px-8 lg:px-12">
+          <div className="overflow-hidden rounded-none bg-[#edf1ea] sm:rounded-2xl sm:border sm:border-stone-200">
+            <div className="grid grid-cols-1 md:grid-cols-[1fr_1.15fr]">
+
+              {/* CONTENT */}
+              <div className="flex items-center gap-4 px-5 py-6 sm:gap-6 sm:p-10">
+                <div className="flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full border border-[#4b5f49]/20 bg-white text-[#4b5f49] sm:h-16 sm:w-16">
+                  <ClockAlert
+                    className="h-9 w-9 sm:h-8 sm:w-8"
+                    strokeWidth={2}
+                  />
+                </div>
+
+                <div className="min-w-0">
+                  <h3 className="font-serif text-2xl font-bold leading-tight text-stone-900 sm:text-3xl">
+                    Good Properties Don&apos;t Stay Available !
+                  </h3>
+
+                  <p className="mt-2 text-sm font-semibold leading-5 text-stone-600 sm:mt-3 sm:max-w-xl sm:text-[17px] sm:leading-relaxed">
+                    Prime retail spaces are discovered quickly. If you find a
+                    great location, submit it immediately before someone else
+                    does.
+                  </p>
+                </div>
+              </div>
+
+              {/* IMAGE */}
+              <div className="relative h-[180px] min-h-0 overflow-hidden md:min-h-[230px]">
+                <img
+                  src="/images/scout-property.jpeg"
+                  alt="Prime retail properties"
+                  className="absolute inset-0 h-full w-full object-cover"
+                />
+
+                {/* Soft fade from banner into image */}
+                <div className="absolute inset-y-0 left-0 hidden w-32 bg-gradient-to-r from-[#edf1ea] via-[#edf1ea]/75 to-transparent md:block md:w-40" />
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* WHITELIST ADVANTAGE */}
+      <section className="pb-24 sm:pb-28">
+        <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12">
+          <div className="mb-10 text-center sm:mb-14">
+            <h2 className="font-serif text-4xl leading-tight tracking-tight sm:text-5xl">
+              The Whitelist Advantage
+            </h2>
+          </div>
+
+          <div className="w-full overflow-hidden rounded-2xl border border-stone-300 bg-white">
+            {/* HEADER */}
+            <div className="grid min-w-0 grid-cols-2 text-center text-base font-bold">
+              <div className="min-w-0 bg-stone-200 px-2 py-3 text-base leading-tight text-stone-800 sm:px-5 sm:py-4 sm:text-2xl">
+                Traditional Brokerage
+              </div>
+
+              <div className="relative flex min-w-0 items-center justify-center bg-[#4b5f49] px-2 py-3 font-serif text-base leading-tight text-white sm:px-5 sm:py-4 sm:text-2xl">
+                WHITELIST
+
+                <span className="absolute left-0 top-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-stone-950 text-xs text-white sm:h-12 sm:w-12 sm:text-xl">
+                  VS
+                </span>
+              </div>
+            </div>
+
+            {/* ROWS */}
+            {[
+              [
+                "Multiple middlemen",
+                "Direct landlord sourcing",
+                Users,
+              ],
+              [
+                "Unstructured updates",
+                "Live dashboard & real-time tracking",
+                ClockAlert,
+              ],
+              [
+                "Manual follow-ups",
+                "Centralized process & transparent updates",
+                Check,
+              ],
+              [
+                "Local network only",
+                "Access to national retail brands",
+                MapPin,
+              ],
+            ].map(([traditional, whitelist, Icon], index) => {
+              const RowIcon = Icon as typeof Users;
+
+              return (
+                <div
+                  key={index}
+                  className="grid min-w-0 grid-cols-2 border-t border-stone-200"
+                >
+                  {/* TRADITIONAL */}
+                  <div className="flex min-w-0 min-h-[60px] items-center gap-2 px-3 py-3 sm:min-h-[68px] sm:gap-4 sm:px-8 sm:py-0">
+                    <RowIcon className="h-4 w-4 flex-shrink-0 text-stone-500 sm:h-5 sm:w-5" />
+
+                    <span className="min-w-0 break-words text-[11px] font-medium leading-[1.3] text-stone-700 sm:text-base sm:leading-normal">
+                      {traditional as string}
+                    </span>
+                  </div>
+
+                  {/* WHITELIST */}
+                  <div className="flex min-w-0 min-h-[60px] items-center gap-2 border-l border-stone-200 px-3 py-3 sm:min-h-[68px] sm:gap-4 sm:px-8 sm:py-0">
+                    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#4b5f49] text-white sm:h-6 sm:w-6">
+                      <Check className="h-3 w-3 sm:h-4 sm:w-4" />
+                    </span>
+
+                    <span className="min-w-0 break-words text-[11px] font-medium leading-[1.3] text-stone-700 sm:text-base sm:leading-normal">
+                      {whitelist as string}
+                    </span>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* FAQ */}
+      <section className="pb-24 sm:pb-28">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+          <div className="mb-14 text-center">
+            <h2 className="font-serif text-4xl tracking-tight sm:text-5xl">
+              Frequently Asked Questions
+            </h2>
+          </div>
+
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
+            {faqs.map((faq, index) => {
+              const isOpen = openFaq.includes(index);
+
+              return (
+                <div
+                  key={faq.question}
+                  className="overflow-hidden rounded-xl border border-stone-300 bg-white"
+                >
+                  <button
+                    onClick={() => {
+                      setOpenFaq((prev) =>
+                        isOpen
+                          ? prev.filter((item) => item !== index)
+                          : [...prev, index]
+                      );
+                    }}
+                    className="flex w-full items-center justify-between gap-5 px-6 py-5 text-left"
+                  >
+                    <span className="text-base font-semibold text-stone-900 sm:text-lg">
+                      {faq.question}
+                    </span>
+
+                    <Plus
+                      className={`h-5 w-5 flex-shrink-0 text-stone-700 transition-transform duration-300 ${isOpen ? "rotate-45" : ""
+                        }`}
+                    />
+                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {isOpen && (
+                      <motion.div
+                        initial={{
+                          height: 0,
+                          opacity: 0,
+                        }}
+                        animate={{
+                          height: "auto",
+                          opacity: 1,
+                        }}
+                        exit={{
+                          height: 0,
+                          opacity: 0,
+                        }}
+                      >
+                        <p className="border-t border-stone-200 px-6 py-5 text-base font-medium leading-relaxed text-stone-600">
+                          {faq.answer}
+                        </p>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
+      {/* FINAL CTA */}
+      <section className="pb-12 sm:pb-16">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+          <div className="overflow-hidden rounded-2xl bg-[#3b4c39]">
+            <div className="flex flex-col gap-8 px-7 py-9 sm:px-10 sm:py-10 md:flex-row md:items-center md:justify-between">
+              <div className="flex items-center gap-6">
+
+
+                <div>
+                  <h2 className="font-serif text-xl font-medium text-white sm:text-3xl md:text-[45px]">
+                    Ready to become a WHITELIST Scout ?
+                  </h2>
+
+                  <p className="mt-2 max-w-5xl text-[19px] font-medium leading-relaxed text-white/75">
+                    Join hundreds of scouts helping India&apos;s leading
+                    retail brands expand into new cities.
+                  </p>
+                </div>
+              </div>
+
+              <div className="flex flex-col items-stretch gap-3 sm:items-end">
+                <SignedIn>
+                  <a
+                    href="/dashboard"
+                    className="inline-flex min-h-[54px] items-center justify-center gap-3 rounded-md bg-[#d8bd68] px-8 text-sm font-bold uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-white"
+                  >
+                    Go To Dashboard
+                    <ArrowRight className="h-4 w-4" />
+                  </a>
+                </SignedIn>
+
+                <SignedOut>
+                  <button
+                    onClick={() => setOpenSignup(true)}
+                    className="inline-flex min-h-[54px] items-center justify-center gap-3 rounded-md bg-[#d8bd68] px-5 sm:px-8 text-base font-bold uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-white whitespace-nowrap">
+                    Register As A Scout
+                    <ArrowRight className="h-5 w-5" />
+                  </button>
+                </SignedOut>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* CLERK SIGNUP */}
       <SignUpButton
         mode="modal"
         forceRedirectUrl="/scout-redirect"
@@ -203,204 +663,165 @@ export default function ScoutsPage() {
         <button id="hidden-signup" className="hidden" />
       </SignUpButton>
 
-
+      {/* SIGNUP MODAL */}
       <AnimatePresence>
         {openSignup && (
           <>
-            {/* Background Blur */}
+            {/* BACKDROP */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               exit={{ opacity: 0 }}
-              transition={{ duration: 0.3, ease: "easeOut" }}
-              onClick={() => setOpenSignup(false)}
-              className="fixed inset-0 z-40 backdrop-blur-sm bg-black/5"
+              transition={{
+                duration: 0.3,
+                ease: "easeOut",
+              }}
+              onClick={() => {
+                setOpenSignup(false);
+                setRefCode("");
+                setTurnstileToken("");
+              }}
+              className="fixed inset-0 z-40 bg-black/5 backdrop-blur-sm"
             />
 
-            {/* Glass Modal */}
+            {/* MODAL */}
             <motion.div
-              initial={{ opacity: 0, y: -12 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -12 }}
-              transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              initial={{
+                opacity: 0,
+                y: -12,
+                scale: 0.98,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                y: -12,
+                scale: 0.98,
+              }}
+              transition={{
+                duration: 0.3,
+                ease: [0.22, 1, 0.36, 1],
+              }}
               className="fixed inset-0 z-50 flex items-center justify-center px-4"
             >
-              <div className="relative w-full max-w-md overflow-hidden rounded-[28px] bg-white/40 border border-white/20 shadow-[0_8px_40px_rgba(0,0,0,0.12)]">
+              <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/30 bg-white/70 shadow-[0_20px_70px_rgba(0,0,0,0.16)] backdrop-blur-xl">
 
-                {/* Reflection */}
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/20 via-white/5 to-transparent" />
+                {/* GLASS GRADIENT */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/10 to-transparent" />
 
-                <div className="relative z-10 p-7 md:p-8">
+                {/* CLOSE BUTTON */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpenSignup(false);
+                    setRefCode("");
+                    setTurnstileToken("");
+                  }}
+                  aria-label="Close"
+                  className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-stone-200/70 bg-white/60 text-stone-600 backdrop-blur-md transition-all duration-200 hover:bg-white hover:text-stone-900 hover:shadow-md"
+                >
+                  <X className="h-4 w-4" strokeWidth={2} />
+                </button>
 
-                  {/* Top Badge */}
-                  <div className="flex justify-center mb-6">
-                    <div className="px-4 py-1.5 rounded-full border border-white/30 bg-white/20 text-[11px] uppercase tracking-[0.25em] font-bold text-stone-700">
+                <div className="relative z-10 p-7 sm:p-8">
+
+                  {/* LABEL */}
+                  <div className="mb-6 flex justify-center">
+                    <div className="rounded-full border border-white/30 bg-white/30 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.25em] text-stone-700">
                       Scout Access
                     </div>
                   </div>
 
-                  {/* Heading */}
-                  <div className="text-center mb-7">
-                    <h2 className="text-2xl md:text-3xl font-serif tracking-tight text-stone-900 mb-2">
+                  {/* HEADING */}
+                  <div className="mb-7 text-center">
+                    <h2 className="mb-2 font-serif text-2xl tracking-tight text-stone-900 sm:text-3xl">
                       Enter Referral Code
                     </h2>
 
-                    <p className="text-sm text-stone-600 leading-relaxed font-light">
-                      If you were invited by an existing scout,
-                      enter their referral code below.
+                    <p className="text-sm font-light leading-relaxed text-stone-600">
+                      Enter the referral code provided by an existing Whitelist
+                      scout to continue.
                     </p>
                   </div>
 
-                  {/* Input */}
-                  <input
-                    type="text"
-                    placeholder="Referral code"
-                    value={refCode}
-                    onChange={(e) =>
-                      setRefCode(
-                        e.target.value.toUpperCase().replace(/\s/g, "")
-                      )
-                    }
-                    className="w-full rounded-2xl border
-                  border-white/30
-                  bg-white/30
-                  px-5
-                  py-4
-                  font-bold
-                  text-sm
-                  text-stone-900
-                  placeholder:text-stone-500
-                  outline-none
-                  transition-all
-                  duration-300
-                  focus:border-white/50
-                  focus:bg-white/40
-                  focus:shadow-[0_0_0_4px_rgba(255,255,255,0.15)]
-                "
-                  />
-
-                <div className="flex justify-center mt-6">
-                  <Turnstile
-                    siteKey={
-                      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
-                    }
-                    onSuccess={(token) => {
-                      setTurnstileToken(token);
-                    }}
-                  />
-                </div>
-                  {/* Buttons */}
-                  <div className="mt-7 space-y-3">
-
-                    {/* Continue */}
-                    <button
-                      onClick={async () => {
-                        if (!turnstileToken) {
-                          alert("Please verify you are human.");
-                          return;
-                        }
-                        const verification = await fetch(
-                          "/api/verify-turnstile",
-                          {method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                              token: turnstileToken,
-                            }),
-                          }
+                  {/* REFERRAL INPUT */}
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Referral code"
+                      value={refCode}
+                      onChange={(e) => {
+                        setRefCode(
+                          e.target.value
+                            .toUpperCase()
+                            .replace(/\s/g, "")
                         );
-                        const result = await verification.json();
-                        if (!result.success) {
-                          alert("Verification failed.");
-                          return;
-                        }
-                        if (refCode && refCode.trim() !== "") {
-                          localStorage.setItem(
-                            "referralCode",
-                            refCode.trim().toUpperCase()
-                          );
-                        }
 
-                        setOpenSignup(false);
-
-                        document
-                          .getElementById("hidden-signup")
-                          ?.click();
                       }}
-                      disabled={!turnstileToken}
-                      className="
-                    w-full
-                    rounded-2xl
-                    bg-[#4b5f49]
-                    text-white
-                    py-4
-                    text-sm
-                    font-bold
-                    uppercase
-                    tracking-[0.18em]
-                    transition-all
-                    duration-300
-                    hover:bg-stone-900
-                    hover:scale-[1.01]
-                    active:scale-[0.99]
-                  "
+                      className={`w-full rounded-2xl border px-5 py-4 text-sm font-bold text-stone-900 outline-none transition-all duration-300 placeholder:text-stone-500 focus:bg-white/40 focus:shadow-[0_0_0_4px_rgba(255,255,255,0.15)] ${referralValid
+                        ? "border-[#4b5f49]/50 bg-[#4b5f49]/5"
+                        : "border-white/30 bg-white/30 focus:border-white/50"
+                        }`}
+                    />
+
+                    {/* VALIDATION MESSAGE */}
+                    {refCode.trim() !== "" && (
+                      <div className="mt-2 px-1 text-xs font-medium">
+                        {checkingReferral ? (
+                          <span className="text-stone-500">
+                            Checking referral code...
+                          </span>
+                        ) : referralValid ? (
+                          <span className="text-[#4b5f49]">
+                            ✓ Valid referral code
+                          </span>
+                        ) : (
+                          <span className="text-red-500">
+                            Invalid referral code
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* TURNSTILE */}
+                  <div className="mt-6 flex justify-center">
+                    <Turnstile
+                      siteKey={
+                        process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                      }
+                      onSuccess={(token) => {
+                        setTurnstileToken(token);
+                      }}
+                    />
+                  </div>
+
+                  {/* CONTINUE */}
+                  <div className="mt-7">
+                    <button
+                      onClick={() => handleSignup(true)}
+                      disabled={
+                        !referralValid ||
+                        !turnstileToken ||
+                        checkingReferral
+                      }
+                      className="w-full rounded-2xl bg-[#4b5f49] py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:scale-[1.01] hover:bg-stone-900 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
                     >
                       {!turnstileToken
-                        ? "Verifying..."
-                        : "Continue"}
+                        ? "Verify You Are Human"
+                        : !referralValid
+                          ? "Enter Valid Referral Code"
+                          : "Continue"}
                     </button>
-
-                    {/* Skip */}
-                    <button
-                      onClick={async () => {
-
-                        if (!turnstileToken) {
-                          alert("Please verify you are human.");
-                          return;
-                        }
-                        const verification = await fetch(
-                          "/api/verify-turnstile",
-                          {
-                            method: "POST",
-                            headers: {
-                              "Content-Type": "application/json",
-                            },
-                            body: JSON.stringify({
-                              token: turnstileToken,
-                            }),
-                          }
-                        );
-                        const result = await verification.json();
-                        if (!result.success) {
-                          alert("Verification failed.");
-                          return;
-                        }
-                        setOpenSignup(false);
-
-                        document
-                          .getElementById("hidden-signup")
-                          ?.click();
-                      }}
-                      disabled={!turnstileToken}
-                      className="
-                    w-full
-                    rounded-2xl
-                    border
-                    border-white/20
-                    bg-white/10
-                    py-4
-                    text-sm
-                    text-stone-700
-                    transition-all
-                    duration-300
-                    hover:bg-white/20
-                  "
-                    >
-                      Skip for Now
-                    </button>
-
                   </div>
+
+                  {/* SMALL FOOTNOTE */}
+                  <p className="mt-4 text-center text-[11px] leading-relaxed text-stone-500">
+                    A valid referral code is required to register as a Scout.
+                  </p>
                 </div>
               </div>
             </motion.div>

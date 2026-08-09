@@ -273,111 +273,44 @@ function LandingPageContent() {
         onMouseLeave={() => setIsHovering(false)}
         className="relative min-h-[85vh] overflow-hidden"
       >
-        <div className="relative z-10 grid grid-cols-1 md:grid-cols-[60%_40%] items-center">
-
+        <div className="relative z-10 grid grid-cols-1 items-center md:grid-cols-[60%_40%]">
           {/* LEFT SIDE — HERO CONTENT */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="
-              flex
-              flex-col
-              justify-center
-              px-6
-              sm:px-10
-              md:px-12
-              lg:px-16
-              xl:px-20
-              py-10
-              md:py-14
-              text-left
-              "
+            className="flex flex-col justify-center px-6 py-4 text-left sm:px-10 md:px-12 md:py-6 lg:px-16 xl:px-20"
           >
-
             {/* Badge */}
             <motion.div
               variants={fadeUp}
-              className="
-                  inline-flex
-                  w-fit
-                  mb-6
-                  px-4
-                  py-1.5
-                  border
-                  border-stone-300
-                  rounded-2xl
-                  text-xs
-                  font-semibold
-                  tracking-widest
-                  uppercase
-                  text-stone-500
-                  bg-white/50
-                  backdrop-blur-sm
-                "
+              className="mb-6 lg:px-2 text-sm font-semibold uppercase tracking-widest text-stone-500"
             >
-              The infrastructure for offline expansion
+              The infrastructure for 
+              <span className="sm:hidden"> <br /></span>
+              <span className="sm:inline"> </span>
+              offline expansion
             </motion.div>
 
             {/* Main Heading */}
             <motion.h1
               variants={fadeUp}
-              className="
-                  text-5xl
-                  sm:text-6xl
-                  md:text-6xl
-                  lg:text-7xl
-                  xl:text-8xl
-                  font-serif
-                  mb-7
-                  leading-[1.02]
-                  tracking-tight
-                  text-stone-900
-                "
+              className="mb-7 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-stone-900 sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl"
             >
               Retail Expansion
               <br />
-              <span className="italic text-stone-600">
-                Simplified.
-              </span>
+              <span className="italic text-[#4b5f49]">Simplified.</span>
             </motion.h1>
 
             {/* Subtext */}
-            <motion.div
-              variants={fadeUp}
-              className="
-                  max-w-xl
-                  mb-9
-                "
-            >
-              <p
-                className="
-                    text-base
-                    sm:text-lg
-                    md:text-lg
-                    lg:text-xl
-                    text-stone-600
-                    font-medium
-                    leading-relaxed
-                  "
-              >
+            <motion.div variants={fadeUp} className="mb-9 max-w-xl">
+              <p className="text-base font-medium leading-relaxed text-stone-600 sm:text-lg md:text-lg lg:text-xl">
                 Whitelist is a retail real-estate sourcing and expansion platform
                 that connects brands with verified, expansion-ready commercial
                 properties across high-growth cities.
               </p>
 
-              <p
-                className="
-                    mt-5
-                    text-base
-                    sm:text-lg
-                    md:text-lg
-                    lg:text-xl
-                    text-stone-600
-                    font-medium
-                    leading-relaxed
-                  "
-              >
+              <p className="mt-5 text-base font-medium leading-relaxed text-stone-600 sm:text-lg md:text-lg lg:text-xl">
                 We bring structure, transparency, and coordination to offline
                 retail expansion.
               </p>
@@ -387,73 +320,35 @@ function LandingPageContent() {
             <motion.div variants={fadeUp}>
               <Link
                 href="/landlords#property-form"
-                className="
-                    inline-flex
-                    items-center
-                    justify-center
-                    gap-3
-                    px-7
-                    sm:px-8
-                    py-4
-                    bg-stone-900
-                    text-white
-                    text-sm
-                    font-bold
-                    tracking-widest
-                    uppercase
-                    transition-all
-                    duration-300
-                    hover:bg-stone-800
-                    hover:-translate-y-0.5
-                    w-full
-                    sm:w-fit
-                  "
+                className="inline-flex w-full items-center justify-center gap-3 bg-stone-900 px-7 py-4 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-800 sm:w-fit sm:px-8"
               >
                 <span>List a Property</span>
-
-                <ArrowRight className="w-4 h-4" />
+                <ArrowRight className="h-4 w-4" />
               </Link>
             </motion.div>
-
           </motion.div>
-
 
           {/* RIGHT SIDE — HERO IMAGE */}
           <motion.div
-          initial={{ opacity: 0, scale: 1.02 }}
-          animate={{ opacity: 1, scale: 1 }}
-          transition={{
-            duration: 1,
-            ease: [0.22, 1, 0.36, 1],
-          }}
-          className="
-            relative
-            w-full
-            aspect-[4/3]
-            overflow-hidden
-            rounded-[28px]
-            border
-            border-stone-300/70
-            bg-stone-200
-          "
-        >
+            initial={{ opacity: 0, scale: 1.02 }}
+            animate={{ opacity: 1, scale: 1 }}
+            transition={{
+              duration: 1,
+              ease: [0.22, 1, 0.36, 1],
+            }}
+            className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] border border-stone-300/70 bg-stone-200"
+          >
             <Image
-            src="/images/retail-hero.jpeg"
-            alt="Modern retail commercial property"
-            fill
-            priority
-            sizes="(max-width: 768px) 100vw, 40vw"
-            className="
-              object-cover
-              scale-[1.01]
-            "
-          />
-  
+              src="/images/retail-hero.jpeg"
+              alt="Modern retail commercial property"
+              fill
+              priority
+              sizes="(max-width: 768px) 100vw, 40vw"
+              className="scale-[1.01] object-cover"
+            />
           </motion.div>
-
         </div>
       </section>
-
 
 
       {/* HOW WHITELIST WORKS */}
@@ -561,7 +456,7 @@ function LandingPageContent() {
             <h2 className="text-3xl md:text-5xl font-serif mb-4">Whitelist Network Strength</h2>
             <p className="text-stone-400 font-light text-[22px] leading-relaxed tracking-wide">Inventory sourced through Verified Landlords and On-Ground Scouts</p>
           </div>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 divide-x divide-stone-700 border-y border-stone-700 py-12">
+          <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:divide-x md:divide-stone-700 border-y border-stone-700 py-12">
             {[
               { number: "175+", label: "Properties Listed" },
               { number: "57", label: "Active Scouts" },
@@ -674,194 +569,194 @@ function LandingPageContent() {
       </section>
 
       {/* RETAIL MARKETS SECTION */}
-<section className="relative py-24 md:py-28 bg-[#111214] text-stone-100 overflow-hidden">
-  {/* Subtle ambient background */}
-  <div className="absolute inset-0 pointer-events-none">
-    <div className="absolute -top-40 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-stone-500/5 blur-3xl" />
-  </div>
-
-  <div className="relative max-w-7xl mx-auto px-0 md:px-6">
-    {/* SECTION HEADER */}
-    <div className="text-center mb-14 md:mb-16 px-6">
-      <motion.h2 
-        initial={{ opacity: 0, y: 20 }} 
-        whileInView={{ opacity: 1, y: 0 }} 
-        viewport={{ once: true }} 
-        className="text-4xl sm:text-5xl md:text-5xl font-serif tracking-tight text-white mb-4"
-      >
-        Retail Markets We Operate In
-      </motion.h2>
-      <motion.p 
-        initial={{ opacity: 0, y: 20 }} 
-        whileInView={{ opacity: 1, y: 0 }} 
-        viewport={{ once: true }} 
-        transition={{ delay: 0.1 }} 
-        className="max-w-2xl mx-auto text-stone-400  font-medium text-base md:text-lg leading-relaxed"
-      >
-        Whitelist focuses on high-growth retail markets across key regions.
-      </motion.p>
-    </div>
-
-
-
-
-
-
-
-
-
-
-
-      {/* MARKETS CAROUSEL / DESKTOP GRID */}
-      <div 
-        ref={scrollContainerRef} 
-        onScroll={handleScroll} 
-        className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 pb-4 md:grid md:grid-cols-4 md:gap-4 md:px-0 md:pb-0 scroll-px-6 md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
-      >
-        {markets.map((market, index) => (
-          <motion.div 
-            key={market.title} 
-            initial={{ opacity: 0, y: 20 }} 
-            whileInView={{ opacity: 1, y: 0 }} 
-            viewport={{ once: true }} 
-            transition={{ delay: index * 0.06, duration: 0.6 }} 
-            className="group relative shrink-0 snap-center w-[86vw] sm:w-[60vw] md:w-auto h-full flex flex-col overflow-hidden rounded-[14px] border border-white/[0.10] bg-white/[0.045] backdrop-blur-md p-3 transition-all duration-500 hover:border-white/[0.18] hover:bg-white/[0.065] hover:-translate-y-1"
-          >
-            {/* CARD CONTENT */}
-            <div className="flex flex-col h-full">
-              {/* TITLE */}
-              <div className="px-2 pt-2 pb-3 text-center">
-                <h3 className="font-sans text-xl md:text-2xl text-stone-100 leading-relaxed font-medium">
-                  {market.title}
-                </h3>
-                <p className="font-sans mt-1.5 text-[11px] md:text-xs text-stone-400 font-medium leading-relaxed whitespace-nowrap overflow-hidden text-ellipsis">
-                  {market.cities}
-                </p>
-              </div>
-
-              {/* IMAGE */}
-              <div className="relative w-full aspect-[1/1] overflow-hidden rounded-[11px] bg-stone-800">
-                <img 
-                  src={market.img} 
-                  alt={`${market.title} retail market`} 
-                  className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]" 
-                />
-                {/* Very subtle image overlay */}
-                <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-white/[0.03]" />
-              </div>
-              
-            </div>
-          </motion.div>
-        ))}
-
-        {/* DON'T SEE YOUR CITY CARD */}
-        <motion.div 
-          initial={{ opacity: 0, y: 20 }} 
-          whileInView={{ opacity: 1, y: 0 }} 
-          viewport={{ once: true }} 
-          transition={{ delay: markets.length * 0.06, duration: 0.6 }} 
-          className="group relative shrink-0 snap-center w-[86vw] sm:w-[60vw] md:w-auto min-h-full overflow-hidden rounded-[14px] border border-white/[0.10] bg-white/[0.045] backdrop-blur-md p-6 md:p-7 flex flex-col items-center justify-center text-center transition-all duration-500 hover:border-white/[0.18] hover:bg-white/[0.065] hover:-translate-y-1"
-        >
-          {/* MAIL ICON */}
-          <div className="flex items-center justify-center w-8 h-8 mb-2 text-[#d5b85a]">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
-              <rect x="3" y="3" width="18" height="14" rx="2" />
-              <path d="m3 7 9 6 9-6" />
-            </svg>
-          </div>
-
-          {/* TITLE */}
-          <h3 className="text-xl md:text-2xl text-stone-100 tracking-tight">
-            Don't See Your City?
-          </h3>
-
-          {/* DESCRIPTION */}
-          <p className="mt-3 max-w-[260px] text-sm md:text-sm leading-relaxed text-stone-400">
-            We are continuously expanding our sourcing network across India.
-          </p>
-          <p className="mt-3 mb-2 max-w-[280px] text-sm md:text-sm leading-relaxed text-stone-400">
-            If your city isn't listed yet, share your details with us and we'll notify you as soon as Whitelist starts operating in your market.
-          </p>
-
-          {/* MAIL CTA */}
-          <Link 
-            href="mailto:contact@whitelistretail.com" 
-            className="group/mail mt-6 w-full h-10 rounded-[10px] border border-white/[0.10] flex items-center justify-between px-4 text-[11px] md:text-xs font-semibold tracking-[0.16em] uppercase text-[#d5b85a] transition-all duration-300 hover:bg-white/[0.06] hover:border-[#d5b85a]/40"
-          >
-            <span>Mail Us</span>
-            <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/mail:translate-x-1" />
-          </Link>
-        </motion.div>
-      </div>
-
-      {/* MOBILE PAGINATION */}
-      <div className="flex md:hidden justify-center items-center gap-2.5 mt-7 px-6">
-        {markets.map((_, idx) => (
-          <div 
-            key={idx} 
-            className={`h-1.5 rounded-full transition-all duration-300 ${activeSlide === idx ? "w-7 bg-[#d5b85a]" : "w-1.5 bg-stone-700"}`} 
-          />
-        ))}
-        {/* CTA card indicator */}
-        <div className={`h-1.5 rounded-full transition-all duration-300 ${activeSlide === markets.length ? "w-7 bg-[#d5b85a]" : "w-1.5 bg-stone-700"}`} />
-      </div>
-    </div>
-  </section>
-
-
-
-
-
-
-
-
-
-
-
-  {/* Brands Grid */}
-    <section className="border-y border-stone-200 bg-white py-18 md:py-28">
-      <div className="mx-auto max-w-6xl px-6">
-        {/* HEADING */}
-        <div className="mb-16 text-center md:mb-12">
-          <h2 className="mb-4 font-serif font-semibold text-3xl md:text-4xl">
-            Brands We Currently Work With
-          </h2>
-          <p className="text-base font-medium text-stone-500 md:text-lg">
-            Partnering with growth-focused retail brands for their expansion needs.
-          </p>
+      <section className="relative py-24 md:py-28 bg-[#111214] text-stone-100 overflow-hidden">
+        {/* Subtle ambient background */}
+        <div className="absolute inset-0 pointer-events-none">
+          <div className="absolute -top-40 left-1/2 h-[500px] w-[700px] -translate-x-1/2 rounded-full bg-stone-500/5 blur-3xl" />
         </div>
 
-        {/* LOGO GRID */}
-        <div className="grid grid-cols-2 py-5 gap-x-10 gap-y-16 md:grid-cols-4 md:gap-x-16 md:gap-y-20">
-          {brands.map((brand, i) => (
-            <motion.div
-              key={brand.name}
-              initial={{ opacity: 0, y: 15 }}
+        <div className="relative max-w-7xl mx-auto px-0 md:px-6">
+          {/* SECTION HEADER */}
+          <div className="text-center mb-14 md:mb-16 px-6">
+            <motion.h2
+              initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
-              transition={{ delay: i * 0.05, duration: 0.5 }}
-              className="group flex flex-col items-center justify-center text-center"
+              className="text-4xl sm:text-5xl md:text-5xl font-serif tracking-tight text-white mb-4"
             >
-              {/* LOGO */}
-              <div className="relative mb-3 flex h-20 w-full items-center justify-center transition-transform duration-500 group-hover:-translate-y-1 md:h-24">
-                <Image
-                  src={brand.logo}
-                  alt={`${brand.name} logo`}
-                  width={180}
-                  height={80}
-                  className="max-h-23 max-w-[180px] object-contain opacity-100  md:max-h-24 md:max-w-[220px]"
-                />
+              Retail Markets We Operate In
+            </motion.h2>
+            <motion.p
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: 0.1 }}
+              className="max-w-2xl mx-auto text-stone-400  font-medium text-base md:text-lg leading-relaxed"
+            >
+              Whitelist focuses on high-growth retail markets across key regions.
+            </motion.p>
+          </div>
+
+
+
+
+
+
+
+
+
+
+
+          {/* MARKETS CAROUSEL / DESKTOP GRID */}
+          <div
+            ref={scrollContainerRef}
+            onScroll={handleScroll}
+            className="flex overflow-x-auto snap-x snap-mandatory gap-4 px-6 pb-4 md:grid md:grid-cols-4 md:gap-4 md:px-0 md:pb-0 scroll-px-6 md:overflow-visible [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none]"
+          >
+            {markets.map((market, index) => (
+              <motion.div
+                key={market.title}
+                initial={{ opacity: 0, y: 20 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: index * 0.06, duration: 0.6 }}
+                className="group relative shrink-0 snap-center w-[86vw] sm:w-[60vw] md:w-auto h-full flex flex-col overflow-hidden rounded-[14px] border border-white/[0.10] bg-white/[0.045] backdrop-blur-md p-3 transition-all duration-500 hover:border-white/[0.18] hover:bg-white/[0.065] hover:-translate-y-1"
+              >
+                {/* CARD CONTENT */}
+                <div className="flex flex-col h-full">
+                  {/* TITLE */}
+                  <div className="px-2 pt-2 pb-3 text-center">
+                    <h3 className="font-sans text-xl md:text-2xl text-stone-100 leading-relaxed font-medium">
+                      {market.title}
+                    </h3>
+                    <p className="font-sans mt-1.5 text-[11px] md:text-xs text-stone-400 font-medium leading-relaxed whitespace-nowrap overflow-hidden text-ellipsis">
+                      {market.cities}
+                    </p>
+                  </div>
+
+                  {/* IMAGE */}
+                  <div className="relative w-full aspect-[1/1] overflow-hidden rounded-[11px] bg-stone-800">
+                    <img
+                      src={market.img}
+                      alt={`${market.title} retail market`}
+                      className="w-full h-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.04]"
+                    />
+                    {/* Very subtle image overlay */}
+                    <div className="absolute inset-0 pointer-events-none bg-gradient-to-t from-black/20 via-transparent to-white/[0.03]" />
+                  </div>
+
+                </div>
+              </motion.div>
+            ))}
+
+            {/* DON'T SEE YOUR CITY CARD */}
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ delay: markets.length * 0.06, duration: 0.6 }}
+              className="group relative shrink-0 snap-center w-[86vw] sm:w-[60vw] md:w-auto min-h-full overflow-hidden rounded-[14px] border border-white/[0.10] bg-white/[0.045] backdrop-blur-md p-6 md:p-7 flex flex-col items-center justify-center text-center transition-all duration-500 hover:border-white/[0.18] hover:bg-white/[0.065] hover:-translate-y-1"
+            >
+              {/* MAIL ICON */}
+              <div className="flex items-center justify-center w-8 h-8 mb-2 text-[#d5b85a]">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" className="w-7 h-7">
+                  <rect x="3" y="3" width="18" height="14" rx="2" />
+                  <path d="m3 7 9 6 9-6" />
+                </svg>
               </div>
 
-              {/* BRAND NAME */}
-              <div className="font-sans text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 transition-colors duration-300 group-hover:text-stone-900 md:text-sm">
-                {brand.name}
-              </div>
+              {/* TITLE */}
+              <h3 className="text-xl md:text-2xl text-stone-100 tracking-tight">
+                Don't See Your City?
+              </h3>
+
+              {/* DESCRIPTION */}
+              <p className="mt-3 max-w-[260px] text-sm md:text-sm leading-relaxed text-stone-400">
+                We are continuously expanding our sourcing network across India.
+              </p>
+              <p className="mt-3 mb-2 max-w-[280px] text-sm md:text-sm leading-relaxed text-stone-400">
+                If your city isn't listed yet, share your details with us and we'll notify you as soon as Whitelist starts operating in your market.
+              </p>
+
+              {/* MAIL CTA */}
+              <Link
+                href="mailto:contact@whitelistretail.com"
+                className="group/mail mt-6 w-full h-10 rounded-[10px] border border-white/[0.10] flex items-center justify-between px-4 text-[11px] md:text-xs font-semibold tracking-[0.16em] uppercase text-[#d5b85a] transition-all duration-300 hover:bg-white/[0.06] hover:border-[#d5b85a]/40"
+              >
+                <span>Mail Us</span>
+                <ArrowRight className="w-4 h-4 transition-transform duration-300 group-hover/mail:translate-x-1" />
+              </Link>
             </motion.div>
-          ))}
+          </div>
+
+          {/* MOBILE PAGINATION */}
+          <div className="flex md:hidden justify-center items-center gap-2.5 mt-7 px-6">
+            {markets.map((_, idx) => (
+              <div
+                key={idx}
+                className={`h-1.5 rounded-full transition-all duration-300 ${activeSlide === idx ? "w-7 bg-[#d5b85a]" : "w-1.5 bg-stone-700"}`}
+              />
+            ))}
+            {/* CTA card indicator */}
+            <div className={`h-1.5 rounded-full transition-all duration-300 ${activeSlide === markets.length ? "w-7 bg-[#d5b85a]" : "w-1.5 bg-stone-700"}`} />
+          </div>
         </div>
-      </div>
-    </section>
+      </section>
+
+
+
+
+
+
+
+
+
+
+
+      {/* Brands Grid */}
+      <section className="border-y border-stone-200 bg-white py-18 md:py-28">
+        <div className="mx-auto max-w-6xl px-6">
+          {/* HEADING */}
+          <div className="mb-16 text-center md:mb-12">
+            <h2 className="mb-4 font-serif font-semibold text-3xl md:text-4xl">
+              Brands We Currently Work With
+            </h2>
+            <p className="text-base font-medium text-stone-500 md:text-lg">
+              Partnering with growth-focused retail brands for their expansion needs.
+            </p>
+          </div>
+
+          {/* LOGO GRID */}
+          <div className="grid grid-cols-2 py-5 gap-x-10 gap-y-16 md:grid-cols-4 md:gap-x-16 md:gap-y-20">
+            {brands.map((brand, i) => (
+              <motion.div
+                key={brand.name}
+                initial={{ opacity: 0, y: 15 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true }}
+                transition={{ delay: i * 0.05, duration: 0.5 }}
+                className="group flex flex-col items-center justify-center text-center"
+              >
+                {/* LOGO */}
+                <div className="relative mb-3 flex h-20 w-full items-center justify-center transition-transform duration-500 group-hover:-translate-y-1 md:h-24">
+                  <Image
+                    src={brand.logo}
+                    alt={`${brand.name} logo`}
+                    width={180}
+                    height={80}
+                    className="max-h-23 max-w-[180px] object-contain opacity-100  md:max-h-24 md:max-w-[220px]"
+                  />
+                </div>
+
+                {/* BRAND NAME */}
+                <div className="font-sans text-xs font-semibold uppercase tracking-[0.16em] text-stone-500 transition-colors duration-300 group-hover:text-stone-900 md:text-sm">
+                  {brand.name}
+                </div>
+              </motion.div>
+            ))}
+          </div>
+        </div>
+      </section>
 
       {/* Footer */}
       <footer className="bg-stone-950 text-stone-400 py-20 px-6 border-t border-stone-900">
@@ -879,14 +774,14 @@ function LandingPageContent() {
               <li><Link href="/landlords" className="hover:text-white transition-colors">Landlords</Link></li>
               <li><Link href="/scouts" className="hover:text-white transition-colors">Scouts</Link></li>
               <li><Link href="/influencer-login" className="hover:text-white transition-colors">Influencer</Link></li>
-              <li><Link href="/dashboard/admin" className="hover:text-white transition-colors">ADMIN</Link></li>
+              <li><Link href="/dashboard/admin" className="hover:text-white transition-colors">Admin</Link></li>
             </ul>
           </div>
           <div>
             <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Company</h4>
             <ul className="space-y-4 text-sm font-light">
               <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
-
+              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
             </ul>
           </div>
           <div>
@@ -901,10 +796,9 @@ function LandingPageContent() {
         <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
 
-          <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
+          
           <div className="flex space-x-6">
-            <Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link>
-            <Link href="/terms" className="hover:text-white transition-colors">Terms of Service</Link>
+          <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
           </div>
         </div>
       </footer>
