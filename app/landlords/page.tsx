@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -112,6 +112,30 @@ export default function LandlordsPage() {
     }
   };
 
+  const fadeUp: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 24,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+  
+  const staggerContainer: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+      },
+    },
+  };
+
   return (
     <main className="relative min-h-screen text-stone-900 overflow-x-hidden">
 
@@ -138,39 +162,51 @@ export default function LandlordsPage() {
 
             {/* LEFT CONTENT */}
             <motion.div
-              initial={{ opacity: 0, x: -30 }}
-              animate={{ opacity: 1, x: 0 }}
-              transition={{ duration: 0.8, ease: "easeOut" }}
+              initial="hidden"
+              animate="visible"
+              variants={staggerContainer}
               className="max-w-[620px]"
             >
 
-            <div className="mb-6 flex w-fit items-center gap-3">
+            <motion.div
+              variants={fadeUp}
+              className="mb-6 flex w-fit items-center gap-3"
+            >
               <span className="h-px w-12 bg-[#4b5f49]" />
 
               <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
                 for property owners
               </span>
-            </div>
+            </motion.div>
 
-            <h1 className="text-5xl sm:text-6xl xl:text-7xl font-semibold tracking-[-0.06em] leading-[0.92] text-stone-950">
+            <motion.h1
+              variants={fadeUp}
+              className="text-5xl sm:text-6xl xl:text-7xl font-semibold tracking-[-0.06em] leading-[0.92] text-stone-950"
+            >
               The Right Retail Tenant.
               <br />
               <span className="italic text-[#4b5f49]">
                 For The Right Property.
               </span>
-            </h1>
+            </motion.h1>
 
 
               {/* Subtext */}
-              <p className="mt-8 text-lg text-black leading-relaxed max-w-xl font-medium">
+              <motion.p
+                variants={fadeUp}
+                className="mt-8 text-lg text-black leading-relaxed max-w-xl font-medium"
+              >
                 Submit your commercial property once.
                 Our team verifies, evaluates, and presents suitable opportunities to well established
                 & expanding retail brands actively searching for new locations.
-              </p>
+              </motion.p>
 
 
               {/* Features */}
-              <div className="grid grid-cols-1 mt-10 gap-5">
+              <motion.div
+                variants={fadeUp}
+                className="grid grid-cols-1 mt-10 gap-5"
+              >
                 {[
                   {
                     icon: Building2,
@@ -202,10 +238,13 @@ export default function LandlordsPage() {
                     </div>
                   );
                 })}
-              </div>
+              </motion.div>
 
               {/* TRUST STRIP */}
-              <div className="mt-12">
+              <motion.div
+                variants={fadeUp}
+                className="mt-12"
+              >
                 <div className="bg-white/72 backdrop-blur-md border border-white/70 rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.06)] overflow-hidden">
 
                   <div className="divide-y divide-stone-200/70">
@@ -248,7 +287,7 @@ export default function LandlordsPage() {
                     ))}
                   </div>
                 </div>
-              </div>
+              </motion.div>
 
               {/* MOBILE FORM */}
               <div
@@ -574,12 +613,18 @@ export default function LandlordsPage() {
 
             {/* DESKTOP FORM */}
             <motion.div
-              initial={{ opacity: 0, y: 30 }}
-              animate={{ opacity: 1, y: 0 }}
+              initial={{
+                opacity: 0,
+                y: 24,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+              }}
               transition={{
                 duration: 0.8,
                 delay: 0.2,
-                ease: "easeOut",
+                ease: [0.22, 1, 0.36, 1],
               }}
               className="hidden lg:block lg:sticky lg:top-28"
             >

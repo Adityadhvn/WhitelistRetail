@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "motion/react";
+import { motion, type Variants } from "motion/react";
 import Navbar from "@/components/Navbar";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
@@ -12,15 +12,14 @@ import { Turnstile } from "@marsidev/react-turnstile";
 import {
   CheckCircle,
   Building2,
-  MapPin,
-  Target,
+
   TrendingUp,
   ShieldCheck,
   Headset,
   UserSearch,
   Rocket,
   Clock3,
-  Store,
+
 } from "lucide-react";
 
 const brandSchema = z.object({
@@ -99,30 +98,35 @@ export default function BrandsPage() {
     }
   };
 
-  const features = [
-    {
-      icon: Target,
-      title: "Precision Sourcing",
-      desc: "We match requirements based on footfall, frontage, and neighboring tenant mix.",
-    },
-    {
-      icon: MapPin,
-      title: "High-Growth Markets",
-      desc: "Deep coverage across Delhi-NCR, UP, Rajasthan, and beyond.",
-    },
-    {
-      icon: Building2,
-      title: "Coordinated Execution",
-      desc: "Managed documentation and unified communication through all deal stages.",
-    },
-  ];
-
   const stats = [
     { value: "175+", label: "Verified Spaces" },
     { value: "75+", label: "Cities Covered" },
     { value: "35+", label: "Brands" },
   ];
 
+  const fadeUp: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 24,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+  
+  const staggerContainer: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+      },
+    },
+  };
 
 
   return (
@@ -132,51 +136,62 @@ export default function BrandsPage() {
       <main>
         <section className="relative overflow-hidden">
           {/* Background */}
-          <div className="absolute inset-0">
-            <div className="absolute left-0 top-0 h-full w-full bg-gradient-to-r from-[#F8F6F2] via-[#F8F6F2]/85 to-[#F8F6F2]/50 z-10" />
+          <div className="fixed left-0 top-0 -z-10 h-[100svh] w-screen overflow-hidden">
+          <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#F8F6F2]/10 via-[#F8F6F2]/65 to-[#F8F6F2]/90" />
 
-            <div
-              className="absolute inset-0 bg-cover bg-center scale-105"
-              style={{
-                backgroundImage:
-                  "url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?q=80&w=2000&auto=format&fit=crop')",
-              }}
-            />
-          </div>
-
+          <div
+          className="absolute inset-0 bg-cover bg-center"
+          style={{
+            backgroundImage: "url('/images/brand-hero.jpg')",
+          }}
+        />
+      </div>
+          
           <div className="relative z-20 w-full max-w-7xl mx-auto px-4 pt-32 pb-20">
             <div className="grid min-w-0 lg:grid-cols-[1fr_620px] gap-16 items-start">
               {/* Left Side */}
               <motion.div
-                initial={{ opacity: 0, x: -30 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.8, ease: "easeOut" }}
+                initial="hidden"
+                animate="visible"
+                variants={staggerContainer}
                 className="w-full min-w-0 max-w-2xl -translate-y-4"
               >
-               <div className="mb-6 flex w-fit items-center gap-3">
+               <motion.div
+                  variants={fadeUp}
+                  className="mb-6 flex w-fit items-center gap-3"
+                >
                 <span className="h-px w-12 bg-[#4b5f49]" />
 
                 <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
                   for brands
                 </span>
-              </div>
+              </motion.div>
 
-                <h1 className="text-5xl sm:text-6xl xl:text-7xl font-semibold font-serif leading-[0.98] tracking-tight">
+              <motion.h1
+                variants={fadeUp}
+                className="text-5xl sm:text-6xl xl:text-7xl font-semibold font-serif leading-[0.98] tracking-tight"
+              >
                   Your Expansion.
                   <br />
                   <span className="italic text-[#4b5f49]">Our Network.</span>
                   <br />
                   Perfect Locations.
-                </h1>
+                </motion.h1>
 
-                <p className="mt-8 text-lg text-stone-600 leading-relaxed max-w-xl font-medium">
+                <motion.p
+                  variants={fadeUp}
+                  className="mt-8 text-lg text-black leading-relaxed max-w-xl font-medium"
+                >
                   Tell us your expansion requirements. Our network of verified
                   scouts and landlords will source high-potential spaces
                   tailored to your brand&apos;s growth strategy.
-                </p>
+                </motion.p>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-4 mt-12 max-w-xl">
+                <motion.div
+                  variants={fadeUp}
+                  className="grid grid-cols-3 gap-4 mt-12 max-w-xl"
+                >
                   {stats.map((stat, idx) => (
                     <div
                       key={idx}
@@ -191,10 +206,13 @@ export default function BrandsPage() {
                       </div>
                     </div>
                   ))}
-                </div>
+                </motion.div>
 
                 {/* TRUST STRIP */}
-                <div className="mt-10">
+                <motion.div
+                  variants={fadeUp}
+                  className="mt-10"
+                >
                   <div className="bg-white/72 backdrop-blur-md border border-white/70 rounded-[2rem] shadow-[0_10px_40px_rgba(0,0,0,0.06)] overflow-hidden">
 
                     <div className="divide-y divide-stone-200/70">
@@ -237,7 +255,7 @@ export default function BrandsPage() {
                       ))}
                     </div>
                   </div>
-                </div>
+                </motion.div>
 
 
               </motion.div>
@@ -247,12 +265,12 @@ export default function BrandsPage() {
 
               {/* Right Side: Form */}
               <motion.div
-                initial={{ opacity: 0, y: 30 }}
+                initial={{ opacity: 0, y: 24 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
                   duration: 0.8,
                   delay: 0.2,
-                  ease: "easeOut",
+                  ease: [0.22, 1, 0.36, 1],
                 }}
                 className="w-full min-w-0 lg:sticky lg:top-28"
               >

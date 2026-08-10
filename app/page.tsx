@@ -216,8 +216,10 @@ function LandingPageContent() {
   };
 
   return (
-    <main onMouseMove={!isMobile ? handleMouseMove : undefined}
-      className="pt-24 md:pt-28 bg-[#Faf9f6] text-stone-900 min-h-screen selection:bg-stone-900 selection:text-white overflow-hidden">
+    <main
+      onMouseMove={!isMobile ? handleMouseMove : undefined}
+      className="relative min-h-screen overflow-hidden bg-[#Faf9f6] text-stone-900 selection:bg-stone-900 selection:text-white"
+    >
       <Navbar />
 
       {/* Base Grid */}
@@ -271,22 +273,22 @@ function LandingPageContent() {
       <section
         onMouseEnter={() => setIsHovering(true)}
         onMouseLeave={() => setIsHovering(false)}
-        className="relative min-h-[85vh] overflow-hidden"
+        className="relative min-h-screen overflow-hidden"
       >
-        <div className="relative z-10 grid grid-cols-1 items-center md:grid-cols-[60%_40%]">
+        <div className="relative z-10 grid grid-cols-1 items-center md:grid-cols-[50%_50%]">
           {/* LEFT SIDE — HERO CONTENT */}
           <motion.div
             initial="hidden"
             animate="visible"
             variants={staggerContainer}
-            className="flex flex-col justify-center px-6 py-4 text-left sm:px-10 md:px-12 md:py-6 lg:px-16 xl:px-20"
+            className="relative z-10 flex flex-col justify-start px-6 pt-24 pb-6 text-left sm:px-10 md:min-h-screen md:justify-center md:px-12 md:pt-32 md:pb-6 lg:px-6 xl:px-26"
           >
             {/* Badge */}
             <motion.div
               variants={fadeUp}
-              className="mb-6 lg:px-2 text-sm font-semibold uppercase tracking-widest text-stone-500"
+              className="mb-4 lg:px-2 text-sm font-semibold uppercase tracking-widest text-stone-500"
             >
-              The infrastructure for 
+              The infrastructure for
               <span className="sm:hidden"> <br /></span>
               <span className="sm:inline"> </span>
               offline expansion
@@ -295,7 +297,7 @@ function LandingPageContent() {
             {/* Main Heading */}
             <motion.h1
               variants={fadeUp}
-              className="mb-7 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-stone-900 sm:text-6xl md:text-6xl lg:text-7xl xl:text-8xl"
+              className="mb-7 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-stone-900 sm:text-6xl md:text-6xl lg:text-6xl xl:text-7xl"
             >
               Retail Expansion
               <br />
@@ -320,7 +322,8 @@ function LandingPageContent() {
             <motion.div variants={fadeUp}>
               <Link
                 href="/landlords#property-form"
-                className="inline-flex w-full items-center justify-center gap-3 bg-stone-900 px-7 py-4 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-800 sm:w-fit sm:px-8"
+                className="inline-flex w-full items-center justify-center overflow-hidden
+              rounded-[16px] gap-3 bg-stone-900 px-7 py-4 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-800 sm:w-fit sm:px-8"
               >
                 <span>List a Property</span>
                 <ArrowRight className="h-4 w-4" />
@@ -328,23 +331,40 @@ function LandingPageContent() {
             </motion.div>
           </motion.div>
 
-          {/* RIGHT SIDE — HERO IMAGE */}
+          {/* FULL-HEIGHT HERO IMAGE */}
           <motion.div
-            initial={{ opacity: 0, scale: 1.02 }}
+            initial={{ opacity: 0, scale: 1.03 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{
-              duration: 1,
+              duration: 1.2,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="relative aspect-[4/3] w-full overflow-hidden rounded-[28px] border border-stone-300/70 bg-stone-200"
+            className="
+              relative
+              z-0
+              mx-6
+              mt-6
+              h-[350px]
+              w-[calc(100%-3rem)]
+              overflow-hidden
+              rounded-[22px]
+              lg:absolute
+              lg:top-2
+              lg:right-2
+              lg:bottom-2
+              lg:mx-0
+              lg:mt-0
+              lg:h-auto
+              lg:w-[50%]
+            "
           >
             <Image
               src="/images/retail-hero.jpeg"
               alt="Modern retail commercial property"
               fill
               priority
-              sizes="(max-width: 768px) 100vw, 40vw"
-              className="scale-[1.01] object-cover"
+              sizes="44vw"
+              className="object-cover object-[50%_center]"
             />
           </motion.div>
         </div>
@@ -787,7 +807,7 @@ function LandingPageContent() {
           <div>
             <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Contact Us</h4>
             <ul className="space-y-4 text-sm font-light">
-              <li>Email: whitelist.retail@gmail.com</li>
+              <li>Email: contact@whitelistretail.com</li>
               <li>Care: 9654755007</li>
               <li>DM us on Instagram</li>
             </ul>
@@ -796,9 +816,9 @@ function LandingPageContent() {
         <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
           <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
 
-          
+
           <div className="flex space-x-6">
-          <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
+            <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
           </div>
         </div>
       </footer>

@@ -1,21 +1,16 @@
 "use client";
 
-import { motion, AnimatePresence } from "motion/react";
+import { motion, AnimatePresence, type Variants } from "motion/react";
 import Navbar from "@/components/Navbar";
 import {
   ArrowRight,
   Check,
-  Target,
-  FileText,
   BarChart3,
   MapPin,
   Users,
-  Clock1,
   Clock3,
   ClockAlert,
   Building2,
-  Car,
-  Ruler,
   UserPlus,
   Upload,
   WalletCards,
@@ -29,7 +24,7 @@ import {
   SignedIn,
   SignedOut,
 } from "@clerk/nextjs";
-import { ClockFading } from "lucide-react";
+
 import { useQuery } from "convex/react";
 import { api } from "@/convex/_generated/api";
 
@@ -54,59 +49,6 @@ export default function ScoutsPage() {
   const checkingReferral =
     refCode.trim() !== "" && referralCheck === undefined;
 
-  const benefits = [
-    {
-      title: "Performance-Based Rewards",
-      description:
-        "Earn attractive incentives every time a property you source is successfully leased to a retail brand.",
-      icon: WalletCards,
-    },
-    {
-      title: "Work In Your Own City",
-      description:
-        "Discover commercial properties around you. No office, fixed hours, or prior real estate experience required.",
-      icon: MapPin,
-    },
-    {
-      title: "Live Dashboard",
-      description:
-        "Track every property submission, monitor approvals, and stay updated on deal progress   -all in one place.",
-      icon: BarChart3,
-    },
-    {
-      title: "Work Directly With Whitelist",
-      description:
-        "We don't rely on brokers or middlemen. Every verified property is reviewed and presented directly through our structured sourcing process.",
-      icon: Users,
-    },
-  ];
-
-  const propertyQualities = [
-    {
-      title: "Prime High Street Location",
-      description:
-        "Properties in high-footfall areas with strong visibility and accessibility.",
-      icon: MapPin,
-    },
-    {
-      title: "Strong Commercial Surroundings",
-      description:
-        "Surrounded by popular retail brands, markets, and growing infrastructure.",
-      icon: Building2,
-    },
-    {
-      title: "Easy Accessibility & Visibility",
-      description:
-        "Good road connectivity, parking availability, and easy access for customers.",
-      icon: Car,
-    },
-    {
-      title: "Meets Brand Requirements",
-      description:
-        "The right size, frontage, and layout as per the brand's needs.",
-      icon: Ruler,
-    },
-  ];
 
   const steps = [
     {
@@ -212,50 +154,85 @@ export default function ScoutsPage() {
     document.getElementById("hidden-signup")?.click();
   };
 
+  const fadeUp: Variants = {
+    hidden: {
+      opacity: 0,
+      y: 24,
+    },
+    visible: {
+      opacity: 1,
+      y: 0,
+      transition: {
+        duration: 0.8,
+        ease: [0.22, 1, 0.36, 1],
+      },
+    },
+  };
+
+  const staggerContainer: Variants = {
+    hidden: {},
+    visible: {
+      transition: {
+        staggerChildren: 0.12,
+      },
+    },
+  };
+
   return (
-    <main className="min-h-screen overflow-x-hidden bg-[#Faf9f6] text-stone-900 selection:bg-stone-900 selection:text-white">
-      <Navbar />
+    <main className="relative min-h-screen overflow-hidden bg-[#Faf9f6] text-stone-900 selection:bg-stone-900 selection:text-white">
+      {/* EXISTING NAVBAR — KEEP YOUR CURRENT NAVBAR CODE */}
+      <div className="absolute left-0 right-0 top-0 z-50">
+        <Navbar />
+      </div>
 
       {/* HERO */}
-      <section className="relative overflow-hidden pt-10 md:pt-14">
-        <div className="mx-auto grid w-full max-w-[1500px] grid-cols-1 items-center md:grid-cols-[58%_42%]">
+      <section className="relative min-h-screen overflow-hidden">
+        <div className="relative z-10 grid grid-cols-1 items-center md:grid-cols-[60%_40%]">
           {/* LEFT */}
           <motion.div
-            initial={{ opacity: 0, y: 30 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{
-              duration: 0.8,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            className="flex flex-col justify-center px-6 py-14 sm:px-8 md:px-10 lg:px-16 xl:px-20 md:-translate-y-4"
+            initial="hidden"
+            animate="visible"
+            variants={staggerContainer}
+            className="relative z-10 flex flex-col justify-start px-6 pb-6 pt-24 text-left sm:px-10 md:min-h-screen md:justify-center md:pb-6 md:pt-26 md:px-12 lg:px-14 xl:px-16"
           >
-            <div className="mb-6 flex w-fit items-center gap-3">
+            <motion.div
+              variants={fadeUp}
+              className="mb-6 flex w-fit items-center gap-3"
+            >
               <span className="h-px w-12 bg-[#4b5f49]" />
-
               <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
                 For Scouts
               </span>
-            </div>
+            </motion.div>
 
-            <h1 className="mb-7 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-stone-900 sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl">
+            <motion.h1
+              variants={fadeUp}
+              className="mb-7 font-serif text-5xl font-semibold leading-[1.02] tracking-tight text-stone-900 sm:text-5xl md:text-6xl lg:text-6xl xl:text-7xl"
+            >
               Turn Local Knowledge
               <br />
               <span className="italic text-[#4b5f49]">
                 Into Real Earnings.
               </span>
-            </h1>
+            </motion.h1>
 
-            <p className="max-w-2xl text-base font-medium leading-relaxed text-stone-600 sm:text-lg md:text-lg lg:text-xl">
+            <motion.p
+              variants={fadeUp}
+              className="max-w-2xl text-base font-medium leading-relaxed text-stone-600 sm:text-lg md:text-lg lg:text-xl"
+            >
               Become part of Whitelist&apos;s nationwide sourcing network.
-              Submit verified retail properties, track your progress, and
-              earn rewards on successful closures.
-            </p>
+              Submit verified retail properties, track your progress, and earn
+              rewards on successful closures.
+            </motion.p>
 
-            <div className="mt-9 flex w-full flex-col gap-3 sm:w-fit sm:flex-row">
+            <motion.div
+              variants={fadeUp}
+              className="mt-9 flex w-full flex-col gap-3 sm:w-fit sm:flex-row"
+            >
               <SignedIn>
                 <a
                   href="/dashboard"
-                  className="inline-flex min-h-[54px] items-center justify-center gap-3 bg-[#4b5f49] px-8 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-900"
+                  className="inline-flex min-h-[54px] items-center justify-center gap-3 rounded-[16px] bg-[#4b5f49] px-8 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-900"
                 >
                   Go to Dashboard
                   <ArrowRight className="h-4 w-4" />
@@ -265,7 +242,7 @@ export default function ScoutsPage() {
               <SignedOut>
                 <button
                   onClick={() => setOpenSignup(true)}
-                  className="inline-flex min-h-[54px] items-center justify-center gap-3 bg-[#3b4c39] px-8 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-900"
+                  className="inline-flex min-h-[54px] items-center justify-center gap-3 rounded-[16px] bg-[#3b4c39] px-8 text-sm font-bold uppercase tracking-widest text-white transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-900"
                 >
                   Register As A Scout
                   <ArrowRight className="h-4 w-4" />
@@ -274,95 +251,127 @@ export default function ScoutsPage() {
 
               <a
                 href="#how-it-works"
-                className="inline-flex min-h-[54px] items-center justify-center gap-3 border border-stone-300 bg-white px-8 text-sm font-bold uppercase tracking-widest text-stone-900 transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-50"
+                className="inline-flex min-h-[54px] items-center justify-center gap-3 rounded-[16px] border border-stone-300 bg-white px-8 text-sm font-bold uppercase tracking-widest text-stone-900 transition-all duration-300 hover:-translate-y-0.5 hover:bg-stone-50"
               >
                 Learn How It Works
                 <ArrowRight className="h-4 w-4" />
               </a>
-            </div>
-
-
+            </motion.div>
           </motion.div>
 
           {/* RIGHT IMAGE */}
           <motion.div
             initial={{
               opacity: 0,
-              scale: 1.02,
+              scale: 1.03,
             }}
             animate={{
               opacity: 1,
               scale: 1,
             }}
             transition={{
-              duration: 1,
+              duration: 1.2,
               ease: [0.22, 1, 0.36, 1],
             }}
-            className="relative min-h-[400px] overflow-hidden md:min-h-[620px]"
+            className="relative z-0 mx-6 mt-6 h-[350px] w-[calc(100%-3rem)] overflow-hidden rounded-[22px] lg:absolute lg:bottom-2 lg:right-2 lg:top-2 lg:mx-0 lg:mt-0 lg:h-auto lg:w-[47%]"
           >
             <img
               src="/images/scout-hero.jpeg"
               alt="Scout documenting a retail property"
-              className="absolute inset-0 h-full w-full object-cover"
+              className="absolute inset-0 h-full w-full object-cover object-center"
             />
           </motion.div>
         </div>
       </section>
 
-      {/* WHY BECOME A SCOUT */}
-      <section className="relative py-24 sm:py-28">
-        <div className="mx-auto max-w-[85rem] px-6 sm:px-8 lg:px-12">
-          <div className="mb-14 text-center">
-            <h2 className="font-serif text-4xl tracking-tight sm:text-5xl">
-              Why Become a Whitelist Scout?
+
+      {/* Bottom Trust Strip */}
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-4  pb-8 mt-14">
+        <div className="max-w-7xl mx-auto bg-white border border-stone-200 rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm">
+          <div className="text-center mb-10">
+            <h2 className="text-4xl  md:text-5xl font-serif tracking-tight">
+              Why Leading Brands Choose Whitelist
             </h2>
+
+            <p className="text-stone-500 mt-3 text-sm md:text-base font-medium max-w-2xl mx-auto">
+              We combine technology, relationships, and real estate
+              expertise to deliver a seamless leasing experience.
+            </p>
           </div>
 
-          <div className="grid grid-cols-1 gap-10 sm:grid-cols-2 lg:grid-cols-4">
-            {benefits.map((item, index) => {
-              const Icon = item.icon;
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
+                <Building2 className="w-7 h-7 text-stone-700" />
+              </div>
 
-              return (
-                <motion.div
-                  key={item.title}
-                  initial={{
-                    opacity: 0,
-                    y: 25,
-                  }}
-                  whileInView={{
-                    opacity: 1,
-                    y: 0,
-                  }}
-                  viewport={{
-                    once: true,
-                    amount: 0.15,
-                  }}
-                  transition={{
-                    duration: 0.6,
-                    delay: index * 0.08,
-                  }}
-                  className="group min-h-[310px] border border-stone-300 bg-white p-8 transition-all duration-500 hover:-translate-y-1 hover:shadow-xl"
-                >
-                  <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-[#eef1eb] text-[#4b5f49] transition-colors duration-500 group-hover:bg-[#4b5f49] group-hover:text-white">
-                    <Icon
-                      className="h-7 w-7"
-                      strokeWidth={1.5}
-                    />
-                  </div>
+              <div>
+                <h4 className="font-semibold text-[20px] mb-2">
+                  Performance-Based Rewards
+                </h4>
 
-                  <h3 className="mt-7 text-center font-serif font-medium text-2xl leading-tight text-stone-900">
-                    {item.title}
-                  </h3>
+                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                  Access verified properties matching your exact expansion
+                  requirements.
+                </p>
+              </div>
+            </div>
 
-                  <p className="mt-4 text-base font-medium leading-relaxed text-stone-600">
-                    {item.description}
-                  </p>
-                </motion.div>
-              );
-            })}
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="w-7 h-7 text-stone-700" />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-[20px] mb-2">
+                  Market Intelligence
+                </h4>
+
+                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                  Data-driven insights helping brands make smarter
+                  location decisions.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
+                <Clock3 className="w-7 h-7 text-stone-700" />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-[20px] mb-2">
+                  Faster Turnaround
+                </h4>
+
+                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                  Streamlined coordination for quicker site closures and
+                  deal movement.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
+                <BarChart3 className="w-7 h-7 text-stone-700" />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-[20px] mb-2">
+                  Trusted by Brands
+                </h4>
+
+                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                  Preferred partner for retail, F&B, hospitality, and
+                  lifestyle expansion.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
-      </section>
+      </div>
+
+
 
 
       {/* HOW IT WORKS */}
@@ -370,49 +379,75 @@ export default function ScoutsPage() {
         id="how-it-works"
         className="scroll-mt-24 pb-24 sm:pb-28"
       >
-        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
-          <div className="mb-14 text-center">
-            <h2 className="font-serif text-4xl tracking-tight sm:text-5xl">
-              How It Works
-            </h2>
-          </div>
+        <div className="mx-auto max-w-7xl px-6 pt-10 sm:px-8 lg:px-12">
 
-          <div className="grid grid-cols-1 gap-12 md:grid-cols-4 md:gap-5">
-            {steps.map((step, index) => {
-              const Icon = step.icon;
+          <div className="bg-white/78 backdrop-blur-md border border-white/70 rounded-[28px] shadow-[0_10px_40px_rgba(0,0,0,0.06)] px-5 md:px-10 py-10 md:py-14">
 
-              return (
-                <div
-                  key={step.number}
-                  className="relative flex flex-col items-center text-center"
-                >
-                  <div className="relative">
-                    <div className="absolute -left-2 -top-2 flex h-7 w-7 items-center justify-center rounded-full bg-[#4b5f49] text-xs font-bold text-white">
-                      {step.number}
-                    </div>
+            {/* Heading */}
+            <div className="text-center">
+              <h2 className="text-4xl md:text-5xl font-semibold tracking-[-0.05em] text-stone-950">
+                How It Works
+              </h2>
 
-                    <div className="flex h-24 w-24 items-center justify-center rounded-full border border-stone-300 bg-white text-stone-800 shadow-sm">
-                      <Icon
-                        className="h-10 w-10"
-                        strokeWidth={1.4}
-                      />
+              {/* NO NEW DESCRIPTION ADDED */}
+            </div>
+
+            {/* Steps */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 lg:gap-10 mt-16">
+
+              {steps.map((step, i) => {
+                const Icon = step.icon;
+
+                return (
+                  <div
+                    key={step.number}
+                    className="relative"
+                  >
+
+                    {/* Connector */}
+                    {i !== 3 && (
+                      <div className="hidden lg:flex absolute top-[102px] left-[calc(100%-5px)] w-[50px] items-center z-10">
+                        <div className="w-full border-t-2 border-dashed border-[#6b855f]" />
+
+                        <div className="absolute right-0 w-2 h-2 border-t-2 border-r-2 border-[#6b855f] rotate-45" />
+                      </div>
+                    )}
+
+                    {/* Step Card */}
+                    <div className="relative bg-white/60 border border-stone-200 rounded-[28px] px-6 pt-12 pb-10 text-center h-full min-h-[370px]">
+
+                      {/* Step Badge */}
+                      <div className="absolute -top-5 left-1/2 -translate-x-1/2 w-11 h-11 rounded-xl bg-[#4b5f49] text-white text-base font-semibold flex items-center justify-center shadow-[0_6px_18px_rgba(75,95,73,0.25)] z-20">
+                        {step.number}
+                      </div>
+
+                      {/* Icon */}
+                      <div className="w-28 h-28 rounded-full bg-[#eef3e8] flex items-center justify-center mx-auto">
+                        <Icon
+                          className="w-11 h-11 text-[#4b5f49]"
+                          strokeWidth={1.7}
+                        />
+                      </div>
+
+                      {/* Title */}
+                      <h3 className="mt-8 text-[22px] font-semibold tracking-[-0.03em] text-stone-900">
+                        {step.title}
+                      </h3>
+
+                      {/* Small Divider */}
+                      <div className="w-10 h-[2px] bg-[#c9d6c2] mx-auto mt-4" />
+
+                      {/* Description */}
+                      <p className="mt-5 text-[15px] leading-7 font-medium text-stone-600 max-w-xs mx-auto">
+                        {step.description}
+                      </p>
+
                     </div>
                   </div>
+                );
+              })}
 
-                  <h3 className="mt-6 font-serif font-medium text-2xl text-stone-900">
-                    {step.title}
-                  </h3>
-
-                  <p className="mt-3 max-w-[220px] text-base font-medium leading-relaxed text-stone-600">
-                    {step.description}
-                  </p>
-
-                  {index < steps.length - 1 && (
-                    <ArrowRight className="absolute -right-7 top-10 hidden h-6 w-6 text-stone-800 md:block" />
-                  )}
-                </div>
-              );
-            })}
+            </div>
           </div>
         </div>
       </section>

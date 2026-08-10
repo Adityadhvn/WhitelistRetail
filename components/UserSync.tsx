@@ -19,7 +19,7 @@ export default function UserSync() {
           ? localStorage.getItem("referralCode") || ""
           : "";
 
-      console.log("REFERRAL SENT:", referralCode); // 👈 DEBUG
+
 
       createUser({
         clerkId: user.id,

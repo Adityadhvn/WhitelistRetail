@@ -11,14 +11,9 @@ const convex = new ConvexHttpClient(
 
 export async function POST(req: Request) {
   try {
-    // ==========================================
-    // 1. CHECK CLERK ADMIN
-    // ==========================================
-
-    const {
-      isAuthenticated,
-      sessionClaims,
-    } = await auth();
+    // Check that the current Clerk user is logged in
+    const { isAuthenticated, sessionClaims } =
+      await auth();
 
     if (!isAuthenticated) {
       return NextResponse.json(
@@ -27,6 +22,7 @@ export async function POST(req: Request) {
       );
     }
 
+    // Check admin role
     const metadata = sessionClaims?.metadata as {
       role?: string;
     };
@@ -38,10 +34,7 @@ export async function POST(req: Request) {
       );
     }
 
-    // ==========================================
-    // 2. READ REQUEST
-    // ==========================================
-
+    // Read request
     const body = await req.json();
 
     const username =
@@ -53,10 +46,6 @@ export async function POST(req: Request) {
       typeof body.newPassword === "string"
         ? body.newPassword
         : "";
-
-    // ==========================================
-    // 3. VALIDATE
-    // ==========================================
 
     if (!username || !newPassword) {
       return NextResponse.json(
@@ -78,19 +67,13 @@ export async function POST(req: Request) {
       );
     }
 
-    // ==========================================
-    // 4. HASH NEW PASSWORD
-    // ==========================================
-
+    // Hash password
     const hashedPassword = await bcrypt.hash(
       newPassword,
       12
     );
 
-    // ==========================================
-    // 5. UPDATE CONVEX
-    // ==========================================
-
+    // Update Convex
     await convex.mutation(
       api.influencers.resetInfluencerPassword,
       {
@@ -98,10 +81,6 @@ export async function POST(req: Request) {
         password: hashedPassword,
       }
     );
-
-    // ==========================================
-    // 6. SUCCESS
-    // ==========================================
 
     return NextResponse.json({
       success: true,

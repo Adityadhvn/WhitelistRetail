@@ -14,25 +14,29 @@ export const getRequirements = query({
 });
 
 export const createRequirement = mutation({
-    args: {
-      brand: v.string(),
-      title: v.string(),
-      frontage: v.string(),
-      size: v.string(),
-      floors: v.string(),
-      location: v.string(),
-      priority: v.string(),
-      logo: v.string(),
-    },
-  
-    handler: async (ctx, args) => {
-      return await ctx.db.insert("brandRequirements", {
-        ...args,
-        isActive: true,
-        createdAt: Date.now(),
-      });
-    },
-  });
+  args: {
+    title: v.string(),
+    frontage: v.string(),
+    floors: v.string(),
+    brand: v.string(),
+    size: v.string(),
+    location: v.string(),
+    priority: v.string(),
+    logo: v.string(),
+    category: v.union(
+      v.literal("live_brand"),
+      v.literal("size_based")
+    ),
+  },
+
+  handler: async (ctx, args) => {
+    return await ctx.db.insert("brandRequirements", {
+      ...args,
+      isActive: true,
+      createdAt: Date.now(),
+    });
+  },
+});
 
   export const deleteRequirement = mutation({
     args: {
