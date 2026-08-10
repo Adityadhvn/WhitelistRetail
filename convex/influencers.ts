@@ -31,17 +31,20 @@ export const createInfluencer = mutation({
       throw new Error("Unauthenticated");
     }
 
+    console.log("CONVEX IDENTITY:", {
+      subject: identity.subject,
+      issuer: identity.issuer,
+      customClaims: identity.customClaims,
+    });
     // ==========================================
     // 2. CHECK ADMIN ROLE
     // ==========================================
 
-    const customClaims = identity.customClaims as {
-      metadata?: {
-        role?: string;
-      };
+    const metadata = identity.metadata as {
+      role?: string;
     };
-
-    if (customClaims?.metadata?.role !== "admin") {
+    
+    if (metadata?.role !== "admin") {
       throw new Error("Forbidden");
     }
 

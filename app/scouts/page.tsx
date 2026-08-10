@@ -286,23 +286,23 @@ export default function ScoutsPage() {
 
 
       {/* Bottom Trust Strip */}
-      <div className="relative z-20 w-full max-w-7xl mx-auto px-4  pb-8 mt-14">
+      <div className="relative z-20 w-full max-w-7xl mx-auto px-6 sm:px-8 lg:px-12 pb-8 mt-14">
         <div className="max-w-7xl mx-auto bg-white border border-stone-200 rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm">
           <div className="text-center mb-10">
             <h2 className="text-4xl  md:text-5xl font-serif tracking-tight">
-              Why Leading Brands Choose Whitelist
+              Why Become A Whitelist Scout ?
             </h2>
 
             <p className="text-stone-500 mt-3 text-sm md:text-base font-medium max-w-2xl mx-auto">
-              We combine technology, relationships, and real estate
-              expertise to deliver a seamless leasing experience.
+            Turn your local property knowledge into flexible earnings with no fixed hours or brokers. 
+            Identify prime retail spots in your city and track your payouts directly through Whitelist.
             </p>
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
             <div className="flex gap-4">
               <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <Building2 className="w-7 h-7 text-stone-700" />
+                <WalletCards className="w-7 h-7 text-stone-700" />
               </div>
 
               <div>
@@ -311,8 +311,23 @@ export default function ScoutsPage() {
                 </h4>
 
                 <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  Access verified properties matching your exact expansion
-                  requirements.
+                Earn attractive incentives every time a property you source is successfully leased to a retail brand.
+                </p>
+              </div>
+            </div>
+
+            <div className="flex gap-4">
+              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
+                <MapPin className="w-7 h-7 text-stone-700" />
+              </div>
+
+              <div>
+                <h4 className="font-semibold text-[20px] mb-2">
+                Work In Your Own City
+                </h4>
+
+                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                Discover commercial properties around you. No office, fixed hours, or prior real estate experience required.
                 </p>
               </div>
             </div>
@@ -324,46 +339,27 @@ export default function ScoutsPage() {
 
               <div>
                 <h4 className="font-semibold text-[20px] mb-2">
-                  Market Intelligence
+                Live Dashboard
                 </h4>
 
                 <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  Data-driven insights helping brands make smarter
-                  location decisions.
+                Track every property submission, monitor approvals, and stay updated on deal progress -all in one place.
                 </p>
               </div>
             </div>
 
             <div className="flex gap-4">
               <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <Clock3 className="w-7 h-7 text-stone-700" />
+                <Users className="w-7 h-7 text-stone-700" />
               </div>
 
               <div>
                 <h4 className="font-semibold text-[20px] mb-2">
-                  Faster Turnaround
+                Work Directly With Whitelist
                 </h4>
 
                 <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  Streamlined coordination for quicker site closures and
-                  deal movement.
-                </p>
-              </div>
-            </div>
-
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <BarChart3 className="w-7 h-7 text-stone-700" />
-              </div>
-
-              <div>
-                <h4 className="font-semibold text-[20px] mb-2">
-                  Trusted by Brands
-                </h4>
-
-                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  Preferred partner for retail, F&B, hospitality, and
-                  lifestyle expansion.
+                We don't rely on brokers or middlemen. Every verified property is reviewed and presented directly through our structured sourcing process.
                 </p>
               </div>
             </div>

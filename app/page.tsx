@@ -1,9 +1,9 @@
 "use client";
 
-import { motion, Variants } from "motion/react";
+import { motion, AnimatePresence, Variants } from "motion/react";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
-import { Shield, Zap, Globe, ArrowRight, StampIcon } from "lucide-react";
+import { Shield, Zap, Globe, ArrowRight, StampIcon, X } from "lucide-react";
 import { SignedIn, SignedOut, SignUpButton } from "@clerk/nextjs";
 import { useState, useRef, useEffect } from "react";
 
@@ -187,18 +187,19 @@ function LandingPageContent() {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
 
 
-
-
-
-
-  const isValidReferral = useQuery(
+  const referralCheck = useQuery(
     api.influencers.validateReferralCode,
-    refCode
-      ? { referralCode: refCode }
+    refCode.trim()
+      ? {
+        referralCode: refCode.trim().toUpperCase(),
+      }
       : "skip"
   );
 
+  const referralValid = referralCheck === true;
 
+  const checkingReferral =
+    refCode.trim() !== "" && referralCheck === undefined;
 
 
   const handleScroll = () => {
@@ -501,7 +502,7 @@ function LandingPageContent() {
       </section>
 
       {/* Stakeholders Section */}
-      <section className="py-32">
+      <section className="relative z-10 py-32 bg-[#Faf9f6]">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-20">
             <h2 className="text-4xl md:text-5xl font-serif text-stone-900">Built For Every Stakeholder</h2>
@@ -725,16 +726,8 @@ function LandingPageContent() {
 
 
 
-
-
-
-
-
-
-
-
       {/* Brands Grid */}
-      <section className="border-y border-stone-200 bg-white py-18 md:py-28">
+      <section className="relative z-10 border-y border-stone-200 bg-white py-18 md:py-28">
         <div className="mx-auto max-w-6xl px-6">
           {/* HEADING */}
           <div className="mb-16 text-center md:mb-12">
@@ -834,205 +827,210 @@ function LandingPageContent() {
 
 
 
-      {openSignup && (
-        <>
-          {/*Background blur */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            transition={{ duration: 0.3, ease: "easeOut" }}
-            onClick={() => setOpenSignup(false)}
-            className="fixed inset-0 z-40 backdrop-blur-sm bg-black/5"
-          />
+      <AnimatePresence>
+        {openSignup && (
+          <>
+            {/* BACKDROP */}
+            <motion.div
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{
+                duration: 0.3,
+                ease: "easeOut",
+              }}
+              onClick={() => {
+                setOpenSignup(false);
+                setRefCode("");
+                setTurnstileToken("");
+              }}
+              className="fixed inset-0 z-40 bg-black/5 backdrop-blur-sm"
+            />
 
-          {/*Glass popup */}
-          <motion.div
-            initial={{ opacity: 0, y: -12 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -12 }}
-            transition={{ duration: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className="fixed inset-0 z-50 flex items-center justify-center px-4"
-          >
-            <div className="relative w-full max-w-md overflow-hidden rounded-[28px] bg-white/60 border border-white/20 shadow-[0_8px_40px_rgba(0,0,0,0.12)]">
+            {/* MODAL */}
+            <motion.div
+              initial={{
+                opacity: 0,
+                y: -12,
+                scale: 0.98,
+              }}
+              animate={{
+                opacity: 1,
+                y: 0,
+                scale: 1,
+              }}
+              exit={{
+                opacity: 0,
+                y: -12,
+                scale: 0.98,
+              }}
+              transition={{
+                duration: 0.3,
+                ease: [0.22, 1, 0.36, 1],
+              }}
+              className="fixed inset-0 z-50 flex items-center justify-center px-4"
+            >
+              <div className="relative w-full max-w-md overflow-hidden rounded-[28px] border border-white/30 bg-white/70 shadow-[0_20px_70px_rgba(0,0,0,0.16)] backdrop-blur-xl">
 
-              {/* subtle reflection */}
-              <div className="absolute inset-0 pointer-events-none bg-gradient-to-br from-white/20 via-white/5 to-transparent" />
+                {/* GLASS GRADIENT */}
+                <div className="absolute inset-0 bg-gradient-to-br from-white/30 via-white/10 to-transparent" />
 
-              {/* CONTENT */}
-              <div className="relative z-10 p-7 md:p-8">
+                {/* CLOSE BUTTON */}
+                <button
+                  type="button"
+                  onClick={() => {
+                    setOpenSignup(false);
+                    setRefCode("");
+                    setTurnstileToken("");
+                  }}
+                  aria-label="Close"
+                  className="absolute right-4 top-4 z-20 flex h-9 w-9 items-center justify-center rounded-full border border-stone-200/70 bg-white/60 text-stone-600 backdrop-blur-md transition-all duration-200 hover:bg-white hover:text-stone-900 hover:shadow-md"
+                >
+                  <X className="h-4 w-4" strokeWidth={2} />
+                </button>
 
-                {/* TOP LABEL */}
-                <div className="flex justify-center mb-6">
-                  <div className="px-4 py-1.5 rounded-full border border-white/30 bg-white/20 text-[11px] uppercase tracking-[0.25em] font-bold text-stone-700">
-                    Scout Access
+                <div className="relative z-10 p-7 sm:p-8">
+
+                  {/* LABEL */}
+                  <div className="mb-6 flex justify-center">
+                    <div className="rounded-full border border-white/30 bg-white/30 px-4 py-1.5 text-[11px] font-bold uppercase tracking-[0.25em] text-stone-700">
+                      Scout Access
+                    </div>
                   </div>
-                </div>
 
-                {/* HEADING */}
-                <div className="text-center mb-7">
-                  <h2 className="text-2xl md:text-3xl font-serif tracking-tight text-stone-900 mb-2">
-                    Enter Referral Code
-                  </h2>
+                  {/* HEADING */}
+                  <div className="mb-7 text-center">
+                    <h2 className="mb-2 font-serif text-2xl tracking-tight text-stone-900 sm:text-3xl">
+                      Enter Referral Code
+                    </h2>
 
-                  <p className="text-sm text-stone-600 leading-relaxed font-light">
-                    If you were invited by an existing scout,
-                    enter their referral code below.
-                  </p>
-                </div>
+                    <p className="text-sm font-light leading-relaxed text-stone-600">
+                      Enter the referral code provided by an existing Whitelist
+                      scout to continue.
+                    </p>
+                  </div>
 
-                {/* INPUT */}
-                <input
-                  type="text"
-                  placeholder="Referral code"
-                  value={refCode}
-                  onChange={(e) => setRefCode((e.target as HTMLInputElement).value.toUpperCase().replace(/\s/g, ""))}
-                  className="
-                    w-full
-                    rounded-2xl
-                    border
-                    border-white/30
-                    bg-white/30
-                    px-5
-                    py-4
-                    text-sm
-                    font-bold
-                    text-stone-900
-                    placeholder:text-stone-500
-                    outline-none
-                    transition-all
-                    duration-300
-                    focus:border-white/50
-                    focus:bg-white/40
-                    focus:shadow-[0_0_0_4px_rgba(255,255,255,0.15)]
-                  "
-                />
+                  {/* REFERRAL INPUT */}
+                  <div>
+                    <input
+                      type="text"
+                      placeholder="Referral code"
+                      value={refCode}
+                      onChange={(e) => {
+                        setRefCode(
+                          e.target.value
+                            .toUpperCase()
+                            .replace(/\s/g, "")
+                        );
+                      }}
+                      className={`w-full rounded-2xl border px-5 py-4 text-sm font-bold text-stone-900 outline-none transition-all duration-300 placeholder:text-stone-500 focus:bg-white/40 focus:shadow-[0_0_0_4px_rgba(255,255,255,0.15)] ${referralValid
+                          ? "border-[#4b5f49]/50 bg-[#4b5f49]/5"
+                          : "border-white/30 bg-white/30 focus:border-white/50"
+                        }`}
+                    />
 
-                <div className="flex justify-center mt-6">
-                  <Turnstile
-                    siteKey={
-                      process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
-                    }
-                    onSuccess={(token) => {
-                      setTurnstileToken(token);
-                    }}
-                  />
-                </div>
-                {/* BUTTONS */}
-                <div className="mt-7 space-y-3">
+                    {/* VALIDATION MESSAGE */}
+                    {refCode.trim() !== "" && (
+                      <div className="mt-2 px-1 text-xs font-medium">
+                        {checkingReferral ? (
+                          <span className="text-stone-500">
+                            Checking referral code...
+                          </span>
+                        ) : referralValid ? (
+                          <span className="text-[#4b5f49]">
+                            ✓ Valid referral code
+                          </span>
+                        ) : (
+                          <span className="text-red-500">
+                            Invalid referral code
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+
+                  {/* TURNSTILE */}
+                  <div className="mt-6 flex justify-center">
+                    <Turnstile
+                      siteKey={
+                        process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                      }
+                      onSuccess={(token) => {
+                        setTurnstileToken(token);
+                      }}
+                    />
+                  </div>
 
                   {/* CONTINUE */}
-                  <button
-                    onClick={async () => {
-                      if (!turnstileToken) {
-                        alert("Please verify you are human.");
-                        return;
-                      }
-                      const verification = await fetch(
-                        "/api/verify-turnstile",
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            token: turnstileToken,
-                          }),
+                  <div className="mt-7">
+                    <button
+                      onClick={async () => {
+                        if (!referralValid) {
+                          alert("Please enter a valid referral code.");
+                          return;
                         }
-                      );
-                      const result = await verification.json();
-                      if (!result.success) {
-                        alert("Verification failed.");
-                        return;
-                      }
 
-                      // if user entered a code but it's invalid
-                      if (refCode && !isValidReferral) {
-                        alert("Invalid referral code");
-                        return;
-                      }
+                        if (!turnstileToken) {
+                          alert("Please verify you are human.");
+                          return;
+                        }
 
-                      if (refCode && refCode.trim() !== "") {
+                        const verification = await fetch(
+                          "/api/verify-turnstile",
+                          {
+                            method: "POST",
+                            headers: {
+                              "Content-Type": "application/json",
+                            },
+                            body: JSON.stringify({
+                              token: turnstileToken,
+                            }),
+                          }
+                        );
+
+                        const result = await verification.json();
+
+                        if (!result.success) {
+                          alert("Verification failed.");
+                          return;
+                        }
+
                         localStorage.setItem(
                           "referralCode",
                           refCode.trim().toUpperCase()
                         );
+
+                        setOpenSignup(false);
+
+                        document
+                          .getElementById("hidden-signup")
+                          ?.click();
+                      }}
+                      disabled={
+                        !referralValid ||
+                        !turnstileToken ||
+                        checkingReferral
                       }
+                      className="w-full rounded-2xl bg-[#4b5f49] py-4 text-sm font-bold uppercase tracking-[0.18em] text-white transition-all duration-300 hover:scale-[1.01] hover:bg-stone-900 active:scale-[0.99] disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:scale-100"
+                    >
+                      {!turnstileToken
+                        ? "Verify You Are Human"
+                        : !referralValid
+                          ? "Enter Valid Referral Code"
+                          : "Continue"}
+                    </button>
+                  </div>
 
-                      setOpenSignup(false);
-                      document.getElementById("hidden-signup")?.click();
-                    }}
-                    disabled={!turnstileToken}
-                    className="
-                      w-full
-                      rounded-2xl
-                      bg-[#4b5f49]
-                      text-white
-                      py-4
-                      text-sm
-                      font-bold
-                      uppercase
-                      tracking-[0.18em] ransition-all duration-300 hover:bg-stone-800 hover:scale-[1.01] active:scale-[0.99]
-                    "
-                  >
-                    {!turnstileToken
-                      ? "Verifying..."
-                      : "Continue"}
-                  </button>
-
-                  {/* SKIP */}
-                  <button
-                    onClick={async () => {
-                      if (!turnstileToken) {
-                        alert("Please verify you are human.");
-
-                        return;
-                      }
-                      const verification = await fetch(
-                        "/api/verify-turnstile",
-                        {
-                          method: "POST",
-                          headers: {
-                            "Content-Type": "application/json",
-                          },
-                          body: JSON.stringify({
-                            token: turnstileToken,
-                          }),
-                        }
-                      );
-                      const result = await verification.json();
-                      if (!result.success) {
-                        alert("Verification failed.");
-                        return;
-                      }
-
-                      setOpenSignup(false);
-                      document.getElementById("hidden-signup")?.click();
-                    }}
-                    disabled={!turnstileToken}
-                    className="
-                      w-full
-                      rounded-2xl
-                      border
-                      border-white/20
-                      bg-white/10
-                      py-4
-                      text-sm
-                      text-stone-700
-                      transition-all
-                      duration-300
-                      hover:bg-white/20
-                    "
-                  >
-                    Skip for Now
-                  </button>
-
+                  {/* SMALL FOOTNOTE */}
+                  <p className="mt-4 text-center text-[11px] leading-relaxed text-stone-500">
+                    A valid referral code is required to register as a Scout.
+                  </p>
                 </div>
               </div>
-            </div>
-          </motion.div>
-        </>
-      )}
+            </motion.div>
+          </>
+        )}
+      </AnimatePresence>
     </main>
   );
 }
