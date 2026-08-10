@@ -46,7 +46,7 @@ export async function POST(req: Request) {
     // 3. PASS CLERK TOKEN TO CONVEX
     // ==========================================
 
-    const token = await getToken();
+    const token = await getToken({ template: "convex" });
 
     if (!token) {
       return NextResponse.json(
