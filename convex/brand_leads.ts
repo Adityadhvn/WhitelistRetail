@@ -5,12 +5,13 @@ export const submitBrandLead = mutation({
   args: {
     brandName: v.string(),
     fullName: v.string(),
+    designation: v.string(),
     contactDetails: v.string(),
     phoneNumber: v.string(),
     currentStoreCount: v.string(),
     expansionTarget: v.string(),
     targetMarkets: v.string(),
-    preferredPropertyType: v.string(),
+    preferredPropertyType: v.array(v.string()),
     requirementSpecs: v.string(),
   },
 

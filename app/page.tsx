@@ -130,6 +130,53 @@ const brands = [
     name: "OWND",
     logo: "/images/brands/ownd.png",
   },
+  {
+    name: "COBB",
+    logo: "/images/brands/cobb.png",
+  },
+];
+
+const faqs = [
+  {
+    question: "What is Whitelist?",
+    answer:
+      "Whitelist is a retail real-estate sourcing and expansion platform that connects growing brands with verified commercial properties across India.",
+  },
+  {
+    question: "How does Whitelist help retail brands?",
+    answer:
+      "Brands share their expansion requirements with us, and our network helps identify suitable properties based on location, size, frontage and other requirements.",
+  },
+  {
+    question: "How can I list my property with Whitelist?",
+    answer:
+      "Property owners can submit their property through our website. Our team reviews the details and connects suitable opportunities with relevant brands.",
+  },
+  {
+    question: "Do I have to pay to list my property?",
+    answer:
+      "There is no upfront fee to submit a property. Our commercial terms are discussed with the property owner during the leasing process.",
+  },
+  {
+    question: "How can I become a Whitelist Scout?",
+    answer:
+      "Register as a Scout through our website. Once your application is approved, you can identify vacant commercial properties, submit their details and earn when eligible properties successfully close.",
+  },
+  {
+    question: "How do Scouts earn?",
+    answer:
+      "Scouts receive a one-time reward for properties that successfully result in a closed deal, and the payout is made at the same time Whitelist receives its commission.",
+  },
+  {
+    question: "What types of properties and brands does Whitelist work with?",
+    answer:
+      "We work with retail properties across high streets and other commercial locations, supporting brands across fashion, lifestyle, beauty, electronics, F&B and more.",
+  },
+  {
+    question: "I’m a commercial builder. How can I partner with Whitelist?",
+    answer:
+      "Commercial builders can partner with Whitelist by sharing upcoming or existing retail projects. We can help connect suitable spaces with brands looking to expand into those markets.",
+  },
 ];
 
 
@@ -161,6 +208,7 @@ function LandingPageContent() {
     }
   }, []);
 
+  const [openFaq, setOpenFaq] = useState<number | null>(null);
 
 
   const [isMobile, setIsMobile] = useState(false);
@@ -289,10 +337,10 @@ function LandingPageContent() {
               variants={fadeUp}
               className="mb-4 lg:px-2 text-sm font-semibold uppercase tracking-widest text-stone-500"
             >
-              The infrastructure for
+              THE NETWORK POWERING 
               <span className="sm:hidden"> <br /></span>
               <span className="sm:inline"> </span>
-              offline expansion
+              INDIA'S RETAIL GROWTH
             </motion.div>
 
             {/* Main Heading */}
@@ -768,8 +816,122 @@ function LandingPageContent() {
               </motion.div>
             ))}
           </div>
+
+          <p className="text-base mt-10 font-medium text-center text-stone-500 md:text-lg">
+            And other leading brands in fashion, electronics, beauty and QSR. 
+            </p>
         </div>
       </section>
+
+
+
+      {/* FAQ SECTION */}
+      <section className="relative overflow-hidden bg-[#Faf9f6] px-6 py-24 md:py-28 lg:py-32">
+        <div className="mx-auto grid max-w-7xl grid-cols-1 gap-12 lg:grid-cols-[38%_62%] lg:items-start lg:gap-16">
+
+          {/* LEFT — FAQ INTRO */}
+          <div className="lg:pt-4">
+            <div className="mb-5 flex items-center gap-3 text-xs font-semibold uppercase tracking-[0.16em] text-stone-600">
+              <span className="h-2 w-2 rounded-full bg-stone-900" />
+              <span>Explore Our Advantages</span>
+            </div>
+
+            <h2 className="max-w-lg font-serif text-4xl leading-[1.05] tracking-tight text-stone-900 sm:text-5xl md:text-6xl">
+              Frequently Asked
+              <br />
+              Questions
+            </h2>
+
+            <p className="mt-7 max-w-md text-sm font-medium leading-relaxed text-stone-500 sm:text-base">
+              Everything you need to know about Whitelist, our retail sourcing
+              network, and how we work with brands, property owners, scouts,
+              and commercial builders.
+            </p>
+          </div>
+
+          {/* RIGHT — FAQ ACCORDION */}
+          <div className="overflow-hidden rounded-[20px] border border-stone-100 bg-white shadow-[0_8px_30px_rgba(0,0,0,0.035)]">
+            <div className="px-5 sm:px-6 md:px-7">
+              {faqs.map((faq, index) => {
+                const isOpen = openFaq === index;
+
+                return (
+                  <div
+                    key={faq.question}
+                    className="border-b border-stone-200 last:border-b-0"
+                  >
+                    {/* QUESTION */}
+                    <button
+                      type="button"
+                      onClick={() =>
+                        setOpenFaq(isOpen ? null : index)
+                      }
+                      aria-expanded={isOpen}
+                      className="flex w-full items-center justify-between gap-6 py-5 text-left transition-colors duration-200 sm:py-6"
+                    >
+                      <span className="text-sm font-medium leading-relaxed text-stone-900 sm:text-base md:text-[17px]">
+                        {faq.question}
+                      </span>
+
+                      <span
+                        className={`flex h-7 w-7 shrink-0 items-center justify-center text-stone-700 transition-transform duration-300 ${
+                          isOpen ? "rotate-45" : "rotate-0"
+                        }`}
+                        aria-hidden="true"
+                      >
+                        <svg
+                          viewBox="0 0 24 24"
+                          fill="none"
+                          stroke="currentColor"
+                          strokeWidth="1.5"
+                          className="h-5 w-5"
+                        >
+                          <path
+                            strokeLinecap="round"
+                            d="M12 5v14"
+                          />
+                          <path
+                            strokeLinecap="round"
+                            d="M5 12h14"
+                          />
+                        </svg>
+                      </span>
+                    </button>
+
+                    {/* ANSWER */}
+                    <AnimatePresence initial={false}>
+                      {isOpen && (
+                        <motion.div
+                          initial={{ height: 0, opacity: 0 }}
+                          animate={{ height: "auto", opacity: 1 }}
+                          exit={{ height: 0, opacity: 0 }}
+                          transition={{
+                            height: {
+                              duration: 0.35,
+                              ease: [0.22, 1, 0.36, 1],
+                            },
+                            opacity: {
+                              duration: 0.2,
+                            },
+                          }}
+                          className="overflow-hidden"
+                        >
+                          <div className="pb-6 pr-10 text-sm leading-relaxed font-medium text-stone-500 sm:text-base">
+                            {faq.answer}
+                          </div>
+                        </motion.div>
+                      )}
+                    </AnimatePresence>
+                  </div>
+                );
+              })}
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
 
       {/* Footer */}
       <footer className="bg-stone-950 text-stone-400 py-20 px-6 border-t border-stone-900">

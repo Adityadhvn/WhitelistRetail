@@ -5,14 +5,14 @@ export const submitLandlordLead = mutation({
   args: {
     fullName: v.string(),
     phone1: v.string(),
-    email: v.string(),
+    email: v.optional(v.string()),
     propertyAddress: v.string(),
     propertyType: v.string(),
     totalArea: v.number(),
     rentExpected: v.number(),
     frontage: v.number(),
     floors: v.string(),
-    preferredTenantType: v.string(),
+    propertyStatus: v.string(),
     additionalDetails: v.optional(v.string()),
   },
 

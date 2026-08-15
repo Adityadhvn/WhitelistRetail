@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence, type Variants } from "motion/react";
 import Navbar from "@/components/Navbar";
+import Link from "next/link";
 import {
   ArrowRight,
   Check,
@@ -16,6 +17,8 @@ import {
   WalletCards,
   Plus,
   X,
+  CarFront,
+  ClipboardCheck,
 } from "lucide-react";
 import { Turnstile } from "@marsidev/react-turnstile";
 import { useState } from "react";
@@ -55,62 +58,62 @@ export default function ScoutsPage() {
       number: "1",
       title: "Register",
       description:
-        "Create your scout profile in less than 2 minutes.",
+        "Create your Scout profile with your basic details and if your profiile gets approved, you can start submitting commercial properties.",
       icon: UserPlus,
     },
     {
       number: "2",
       title: "Find a Property",
       description:
-        "Discover high-potential retail spaces in your city.",
+        "Use your local knowledge to identify vacant or upcoming commercial spaces that could match current retail brand requirements.",
       icon: Building2,
     },
     {
       number: "3",
-      title: "Upload Details",
+      title: "Submit Details",
       description:
-        "Submit accurate property details and photos.",
+        "Upload accurate property information, photographs, location details, frontage, size and other specifications through your Scout dashboard",
       icon: Upload,
     },
     {
       number: "4",
-      title: "Get Rewarded",
+      title: "Earn Incentive",
       description:
-        "Earn rewards when your property is successfully leased.",
+        "When your eligible property successfully leads to a closed deal, you receive a one-time incentive after Whitelist receives its commission.",
       icon: WalletCards,
     },
   ];
 
   const faqs = [
     {
-      question: "How do I earn?",
+      question: "What is a Whitelist Scout?",
       answer:
-        "You earn a commission when a property you submit is successfully leased to a retail brand through Whitelist.",
+        "A Scout helps Whitelist discover vacant commercial properties that could match retail brand requirements in their local area.",
     },
     {
-      question: "How long does approval take?",
+      question: "How do I become a Whitelist Scout?",
       answer:
-        "Once your property is submitted, our team reviews the information and updates its status through your dashboard.",
+        "Click the “Register as a scout” on our website and complete the Scout Application. Your profile will be reviewed before you are approved.",
     },
     {
-      question: "Who pays the commission?",
+      question: "How do Scouts earn money?",
       answer:
-        "The commission is paid by the landlord. Scouts do not have to pay to submit properties.",
+        "Scouts receive a one-time reward for properties that successfully result in a closed deal, and the payout is made at the same time Whitelist receives its commission. There are no monthly or recurring payments for the same property.",
     },
     {
-      question: "Can I submit multiple properties?",
+      question: "Do I need real estate experience?",
       answer:
-        "Yes. You can submit multiple properties and track each submission through your Scout Dashboard.",
+        "No. You don't need prior real-estate experience. Local knowledge, genuine property information and accurate submissions are what matter most.",
     },
     {
-      question: "Do I need experience?",
+      question: "What properties should I submit?",
       answer:
-        "No prior real estate experience is required. Local knowledge and the ability to identify suitable properties are what matter.",
+        "Focus on vacant or soon-to-be-vacant commercial spaces with good locations, visibility, frontage and suitable sizes. You can also use the Requirements page to find active opportunities.",
     },
     {
-      question: "What types of properties should I submit?",
+      question: "How do I know what brands are looking for?",
       answer:
-        "Focus on high-visibility retail spaces in strong commercial locations that match the requirements of growing retail brands.",
+        "Your Scout dashboard includes current brand and size-based requirements, helping you identify properties that are more likely to be shortlisted.",
     },
   ];
 
@@ -221,8 +224,8 @@ export default function ScoutsPage() {
               className="max-w-2xl text-base font-medium leading-relaxed text-stone-600 sm:text-lg md:text-lg lg:text-xl"
             >
               Become part of Whitelist&apos;s nationwide sourcing network.
-              Submit verified retail properties, track your progress, and earn
-              rewards on successful closures.
+              Submit verified retail properties, track your progress, and earn 
+              performance based incentives on successful closures.
             </motion.p>
 
             <motion.div
@@ -293,9 +296,9 @@ export default function ScoutsPage() {
               Why Become A Whitelist Scout ?
             </h2>
 
-            <p className="text-stone-500 mt-3 text-sm md:text-base font-medium max-w-2xl mx-auto">
-            Turn your local property knowledge into flexible earnings with no fixed hours or brokers. 
-            Identify prime retail spots in your city and track your payouts directly through Whitelist.
+            <p className="text-stone-500 mt-3 text-sm md:text-base font-medium max-w-3xl mx-auto">
+              Turn your local property knowledge into flexible earnings with no fixed hours or brokers.
+              Identify prime retail spots in your city and track your payouts directly through Whitelist.
             </p>
           </div>
 
@@ -311,7 +314,7 @@ export default function ScoutsPage() {
                 </h4>
 
                 <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                Earn attractive incentives every time a property you source is successfully leased to a retail brand.
+                  Earn attractive incentives every time a property you source is successfully leased to a retail brand.
                 </p>
               </div>
             </div>
@@ -323,11 +326,11 @@ export default function ScoutsPage() {
 
               <div>
                 <h4 className="font-semibold text-[20px] mb-2">
-                Work In Your Own City
+                  Work In Your Own City
                 </h4>
 
                 <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                Discover commercial properties around you. No office, fixed hours, or prior real estate experience required.
+                  Discover commercial properties around you. No office, fixed hours, or prior real estate experience required.
                 </p>
               </div>
             </div>
@@ -339,11 +342,11 @@ export default function ScoutsPage() {
 
               <div>
                 <h4 className="font-semibold text-[20px] mb-2">
-                Live Dashboard
+                  Live Dashboard
                 </h4>
 
                 <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                Track every property submission, monitor approvals, and stay updated on deal progress -all in one place.
+                  Track every property submission, monitor approvals, and stay updated on deal progress -all in one place.
                 </p>
               </div>
             </div>
@@ -355,11 +358,11 @@ export default function ScoutsPage() {
 
               <div>
                 <h4 className="font-semibold text-[20px] mb-2">
-                Work Directly With Whitelist
+                  Work Directly With Whitelist
                 </h4>
 
                 <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                We don't rely on brokers or middlemen. Every verified property is reviewed and presented directly through our structured sourcing process.
+                  We don't rely on brokers or middlemen. Every verified property is reviewed and presented directly through our structured sourcing process.
                 </p>
               </div>
             </div>
@@ -426,7 +429,7 @@ export default function ScoutsPage() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="mt-8 text-[22px] font-semibold tracking-[-0.03em] text-stone-900">
+                      <h3 className="mt-8 text-[20px] font-semibold tracking-[-0.03em] text-stone-900">
                         {step.title}
                       </h3>
 
@@ -493,156 +496,260 @@ export default function ScoutsPage() {
         </div>
       </section>
 
-      {/* WHITELIST ADVANTAGE */}
-      <section className="pb-24 sm:pb-28">
-        <div className="mx-auto max-w-7xl px-4 sm:px-8 lg:px-12">
-          <div className="mb-10 text-center sm:mb-14">
-            <h2 className="font-serif text-4xl leading-tight tracking-tight sm:text-5xl">
-              The Whitelist Advantage
+
+
+            {/* WHAT MAKES A GOOD PROPERTY */}
+            <section className="pb-24 sm:pb-28">
+        <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+
+          {/* SECTION HEADING */}
+          <div className="mb-10 text-center sm:mb-12">
+            <h2 className="font-serif text-4xl tracking-tight text-stone-900 sm:text-5xl">
+              What Makes a Good Property?
             </h2>
           </div>
 
-          <div className="w-full overflow-hidden rounded-2xl border border-stone-300 bg-white">
-            {/* HEADER */}
-            <div className="grid min-w-0 grid-cols-2 text-center text-base font-bold">
-              <div className="min-w-0 bg-stone-200 px-2 py-3 text-base leading-tight text-stone-800 sm:px-5 sm:py-4 sm:text-2xl">
-                Traditional Brokerage
+          {/* PROPERTY CRITERIA */}
+          <div className="grid grid-cols-1 gap-3 sm:grid-cols-2 lg:grid-cols-4">
+
+            {/* CARD 1 */}
+            <div className="rounded-xl border border-stone-200 bg-white px-6 py-7 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+              
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#eef3e8]">
+                <MapPin
+                  className="h-7 w-7 text-[#4b5f49]"
+                  strokeWidth={1.7}
+                />
               </div>
 
-              <div className="relative flex min-w-0 items-center justify-center bg-[#4b5f49] px-2 py-3 font-serif text-base leading-tight text-white sm:px-5 sm:py-4 sm:text-2xl">
-                WHITELIST
+              <h3 className="text-[17px] font-semibold tracking-[-0.02em] text-stone-900 sm:text-[20px]">
+                Prime High Street Location
+              </h3>
 
-                <span className="absolute left-0 top-1/2 flex h-9 w-9 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-stone-950 text-xs text-white sm:h-12 sm:w-12 sm:text-xl">
-                  VS
-                </span>
-              </div>
+              <div className="mx-auto mt-3 h-[2px] w-8 bg-[#c9d6c2]" />
+
+              <p className="mx-auto mt-4 max-w-xs text-[15px] font-medium leading-6 text-stone-500">
+                Properties in high-footfall areas with strong visibility and
+                accessibility.
+              </p>
             </div>
 
-            {/* ROWS */}
-            {[
-              [
-                "Multiple middlemen",
-                "Direct landlord sourcing",
-                Users,
-              ],
-              [
-                "Unstructured updates",
-                "Live dashboard & real-time tracking",
-                ClockAlert,
-              ],
-              [
-                "Manual follow-ups",
-                "Centralized process & transparent updates",
-                Check,
-              ],
-              [
-                "Local network only",
-                "Access to national retail brands",
-                MapPin,
-              ],
-            ].map(([traditional, whitelist, Icon], index) => {
-              const RowIcon = Icon as typeof Users;
 
-              return (
-                <div
-                  key={index}
-                  className="grid min-w-0 grid-cols-2 border-t border-stone-200"
-                >
-                  {/* TRADITIONAL */}
-                  <div className="flex min-w-0 min-h-[60px] items-center gap-2 px-3 py-3 sm:min-h-[68px] sm:gap-4 sm:px-8 sm:py-0">
-                    <RowIcon className="h-4 w-4 flex-shrink-0 text-stone-500 sm:h-5 sm:w-5" />
+            {/* CARD 2 */}
+            <div className="rounded-xl border border-stone-200 bg-white px-6 py-7 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+              
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#eef3e8]">
+                <Building2
+                  className="h-7 w-7 text-[#4b5f49]"
+                  strokeWidth={1.7}
+                />
+              </div>
 
-                    <span className="min-w-0 break-words text-[11px] font-medium leading-[1.3] text-stone-700 sm:text-base sm:leading-normal">
-                      {traditional as string}
-                    </span>
-                  </div>
+              <h3 className="text-[17px] font-semibold tracking-[-0.02em] text-stone-900 sm:text-[20px]">
+                Strong Commercial Surroundings
+              </h3>
 
-                  {/* WHITELIST */}
-                  <div className="flex min-w-0 min-h-[60px] items-center gap-2 border-l border-stone-200 px-3 py-3 sm:min-h-[68px] sm:gap-4 sm:px-8 sm:py-0">
-                    <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center rounded-full bg-[#4b5f49] text-white sm:h-6 sm:w-6">
-                      <Check className="h-3 w-3 sm:h-4 sm:w-4" />
-                    </span>
+              <div className="mx-auto mt-3 h-[2px] w-8 bg-[#c9d6c2]" />
 
-                    <span className="min-w-0 break-words text-[11px] font-medium leading-[1.3] text-stone-700 sm:text-base sm:leading-normal">
-                      {whitelist as string}
-                    </span>
-                  </div>
-                </div>
-              );
-            })}
+              <p className="mx-auto mt-4 max-w-xs text-[15px] font-medium leading-6 text-stone-500">
+                Surrounded by popular retail brands, markets, and growing
+                infrastructure.
+              </p>
+            </div>
+
+
+            {/* CARD 3 */}
+            <div className="rounded-xl border border-stone-200 bg-white px-6 py-7 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+              
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#eef3e8]">
+                <CarFront
+                  className="h-7 w-7 text-[#4b5f49]"
+                  strokeWidth={1.7}
+                />
+              </div>
+
+              <h3 className="text-[17px] font-semibold tracking-[-0.02em] text-stone-900 sm:text-[20px]">
+                Easy Accessibility &amp; Visibility
+              </h3>
+
+              <div className="mx-auto mt-3 h-[2px] w-8 bg-[#c9d6c2]" />
+
+              <p className="mx-auto mt-4 max-w-xs text-[15px] font-medium leading-6 text-stone-500">
+                Good road connectivity, parking availability, and easy access
+                for customers.
+              </p>
+            </div>
+
+
+            {/* CARD 4 */}
+            <div className="rounded-xl border border-stone-200 bg-white px-6 py-7 text-center transition-all duration-300 hover:-translate-y-1 hover:shadow-md">
+              
+              <div className="mx-auto mb-5 flex h-14 w-14 items-center justify-center rounded-full bg-[#eef3e8]">
+                <ClipboardCheck
+                  className="h-7 w-7 text-[#4b5f49]"
+                  strokeWidth={1.7}
+                />
+              </div>
+
+              <h3 className="text-[17px] font-semibold tracking-[-0.02em] text-stone-900 sm:text-[20px]">
+                Meets Brand Requirements
+              </h3>
+
+              <div className="mx-auto mt-3 h-[2px] w-8 bg-[#c9d6c2]" />
+
+              <p className="mx-auto mt-4 max-w-xs text-[15px] font-medium leading-6 text-stone-500">
+                The right size, frontage, and layout as per the brand&apos;s
+                requirements.
+              </p>
+            </div>
+
           </div>
         </div>
       </section>
 
+
+
       {/* FAQ */}
       <section className="pb-24 sm:pb-28">
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
+
           <div className="mb-14 text-center">
             <h2 className="font-serif text-4xl tracking-tight sm:text-5xl">
               Frequently Asked Questions
             </h2>
           </div>
 
-          <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
-            {faqs.map((faq, index) => {
-              const isOpen = openFaq.includes(index);
+          {/* TWO INDEPENDENT FAQ COLUMNS */}
+          <div className="grid grid-cols-1 gap-3 md:grid-cols-2 md:gap-x-3 md:gap-y-0">
 
-              return (
-                <div
-                  key={faq.question}
-                  className="overflow-hidden rounded-xl border border-stone-300 bg-white"
-                >
-                  <button
-                    onClick={() => {
-                      setOpenFaq((prev) =>
-                        isOpen
-                          ? prev.filter((item) => item !== index)
-                          : [...prev, index]
-                      );
-                    }}
-                    className="flex w-full items-center justify-between gap-5 px-6 py-5 text-left"
-                  >
-                    <span className="text-base font-semibold text-stone-900 sm:text-lg">
-                      {faq.question}
-                    </span>
+            {/* LEFT COLUMN */}
+            <div className="flex flex-col gap-3">
+              {faqs
+                .filter((_, index) => index % 2 === 0)
+                .map((faq, index) => {
+                  const actualIndex = index * 2;
+                  const isOpen = openFaq.includes(actualIndex);
 
-                    <Plus
-                      className={`h-5 w-5 flex-shrink-0 text-stone-700 transition-transform duration-300 ${isOpen ? "rotate-45" : ""
-                        }`}
-                    />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {isOpen && (
-                      <motion.div
-                        initial={{
-                          height: 0,
-                          opacity: 0,
+                  return (
+                    <div
+                      key={faq.question}
+                      className="overflow-hidden rounded-xl border border-stone-300 bg-white"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenFaq((prev) =>
+                            isOpen
+                              ? prev.filter((item) => item !== actualIndex)
+                              : [...prev, actualIndex]
+                          );
                         }}
-                        animate={{
-                          height: "auto",
-                          opacity: 1,
-                        }}
-                        exit={{
-                          height: 0,
-                          opacity: 0,
-                        }}
+                        className="flex w-full items-center justify-between gap-5 px-6 py-5 text-left"
                       >
-                        <p className="border-t border-stone-200 px-6 py-5 text-base font-medium leading-relaxed text-stone-600">
-                          {faq.answer}
-                        </p>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div>
-              );
-            })}
+                        <span className="text-base font-semibold text-stone-900 sm:text-lg">
+                          {faq.question}
+                        </span>
+
+                        <Plus
+                          className={`h-5 w-5 flex-shrink-0 text-stone-700 transition-transform duration-300 ${isOpen ? "rotate-45" : ""
+                            }`}
+                        />
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.div
+                            initial={{
+                              height: 0,
+                              opacity: 0,
+                            }}
+                            animate={{
+                              height: "auto",
+                              opacity: 1,
+                            }}
+                            exit={{
+                              height: 0,
+                              opacity: 0,
+                            }}
+                          >
+                            <p className="border-t border-stone-200 px-6 py-5 text-base font-medium leading-relaxed text-stone-600">
+                              {faq.answer}
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+            </div>
+
+            {/* RIGHT COLUMN */}
+            <div className="flex flex-col gap-3">
+              {faqs
+                .filter((_, index) => index % 2 === 1)
+                .map((faq, index) => {
+                  const actualIndex = index * 2 + 1;
+                  const isOpen = openFaq.includes(actualIndex);
+
+                  return (
+                    <div
+                      key={faq.question}
+                      className="overflow-hidden rounded-xl border border-stone-300 bg-white"
+                    >
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setOpenFaq((prev) =>
+                            isOpen
+                              ? prev.filter((item) => item !== actualIndex)
+                              : [...prev, actualIndex]
+                          );
+                        }}
+                        className="flex w-full items-center justify-between gap-5 px-6 py-5 text-left"
+                      >
+                        <span className="text-base font-semibold text-stone-900 sm:text-lg">
+                          {faq.question}
+                        </span>
+
+                        <Plus
+                          className={`h-5 w-5 flex-shrink-0 text-stone-700 transition-transform duration-300 ${isOpen ? "rotate-45" : ""
+                            }`}
+                        />
+                      </button>
+
+                      <AnimatePresence initial={false}>
+                        {isOpen && (
+                          <motion.div
+                            initial={{
+                              height: 0,
+                              opacity: 0,
+                            }}
+                            animate={{
+                              height: "auto",
+                              opacity: 1,
+                            }}
+                            exit={{
+                              height: 0,
+                              opacity: 0,
+                            }}
+                          >
+                            <p className="border-t border-stone-200 px-6 py-5 text-base font-medium leading-relaxed text-stone-600">
+                              {faq.answer}
+                            </p>
+                          </motion.div>
+                        )}
+                      </AnimatePresence>
+                    </div>
+                  );
+                })}
+            </div>
+
           </div>
         </div>
       </section>
 
       {/* FINAL CTA */}
-      <section className="pb-12 sm:pb-16">
+      <section className="pb-12 mb-10 sm:pb-16">
         <div className="mx-auto max-w-7xl px-6 sm:px-8 lg:px-12">
           <div className="overflow-hidden rounded-2xl bg-[#3b4c39]">
             <div className="flex flex-col gap-8 px-7 py-9 sm:px-10 sm:py-10 md:flex-row md:items-center md:justify-between">
@@ -650,11 +757,11 @@ export default function ScoutsPage() {
 
 
                 <div>
-                  <h2 className="font-serif text-xl font-medium text-white sm:text-3xl md:text-[45px]">
-                    Ready to become a WHITELIST Scout ?
+                <h2 className="font-serif text-2xl font-medium leading-tight text-white sm:text-3xl md:text-[32px]">
+                    Ready to become a Whitelist Scout ?
                   </h2>
 
-                  <p className="mt-2 max-w-5xl text-[19px] font-medium leading-relaxed text-white/75">
+                  <p className="mt-2 max-w-5xl text-[17px] font-medium leading-relaxed text-white/75">
                     Join hundreds of scouts helping India&apos;s leading
                     retail brands expand into new cities.
                   </p>
@@ -685,6 +792,52 @@ export default function ScoutsPage() {
           </div>
         </div>
       </section>
+
+
+      {/* Footer */}
+      <footer className="bg-stone-950 text-stone-400 py-20 px-6 border-t border-stone-900">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="space-y-4">
+            <div className="text-2xl font-serif font-bold text-white tracking-widest">WHITELIST</div>
+            <p className="text-sm font-light leading-relaxed">
+              A structured retail expansion infrastructure company providing verified sourcing and coordination across India.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Platform</h4>
+            <ul className="space-y-4 text-sm font-light">
+              <li><Link href="/brands" className="hover:text-white transition-colors">Brands</Link></li>
+              <li><Link href="/landlords" className="hover:text-white transition-colors">Landlords</Link></li>
+              <li><Link href="/scouts" className="hover:text-white transition-colors">Scouts</Link></li>
+              <li><Link href="/influencer-login" className="hover:text-white transition-colors">Influencer</Link></li>
+              <li><Link href="/dashboard/admin" className="hover:text-white transition-colors">Admin</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Company</h4>
+            <ul className="space-y-4 text-sm font-light">
+              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Contact Us</h4>
+            <ul className="space-y-4 text-sm font-light">
+              <li>Email: contact@whitelistretail.com</li>
+              <li>Care: 9654755007</li>
+              <li>DM us on Instagram</li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+          <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
+
+
+          <div className="flex space-x-6">
+            <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
+          </div>
+        </div>
+      </footer>
 
       {/* CLERK SIGNUP */}
       <SignUpButton

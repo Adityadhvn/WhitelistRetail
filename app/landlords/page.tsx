@@ -9,6 +9,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import Navbar from "@/components/Navbar";
 import { Turnstile } from "@marsidev/react-turnstile";
+import Link from "next/link";
 import {
   ArrowRight, ShieldCheck, TrendingUp, Building2, Users, Check, User, Mail, Phone, MapPin,
   Clock3, Headset, Network, Handshake, Eye, LayoutDashboard, FilePenLine, MessagesSquare, UserRound, FileCheck2,
@@ -26,7 +27,9 @@ const landlordSchema = z.object({
 
   email: z
     .string()
-    .email("Invalid email address"),
+    .email("Invalid email address")
+    .optional()
+    .or(z.literal("")),
 
   propertyAddress: z
     .string()
@@ -52,9 +55,9 @@ const landlordSchema = z.object({
     .string()
     .min(1, "Please select number of floors"),
 
-  preferredTenantType: z
+  propertyStatus: z
     .string()
-    .min(1, "Please select a preferred tenant type"),
+    .min(1, "Please select a Property Status"),
 
   additionalDetails: z
     .string()
@@ -126,7 +129,7 @@ export default function LandlordsPage() {
       },
     },
   };
-  
+
   const staggerContainer: Variants = {
     hidden: {},
     visible: {
@@ -168,27 +171,27 @@ export default function LandlordsPage() {
               className="max-w-[620px]"
             >
 
-            <motion.div
-              variants={fadeUp}
-              className="mb-6 flex w-fit items-center gap-3"
-            >
-              <span className="h-px w-12 bg-[#4b5f49]" />
+              <motion.div
+                variants={fadeUp}
+                className="mb-6 flex w-fit items-center gap-3"
+              >
+                <span className="h-px w-12 bg-[#4b5f49]" />
 
-              <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
-                for property owners
-              </span>
-            </motion.div>
+                <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
+                  for property owners
+                </span>
+              </motion.div>
 
-            <motion.h1
-              variants={fadeUp}
-              className="text-5xl sm:text-6xl xl:text-7xl font-semibold tracking-[-0.06em] leading-[0.92] text-stone-950"
-            >
-              The Right Retail Tenant.
-              <br />
-              <span className="italic text-[#4b5f49]">
-                For The Right Property.
-              </span>
-            </motion.h1>
+              <motion.h1
+                variants={fadeUp}
+                className="text-5xl sm:text-6xl xl:text-7xl font-semibold tracking-[-0.06em] leading-[0.92] text-stone-950"
+              >
+                The Right Retail Tenant.
+                <br />
+                <span className="italic text-[#4b5f49]">
+                  For The Right Property.
+                </span>
+              </motion.h1>
 
 
               {/* Subtext */}
@@ -196,16 +199,15 @@ export default function LandlordsPage() {
                 variants={fadeUp}
                 className="mt-8 text-lg text-black leading-relaxed max-w-xl font-medium"
               >
-                Submit your commercial property once.
-                Our team verifies, evaluates, and presents suitable opportunities to well established
-                & expanding retail brands actively searching for new locations.
+                Whitelist connects your commercial property with leading national and international retail brands actively expanding across India.
+                Our team verifies your property, identifies the right brand fit, and manages the leasing process from submission to closure.
               </motion.p>
 
 
               {/* Features */}
               <motion.div
                 variants={fadeUp}
-                className="grid grid-cols-1 mt-10 gap-5"
+                className="mt-10 grid grid-cols-1 gap-6 sm:grid-cols-3"
               >
                 {[
                   {
@@ -228,7 +230,7 @@ export default function LandlordsPage() {
                       key={i}
                       className="flex items-start gap-4"
                     >
-                      <Icon className="w-7 h-7 flex-shrink-0 text-[#476845] stroke-[1.5]" />
+                      <Icon className="w-9 h-9 flex-shrink-0 text-[#749c71] stroke-[1.5]" />
 
                       <div>
                         <h3 className="!font-sans mt-1 text-base font-medium text-black leading-tight whitespace-normal">
@@ -289,11 +291,10 @@ export default function LandlordsPage() {
                 </div>
               </motion.div>
 
+
+         
               {/* MOBILE FORM */}
-              <div
-                id="property-form"
-                className="lg:hidden mt-10 scroll-mt-28 w-full"
-              >
+              <div id="property-form" className="lg:hidden mt-10 scroll-mt-28 w-full">
                 <div className="w-full bg-white/88 backdrop-blur-md border border-white/70 rounded-[28px] p-5 sm:p-7 shadow-[0_15px_60px_rgba(0,0,0,0.08)]">
 
                   {!submitted ? (
@@ -407,10 +408,8 @@ export default function LandlordsPage() {
                                 Property Type *
                               </option>
                               <option value="High Street">High Street</option>
-                              <option value="Mall">Mall</option>
                               <option value="Commercial Complex">Commercial Complex</option>
                               <option value="Standalone">Standalone</option>
-                              <option value="Warehouse">Warehouse</option>
                               <option value="Other">Other</option>
                             </select>
 
@@ -489,7 +488,7 @@ export default function LandlordsPage() {
                           </div>
                         </div>
 
-                        {/* Floors + Preferred Tenant Type */}
+                        {/* Floors + Property Status */}
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 md:gap-6">
                           <div className="relative">
                             <Building2 className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none" />
@@ -503,10 +502,9 @@ export default function LandlordsPage() {
                                 No. of Floors *
                               </option>
                               <option value="Ground Floor">Ground Floor</option>
-                              <option value="1">1 Floor</option>
-                              <option value="2">2 Floors</option>
-                              <option value="3">3 Floors</option>
-                              <option value="4+">4+ Floors</option>
+                              <option value="Ground + 1">Ground + 1</option>
+                              <option value="Ground + 2">Ground + 2</option>
+                              <option value="Ground + 3">Ground + 3</option>
                             </select>
 
                             {errors.floors && (
@@ -520,23 +518,22 @@ export default function LandlordsPage() {
                             <Users className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none" />
 
                             <select
-                              {...register("preferredTenantType")}
+                              {...register("propertyStatus")}
                               defaultValue=""
                               className="w-full h-[58px] md:h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
                             >
                               <option value="" disabled>
-                                Preferred Tenant Type *
+                                Property Status *
                               </option>
-                              <option value="Retail Brand">Retail Brand</option>
-                              <option value="F&B">F&B</option>
-                              <option value="Hospitality">Hospitality</option>
-                              <option value="Office">Office</option>
-                              <option value="Any">Any</option>
+                              <option value="Vacant">Vacant</option>
+                              <option value="Occupied">Occupied</option>
+                              <option value="Upcoming Vacancy">Upcoming Vacancy</option>
+                              <option value="Under Construction">Under Construction</option>
                             </select>
 
-                            {errors.preferredTenantType && (
+                            {errors.propertyStatus && (
                               <p className="text-red-500 text-xs mt-2">
-                                {errors.preferredTenantType.message}
+                                {errors.propertyStatus.message}
                               </p>
                             )}
                           </div>
@@ -626,6 +623,7 @@ export default function LandlordsPage() {
                 delay: 0.2,
                 ease: [0.22, 1, 0.36, 1],
               }}
+              id="property-form-desktop"
               className="hidden lg:block lg:sticky lg:top-28"
             >
               <div className="bg-white/88 backdrop-blur-md p-10 md:p-12 rounded-[2.3rem] shadow-[0_15px_60px_rgba(0,0,0,0.08)] border border-white/70 relative overflow-hidden">
@@ -677,7 +675,7 @@ export default function LandlordsPage() {
                             type="tel"
                             maxLength={10}
                             inputMode="numeric"
-                            placeholder="Phone Number *"
+                            placeholder="Phone (Whatsapp)*"
                             {...register("phone1")}
                             className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-4 outline-none focus:border-[#4b5f49] transition-all"
                           />
@@ -741,10 +739,8 @@ export default function LandlordsPage() {
                               Property Type *
                             </option>
                             <option value="High Street">High Street</option>
-                            <option value="Mall">Mall</option>
                             <option value="Commercial Complex">Commercial Complex</option>
                             <option value="Standalone">Standalone</option>
-                            <option value="Warehouse">Warehouse</option>
                             <option value="Other">Other</option>
                           </select>
 
@@ -837,10 +833,9 @@ export default function LandlordsPage() {
                               No. of Floors *
                             </option>
                             <option value="Ground Floor">Ground Floor</option>
-                            <option value="1">1 Floor</option>
-                            <option value="2">2 Floors</option>
-                            <option value="3">3 Floors</option>
-                            <option value="4+">4+ Floors</option>
+                            <option value="Ground + 1">Ground + 1</option>
+                            <option value="Ground + 2">Ground + 2</option>
+                            <option value="Ground + 3">Ground + 3</option>
                           </select>
 
                           {errors.floors && (
@@ -854,23 +849,22 @@ export default function LandlordsPage() {
                           <Users className="w-5 h-5 text-stone-400 absolute left-5 top-1/2 -translate-y-1/2 pointer-events-none" />
 
                           <select
-                            {...register("preferredTenantType")}
+                            {...register("propertyStatus")}
                             defaultValue=""
                             className="w-full h-[62px] rounded-2xl border border-stone-200 bg-[#faf9f6] pl-14 pr-10 text-stone-500 outline-none focus:border-[#4b5f49] transition-all"
                           >
                             <option value="" disabled>
-                              Preferred Tenant Type *
+                              Property Status *
                             </option>
-                            <option value="Retail Brand">Retail Brand</option>
-                            <option value="F&B">F&B</option>
-                            <option value="Hospitality">Hospitality</option>
-                            <option value="Office">Office</option>
-                            <option value="Any">Any</option>
+                            <option value="Vacant">Vacant</option>
+                            <option value="Occupied">Occupied</option>
+                            <option value="Upcoming Vacancy">Upcoming Vacancy</option>
+                            <option value="Under Construction">Under Construction</option>
                           </select>
 
-                          {errors.preferredTenantType && (
+                          {errors.propertyStatus && (
                             <p className="text-red-500 text-xs mt-2">
-                              {errors.preferredTenantType.message}
+                              {errors.propertyStatus.message}
                             </p>
                           )}
                         </div>
@@ -893,15 +887,15 @@ export default function LandlordsPage() {
                       </div>
 
                       <div className="flex justify-center">
-                          <Turnstile
-                            siteKey={
-                              process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
-                            }
-                            onSuccess={(token) => {
-                              setTurnstileToken(token);
-                            }}
-                      />
-                        </div>
+                        <Turnstile
+                          siteKey={
+                            process.env.NEXT_PUBLIC_TURNSTILE_SITE_KEY!
+                          }
+                          onSuccess={(token) => {
+                            setTurnstileToken(token);
+                          }}
+                        />
+                      </div>
 
                       <button
                         type="submit"
@@ -1002,7 +996,7 @@ export default function LandlordsPage() {
         <div className="max-w-7xl mx-auto bg-white border border-stone-200 rounded-[28px] p-5 sm:p-8 md:p-10 shadow-sm">
           <div className="text-center mb-10">
             <h2 className="text-4xl  md:text-5xl font-serif tracking-tight">
-              Why Property Owners Choose Whitelist
+              Why Property Owners Choose Whitelist ?
             </h2>
 
             <p className="text-stone-500 mt-3 text-sm md:text-base font-medium max-w-2xl mx-auto">
@@ -1012,68 +1006,54 @@ export default function LandlordsPage() {
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-8 sm:gap-10">
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <Network className="w-7 h-7 text-stone-700" />
+            <div className="flex items-center gap-4 lg:border-r lg:border-stone-200 lg:pr-8">
+              <div className="w-14 h-14 rounded-full bg-[#e8f0e3] border-2 border-[#4b5f49] flex items-center justify-center flex-shrink-0">
+                <Network className="w-9 h-9 text-[#4b5f49]" strokeWidth={1.8} />
               </div>
 
-              <div>
-                <h4 className="font-semibold text-[20px] mb-2">
-                  Good Connections
-                </h4>
 
-                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  Strong network of established & expanding retail brands
-                </p>
-              </div>
+              <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                Strong network of expanding retail brands
+              </p>
+
             </div>
 
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <Handshake className="w-7 h-7 text-stone-700" />
+            <div className="flex items-center gap-4 lg:border-r lg:border-stone-200 lg:pr-8">
+              <div className="w-14 h-14 rounded-full bg-[#e8f0e3] border-2 border-[#4b5f49] flex items-center justify-center flex-shrink-0">
+                <Handshake className="w-9 h-9 text-[#4b5f49]" />
               </div>
 
-              <div>
-                <h4 className="font-semibold text-[20px] mb-2">
-                  Good Faith
-                </h4>
 
-                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  One dedicated relationship manager
-                </p>
-              </div>
+              <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                One dedicated relationship
+                <br></br>manager
+              </p>
+
             </div>
 
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <Eye className="w-7 h-7 text-stone-700" />
+            <div className="flex items-center gap-4 lg:border-r lg:border-stone-200 lg:pr-8">
+              <div className="w-14 h-14 rounded-full bg-[#e8f0e3] border-2 border-[#4b5f49] flex items-center justify-center flex-shrink-0">
+                <Eye className="w-9 h-9 text-[#4b5f49]" />
               </div>
 
-              <div>
-                <h4 className="font-semibold text-[20px] mb-2">
-                  Transparency
-                </h4>
 
-                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  Transparent and professional communication
-                </p>
-              </div>
+
+              <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                Transparent and professional communication
+              </p>
+
             </div>
 
-            <div className="flex gap-4">
-              <div className="w-12 h-12 rounded-full bg-stone-100 flex items-center justify-center flex-shrink-0">
-                <LayoutDashboard className="w-7 h-7 text-stone-700" />
+            <div className="flex gap-4 items-center">
+              <div className="w-14 h-14 rounded-full bg-[#e8f0e3] border-2 border-[#4b5f49] flex items-center justify-center flex-shrink-0">
+                <LayoutDashboard className="w-9 h-9 text-[#4b5f49]" />
               </div>
 
-              <div>
-                <h4 className="font-semibold text-[20px] mb-2">
-                  Dashboard
-                </h4>
 
-                <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
-                  Real time updates through your own landlord dashboard
-                </p>
-              </div>
+              <p className="text-[15px] text-stone-500 leading-relaxed font-medium">
+                Real time updates <br></br>through your own <br></br>landlord dashboard
+              </p>
+
             </div>
           </div>
         </div>
@@ -1173,76 +1153,106 @@ export default function LandlordsPage() {
                 );
               })}
             </div>
+          </div>
+        </div>
+      </section>
 
-            {/* Bottom Benefits Strip */}
-            <div className="mt-8 bg-white/70 border border-stone-200 rounded-[28px] px-4 sm:px-6 md:px-8 py-5 md:py-6">
+      {/* FINAL CTA */}
+      <section className="pb-12 pt-2 mb-6 sm:pb-16 sm:pt-4 sm:mb-8">
+        <div className="mx-auto max-w-7xl px-5 sm:px-8 lg:px-12">
+          <div className="overflow-hidden rounded-2xl bg-[#3b4c39]">
 
-            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4">
+            <div className="flex flex-col gap-7 px-6 py-8 sm:px-10 sm:py-10 md:flex-row md:items-center md:justify-between md:gap-10">
 
-              {[
-                {
-                  icon: ShieldCheck,
-                  title: "Curated Retail",
-                  subtitle: "Brand Network",
-                },
-                {
-                  icon: UserRound,
-                  title: "Dedicated Leasing",
-                  subtitle: "Support",
-                },
-                {
-                  icon: Clock3,
-                  title: "Timely Updates at",
-                  subtitle: "Every Stage",
-                },
-                {
-                  icon: FileCheck2,
-                  title: "Hassle-Free",
-                  subtitle: "Process",
-                },
-              ].map((item, i) => {
-                const Icon = item.icon;
+              {/* CONTENT */}
+              <div className="min-w-0">
+                <h2 className="font-serif text-2xl font-medium leading-tight text-white sm:text-3xl md:text-[32px]">
+                  Ready to List Your Property?
+                </h2>
 
-                return (
-                  <div
-                    key={i}
-                    className={`
-                      flex items-center justify-start
-                      gap-4 px-3 py-4
-                      sm:justify-center sm:px-5
-                      lg:justify-center
-                      ${i !== 0 ? "lg:border-l lg:border-stone-200" : ""}
-                    `}
-                  >
+                <p className="mt-3 max-w-2xl text-sm font-medium leading-6 text-white/75 sm:text-[17px] sm:leading-relaxed md:text-[17px]">
+                  Connect your property with leading retail brands expanding across
+                  India. Submit your property details and let our team take it from
+                  there.
+                </p>
+              </div>
 
-                    {/* Icon */}
-                    <div className="w-11 h-11 rounded-full bg-[#eef3e8] flex items-center justify-center flex-shrink-0">
-                      <Icon
-                        className="w-5 h-5 text-[#4b5f49]"
-                        strokeWidth={1.7}
-                      />
-                    </div>
+              {/* CTA */}
+              <div className="flex w-full flex-shrink-0 md:w-auto">
+              <button
+                type="button"
+                onClick={() => {
+                  const isDesktop = window.innerWidth >= 1024;
 
-                    {/* Text */}
-                    <div className="min-w-0">
-                      <h4 className="!font-sans text-[15px] font-semibold text-stone-900 leading-[1.2]">
-                        {item.title}
-                      </h4>
+                  const target = document.getElementById(
+                    isDesktop ? "property-form-desktop" : "property-form"
+                  );
 
-                      <p className="!font-sans text-[15px] font-semibold text-stone-900 leading-[1.2]">
-                        {item.subtitle}
-                      </p>
-                    </div>
+                  target?.scrollIntoView({
+                    behavior: "smooth",
+                    block: "start",
+                  });
+                }}
+                className="inline-flex min-h-[54px] w-full items-center justify-center gap-3 rounded-md bg-[#d8bd68] px-6 text-sm font-bold uppercase tracking-widest text-stone-900 transition-all duration-300 hover:bg-white sm:px-8 md:w-auto"
+              >
+                List Your Property
+                <ArrowRight className="h-5 w-5" />
+              </button>
+              </div>
 
-                  </div>
-                );
-              })}
-
-            </div>
             </div>
           </div>
         </div>
       </section>
+
+      {/* Footer */}
+      <footer className="bg-stone-950 text-stone-400 py-20 px-6 border-t border-stone-900">
+        <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+          <div className="space-y-4">
+            <div className="text-2xl font-serif font-bold text-white tracking-widest">WHITELIST</div>
+            <p className="text-sm font-light leading-relaxed">
+              A structured retail expansion infrastructure company providing verified sourcing and coordination across India.
+            </p>
+          </div>
+          <div>
+            <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Platform</h4>
+            <ul className="space-y-4 text-sm font-light">
+              <li><Link href="/brands" className="hover:text-white transition-colors">Brands</Link></li>
+              <li><Link href="/landlords" className="hover:text-white transition-colors">Landlords</Link></li>
+              <li><Link href="/scouts" className="hover:text-white transition-colors">Scouts</Link></li>
+              <li><Link href="/influencer-login" className="hover:text-white transition-colors">Influencer</Link></li>
+              <li><Link href="/dashboard/admin" className="hover:text-white transition-colors">Admin</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Company</h4>
+            <ul className="space-y-4 text-sm font-light">
+              <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+              <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+            </ul>
+          </div>
+          <div>
+            <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Contact Us</h4>
+            <ul className="space-y-4 text-sm font-light">
+              <li>Email: contact@whitelistretail.com</li>
+              <li>Care: 9654755007</li>
+              <li>DM us on Instagram</li>
+            </ul>
+          </div>
+        </div>
+        <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+          <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
+
+
+          <div className="flex space-x-6">
+            <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
+          </div>
+        </div>
+      </footer>
+
+
+
+
     </main>
   );
 } 

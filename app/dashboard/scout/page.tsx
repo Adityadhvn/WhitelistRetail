@@ -10,10 +10,9 @@ import { motion, AnimatePresence } from "motion/react";
 import { FaWhatsapp } from "react-icons/fa";
 import {
   ChevronDown,
-  ChevronUp,
   MapPin,
-  BadgeAlert,
   ArrowRight,
+  Info,
 } from "lucide-react";
 
 export default function ScoutDashboard() {
@@ -51,28 +50,28 @@ export default function ScoutDashboard() {
   const WHATSAPP_NUMBER = "919654755007";
 
   const handleSubmitProperty = (req: any) => {
-    const message = 
-`Hi, I am interested in submitting a property for the ${req.brand} requirement.
+    const message =
+      `Hi, I am interested in submitting a property for the ${req.brand} requirement.
   
 Requirement: ${req.title}
 Location: ${req.location}
 Size: ${req.size}
 Frontage: ${req.frontage}`;
-  
+
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
       message
     )}`;
-  
+
     window.open(whatsappUrl, "_blank");
   };
-  
+
   const handleSubmitAnyProperty = () => {
     const message = `Hi, I am a Whitelist Scout and I would like to submit a property that may not currently match a listed requirement. I would like to share the property details with you.`;
-  
+
     const whatsappUrl = `https://wa.me/${WHATSAPP_NUMBER}?text=${encodeURIComponent(
       message
     )}`;
-  
+
     window.open(whatsappUrl, "_blank");
   };
 
@@ -353,26 +352,25 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                               />
                             )}
 
-                          <motion.span
-                            layout
-                            className={`relative z-10 inline-block ${
-                              requirementCategory === "size"
-                                ? "text-stone-600 font-bold normal-case"
-                                : "text-white font-bold uppercase"
-                            }`}
-                            animate={{
-                              letterSpacing:
-                                requirementCategory === "size" ? "0.02em" : "0em",
-                              scale:
-                                requirementCategory === "size" ? 1.01 : 1,
-                            }}
-                            transition={{
-                              duration: 0.25,
-                              ease: "easeOut",
-                            }}
-                          >
-                            Live Brand Requirements
-                          </motion.span>
+                            <motion.span
+                              layout
+                              className={`relative z-10 inline-block ${requirementCategory === "size"
+                                  ? "text-stone-600 font-bold normal-case"
+                                  : "text-white font-bold uppercase"
+                                }`}
+                              animate={{
+                                letterSpacing:
+                                  requirementCategory === "size" ? "0.02em" : "0em",
+                                scale:
+                                  requirementCategory === "size" ? 1.01 : 1,
+                              }}
+                              transition={{
+                                duration: 0.25,
+                                ease: "easeOut",
+                              }}
+                            >
+                              Live Brand Requirements
+                            </motion.span>
                           </button>
 
 
@@ -393,31 +391,103 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                               />
                             )}
 
-                          <motion.span
-                            layout
-                            className={`relative z-10 inline-block  ${
-                              requirementCategory === "size"
-                                ? "text-white font-bold uppercase"
-                                : "text-stone-600 font-bold normal-case"
-                            }`}
-                            animate={{
-                              letterSpacing:
-                                requirementCategory === "size" ? "0.02em" : "0em",
-                              scale:
-                                requirementCategory === "size" ? 1.01 : 1,
-                            }}
-                            transition={{
-                              duration: 0.25,
-                              ease: "easeOut",
-                            }}
-                          >
-                            Size Based Requirements
-                          </motion.span>
+                            <motion.span
+                              layout
+                              className={`relative z-10 inline-block  ${requirementCategory === "size"
+                                  ? "text-white font-bold uppercase"
+                                  : "text-stone-600 font-bold normal-case"
+                                }`}
+                              animate={{
+                                letterSpacing:
+                                  requirementCategory === "size" ? "0.02em" : "0em",
+                                scale:
+                                  requirementCategory === "size" ? 1.01 : 1,
+                              }}
+                              transition={{
+                                duration: 0.25,
+                                ease: "easeOut",
+                              }}
+                            >
+                              Size Based Requirements
+                            </motion.span>
                           </button>
 
                         </div>
 
                       </div>
+
+
+
+                      {/* REQUIREMENT HELPER TEXT */}
+                      <motion.div
+                        key={requirementCategory}
+                        initial={{ opacity: 0, y: 6 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.25, ease: "easeOut" }}
+                        className="mb-7 rounded-2xl border border-[#dfe7de] bg-[#f4f7f3] px-5 py-5 md:px-6 md:py-6"
+                      >
+                        <div className="flex items-start gap-3.5">
+
+                          {/* INFO ICON */}
+                          <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#4b5f49]/10">
+                            <Info className="h-4.5 w-4.5 text-[#4b5f49]" strokeWidth={2} />
+                          </div>
+
+                          {/* TEXT */}
+                          <div className="min-w-0">
+
+                            <h3 className="text-base !font-sans font-bold uppercase tracking-[0.08em] text-[#4b5f49]">
+                              {requirementCategory === "live"
+                                ? "Live Brand Requirements"
+                                : "Size-Based Requirements"}
+                            </h3>
+
+                            <div className="mt-2 space-y-3 text-sm font-medium leading-6 text-stone-600 md:text-[15px] md:leading-7">
+
+                              {requirementCategory === "live" ? (
+                                <>
+                                  <p>
+                                    Think of the brands shown here as clues about where other
+                                    brands may also want to open stores. If you find an empty
+                                    property in the same market or nearby area, it can be relevant
+                                    — it does not have to be directly beside the brand shown.
+                                  </p>
+
+                                  <p>
+                                    We have also mentioned the recommended size, frontage, floors,
+                                    and location preference for each requirement. Use these numbers
+                                    as a guide while scouting. If a property is close to the
+                                    requirements and has good visibility, frontage, and footfall,
+                                    you can still submit it for our team to review.
+                                  </p>
+                                </>
+                              ) : (
+                                <>
+                                  <p>
+                                    These requirements help you identify properties based on size and
+                                    format, even if you don&apos;t know which brand they may suit.
+                                    Simply compare your property&apos;s size, frontage, number of
+                                    floors, and location type with the categories listed below. Our
+                                    team will match suitable properties with the most relevant retail
+                                    brands from our network. These categories represent the typical
+                                    space requirements of different retail formats rather than any
+                                    specific brand.
+                                  </p>
+
+                                  <p>
+                                    Unless mentioned otherwise, ground-floor access is
+                                    expected for almost all retail businesses. If your property has
+                                    excellent visibility, a prominent main-road location, and strong
+                                    commercial potential, it&apos;s always worth submitting — even if
+                                    it doesn&apos;t perfectly fit a category.
+                                  </p>
+                                </>
+                              )}
+
+                            </div>
+                          </div>
+                        </div>
+                      </motion.div>
 
 
 
@@ -460,7 +530,7 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
 
                                   {/* LOGO */}
                                   <div className="w-full sm:w-[170px] h-[90px] bg-[#fcfdfc] border border-stone-200 rounded-xl flex items-center justify-center overflow-hidden mx-auto lg:mx-0">
-                                  {req.logo ? (
+                                    {req.logo ? (
                                       <img
                                         src={req.logo}
                                         alt={req.brand}

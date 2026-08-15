@@ -9,6 +9,7 @@ import { useMutation } from "convex/react";
 import { api } from "@/convex/_generated/api";
 import { useState } from "react";
 import { Turnstile } from "@marsidev/react-turnstile";
+import Link from "next/link";
 import {
   CheckCircle,
   Building2,
@@ -27,6 +28,10 @@ const brandSchema = z.object({
 
   fullName: z.string().min(2, "Full Name is required"),
 
+  designation: z
+    .string().trim().min(1, "Designation is required").max(50, "Designation is too long"),
+
+
   contactDetails: z.string().email("Invalid email address"),
 
   phoneNumber: z.string().min(10, "Phone number is required"),
@@ -42,8 +47,8 @@ const brandSchema = z.object({
   targetMarkets: z.string().min(2, "Target markets are required"),
 
   preferredPropertyType: z
-    .string()
-    .min(1, "Please select a property type"),
+    .array(z.string())
+    .min(1, "Please select at least one property type"),
 
   requirementSpecs: z
     .string()
@@ -61,10 +66,16 @@ export default function BrandsPage() {
   const {
     register,
     handleSubmit,
+    watch,
+    setValue,
     formState: { errors, isSubmitting },
   } = useForm<BrandFormValues>({
     resolver: zodResolver(brandSchema),
+    defaultValues: {
+      preferredPropertyType: [],
+    },
   });
+  const selectedPropertyTypes = watch("preferredPropertyType");
 
   const onSubmit = async (data: BrandFormValues) => {
     try {
@@ -118,7 +129,7 @@ export default function BrandsPage() {
       },
     },
   };
-  
+
   const staggerContainer: Variants = {
     hidden: {},
     visible: {
@@ -137,16 +148,16 @@ export default function BrandsPage() {
         <section className="relative overflow-hidden">
           {/* Background */}
           <div className="fixed left-0 top-0 -z-10 h-[100svh] w-screen overflow-hidden">
-          <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#F8F6F2]/10 via-[#F8F6F2]/65 to-[#F8F6F2]/90" />
+            <div className="absolute inset-0 z-10 bg-gradient-to-b from-[#F8F6F2]/10 via-[#F8F6F2]/65 to-[#F8F6F2]/90" />
 
-          <div
-          className="absolute inset-0 bg-cover bg-center"
-          style={{
-            backgroundImage: "url('/images/brand-hero.jpg')",
-          }}
-        />
-      </div>
-          
+            <div
+              className="absolute inset-0 bg-cover bg-center"
+              style={{
+                backgroundImage: "url('/images/brand-hero.jpg')",
+              }}
+            />
+          </div>
+
           <div className="relative z-20 w-full max-w-7xl mx-auto px-4 pt-32 pb-20">
             <div className="grid min-w-0 lg:grid-cols-[1fr_620px] gap-16 items-start">
               {/* Left Side */}
@@ -156,21 +167,21 @@ export default function BrandsPage() {
                 variants={staggerContainer}
                 className="w-full min-w-0 max-w-2xl -translate-y-4"
               >
-               <motion.div
+                <motion.div
                   variants={fadeUp}
                   className="mb-6 flex w-fit items-center gap-3"
                 >
-                <span className="h-px w-12 bg-[#4b5f49]" />
+                  <span className="h-px w-12 bg-[#4b5f49]" />
 
-                <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
-                  for brands
-                </span>
-              </motion.div>
+                  <span className="text-xs font-semibold uppercase tracking-widest text-[#4b5f49]">
+                    for brands
+                  </span>
+                </motion.div>
 
-              <motion.h1
-                variants={fadeUp}
-                className="text-5xl sm:text-6xl xl:text-7xl font-semibold font-serif leading-[0.98] tracking-tight"
-              >
+                <motion.h1
+                  variants={fadeUp}
+                  className="text-5xl sm:text-6xl xl:text-7xl font-semibold font-serif leading-[0.98] tracking-tight"
+                >
                   Your Expansion.
                   <br />
                   <span className="italic text-[#4b5f49]">Our Network.</span>
@@ -322,42 +333,80 @@ export default function BrandsPage() {
                       </div>
 
                       {/* Brand Name + Full Name */}
+                      {/* Brand Name + Full Name */}
                       <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div className="space-y-2">
-                          <label className="text-xs uppercase tracking-widest font-bold text-stone-500">
-                            Brand / Company Name *
-                          </label>
 
-                          <input
-                            {...register("brandName")}
-                            className="w-full rounded-xl bg-stone-50/80 border border-stone-200 px-4 py-3.5 text-stone-900 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
-                            placeholder="e.g. Zudio"
-                          />
+                        {/* LEFT COLUMN */}
+                        <div className="space-y-6">
 
-                          {errors.brandName && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {errors.brandName.message}
-                            </p>
-                          )}
+                          {/* Brand Name */}
+                          <div className="space-y-2">
+                            <label className="text-xs uppercase tracking-widest font-bold text-stone-500">
+                              Brand / Company Name *
+                            </label>
+
+                            <input
+                              {...register("brandName")}
+                              className="w-full rounded-xl bg-stone-50/80 border border-stone-200 px-4 py-3.5 text-stone-900 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
+                              placeholder="e.g. Zudio"
+                            />
+
+                            {errors.brandName && (
+                              <p className="text-red-500 text-xs mt-1">
+                                {errors.brandName.message}
+                              </p>
+                            )}
+                          </div>
+
+                          {/* Designation */}
+                          <div className="space-y-2">
+                            <label className="text-xs uppercase tracking-widest font-bold text-stone-500">
+                              Designation *
+                            </label>
+
+                            <input
+                              type="text"
+                              {...register("designation")}
+                              className="w-full rounded-xl bg-stone-50/80 border border-stone-200 px-4 py-3.5 text-stone-900 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
+                              placeholder="e.g. Retail Expansion Manager"
+                            />
+
+                            {errors.designation && (
+                              <p className="text-red-500 text-xs mt-1">
+                                {errors.designation.message}
+                              </p>
+                            )}
+                          </div>
+
                         </div>
 
-                        <div className="space-y-2">
-                          <label className="text-xs uppercase tracking-widest font-bold text-stone-500">
-                            Full Name *
-                          </label>
 
-                          <input
-                            {...register("fullName")}
-                            className="w-full rounded-xl bg-stone-50/80 border border-stone-200 px-4 py-3.5 text-stone-900 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
-                            placeholder="e.g. Rahul Mehta"
-                          />
+                        {/* RIGHT COLUMN */}
+                        <div className="space-y-6">
 
-                          {errors.fullName && (
-                            <p className="text-red-500 text-xs mt-1">
-                              {errors.fullName.message}
-                            </p>
-                          )}
+                          {/* Full Name */}
+                          <div className="space-y-2">
+                            <label className="text-xs uppercase tracking-widest font-bold text-stone-500">
+                              Full Name *
+                            </label>
+
+                            <input
+                              {...register("fullName")}
+                              className="w-full rounded-xl bg-stone-50/80 border border-stone-200 px-4 py-3.5 text-stone-900 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
+                              placeholder="e.g. Rahul Mehta"
+                            />
+
+                            {errors.fullName && (
+                              <p className="text-red-500 text-xs mt-1">
+                                {errors.fullName.message}
+                              </p>
+                            )}
+                          </div>
+
+                          
+
                         </div>
+
                       </div>
 
                       {/* Work Email + Phone Number */}
@@ -486,23 +535,75 @@ export default function BrandsPage() {
                             Preferred Property Type *
                           </label>
 
-                          <select
-                            {...register("preferredPropertyType")}
-                            defaultValue=""
-                            className="w-full rounded-xl bg-stone-50/80 border border-stone-200 px-4 py-3.5 text-stone-500 focus:bg-white focus:border-amber-700 focus:ring-2 focus:ring-amber-100 outline-none transition-all"
-                          >
-                            <option value="" disabled>
-                              Select type
-                            </option>
-                            <option value="High Street">High Street</option>
-                            <option value="Mall">Mall</option>
-                            <option value="Commercial Complex">Commercial Complex</option>
-                            <option value="Standalone">Standalone</option>
-                            <option value="Any">Any</option>
-                          </select>
+                          <div className="overflow-hidden rounded-xl border border-stone-200 bg-stone-50/80">
+                            {[
+                              "High Street",
+                              "Mall",
+                              "Commercial Complex",
+                              "Standalone",
+                            ].map((type, index) => {
+                              const isSelected = selectedPropertyTypes.includes(type);
+
+                              return (
+                                <button
+                                  key={type}
+                                  type="button"
+                                  onClick={() => {
+                                    const updatedValues = isSelected
+                                      ? selectedPropertyTypes.filter(
+                                        (item) => item !== type
+                                      )
+                                      : [...selectedPropertyTypes, type];
+
+                                    setValue("preferredPropertyType", updatedValues, {
+                                      shouldValidate: true,
+                                      shouldDirty: true,
+                                    });
+                                  }}
+                                  className={`flex w-full items-center justify-between px-4 py-3.5 text-left transition-colors duration-200 ${index !== 0 ? "border-t border-stone-200" : ""
+                                    } ${isSelected
+                                      ? "bg-[#edf2e7]"
+                                      : "bg-stone-50/80 hover:bg-white"
+                                    }`}
+                                >
+                                  <span
+                                    className={`text-sm font-medium ${isSelected
+                                      ? "text-[#4b5f49]"
+                                      : "text-stone-600"
+                                      }`}
+                                  >
+                                    {type}
+                                  </span>
+
+                                  <span
+                                    className={`flex h-5 w-5 items-center justify-center rounded-md border transition-all duration-200 ${isSelected
+                                      ? "border-[#4b5f49] bg-[#4b5f49]"
+                                      : "border-stone-300 bg-white"
+                                      }`}
+                                  >
+                                    {isSelected && (
+                                      <svg
+                                        viewBox="0 0 20 20"
+                                        fill="none"
+                                        className="h-3.5 w-3.5 text-white"
+                                      >
+                                        <path
+                                          d="M4 10.5L8 14L16 6"
+                                          stroke="currentColor"
+                                          strokeWidth="2"
+                                          strokeLinecap="round"
+                                          strokeLinejoin="round"
+                                        />
+                                      </svg>
+                                    )}
+                                  </span>
+                                </button>
+                              );
+                            })}
+                          </div>
 
                           {errors.preferredPropertyType && (
-                            <p className="text-red-500 text-xs mt-1">
+                            <p className="mt-1 text-xs text-red-500">
                               {errors.preferredPropertyType.message}
                             </p>
                           )}
@@ -565,7 +666,7 @@ export default function BrandsPage() {
             <div className="max-w-7xl mx-auto bg-white border border-stone-200 rounded-[2rem] p-6 sm:p-8 md:p-10 shadow-sm">
               <div className="text-center mb-10">
                 <h2 className="text-4xl  md:text-5xl font-serif tracking-tight">
-                  Why Leading Brands Choose Whitelist
+                  Why Leading Brands Choose Whitelist ?
                 </h2>
 
                 <p className="text-stone-500 mt-3 text-sm md:text-base font-medium max-w-2xl mx-auto">
@@ -727,8 +828,54 @@ export default function BrandsPage() {
               </div>
             </div>
           </div>
-
         </section>
+
+        {/* Footer */}
+        <footer className="bg-stone-950 text-stone-400 py-20 px-6 border-t border-stone-900">
+          <div className="max-w-7xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-12 mb-16">
+            <div className="space-y-4">
+              <div className="text-2xl font-serif font-bold text-white tracking-widest">WHITELIST</div>
+              <p className="text-sm font-light leading-relaxed">
+                A structured retail expansion infrastructure company providing verified sourcing and coordination across India.
+              </p>
+            </div>
+            <div>
+              <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Platform</h4>
+              <ul className="space-y-4 text-sm font-light">
+                <li><Link href="/brands" className="hover:text-white transition-colors">Brands</Link></li>
+                <li><Link href="/landlords" className="hover:text-white transition-colors">Landlords</Link></li>
+                <li><Link href="/scouts" className="hover:text-white transition-colors">Scouts</Link></li>
+                <li><Link href="/influencer-login" className="hover:text-white transition-colors">Influencer</Link></li>
+                <li><Link href="/dashboard/admin" className="hover:text-white transition-colors">Admin</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Company</h4>
+              <ul className="space-y-4 text-sm font-light">
+                <li><Link href="/about" className="hover:text-white transition-colors">About Us</Link></li>
+                <li><Link href="/privacy" className="hover:text-white transition-colors">Privacy Policy</Link></li>
+              </ul>
+            </div>
+            <div>
+              <h4 className="text-white text-s font-bold uppercase tracking-widest mb-6">Contact Us</h4>
+              <ul className="space-y-4 text-sm font-light">
+                <li>Email: contact@whitelistretail.com</li>
+                <li>Care: 9654755007</li>
+                <li>DM us on Instagram</li>
+              </ul>
+            </div>
+          </div>
+          <div className="max-w-7xl mx-auto pt-8 border-t border-stone-800 flex flex-col md:flex-row items-center justify-between gap-4 text-xs">
+            <div>© 2026 Whitelist Retail Pvt Ltd. All rights reserved.</div>
+
+
+            <div className="flex space-x-6">
+              <div className="hover:text-white transition-colors">Platform engineered by Aditya Dhawan</div>
+            </div>
+          </div>
+        </footer>
+
+
       </main>
     </>
   );
