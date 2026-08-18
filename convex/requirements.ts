@@ -22,11 +22,11 @@ export const createRequirement = mutation({
     size: v.string(),
     location: v.string(),
     priority: v.string(),
-    logo: v.string(),
     category: v.union(
       v.literal("live_brand"),
       v.literal("size_based")
     ),
+    logos: v.array(v.string()),
   },
 
   handler: async (ctx, args) => {
