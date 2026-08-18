@@ -8,12 +8,7 @@ import Navbar from "@/components/Navbar";
 import { useState } from "react";
 import { motion, AnimatePresence } from "motion/react";
 import { FaWhatsapp } from "react-icons/fa";
-import {
-  ChevronDown,
-  MapPin,
-  ArrowRight,
-  Info,
-} from "lucide-react";
+import { ChevronDown, MapPin, ArrowRight, Info } from "lucide-react";
 
 export default function ScoutDashboard() {
   const { user } = useUser();
@@ -35,23 +30,18 @@ export default function ScoutDashboard() {
     dbUser ? { scoutId: dbUser._id } : "skip"
   );
 
-  const requirements = useQuery(
-    api.requirements.getRequirements
-  );
+  const requirements = useQuery(api.requirements.getRequirements);
 
   const filteredRequirements = requirements?.filter(
     (req) =>
       req.category ===
-      (requirementCategory === "live"
-        ? "live_brand"
-        : "size_based")
+      (requirementCategory === "live" ? "live_brand" : "size_based")
   );
 
   const WHATSAPP_NUMBER = "919654755007";
 
   const handleSubmitProperty = (req: any) => {
-    const message =
-      `Hi, I am interested in submitting a property for the ${req.brand} requirement.
+    const message = `Hi, I am interested in submitting a property for the ${req.brand} requirement.
   
 Requirement: ${req.title}
 Location: ${req.location}
@@ -92,14 +82,12 @@ Frontage: ${req.frontage}`;
       {/* GRID BACKGROUND */}
       <div
         className="absolute inset-0 z-0
-        bg-[linear-gradient(to_right,rgba(75,95,73,0.06)_1px,transparent_1px),
-linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
+        bg-[linear-gradient(to_right,rgba(75,95,73,0.06)_1px,transparent_1px),linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
         bg-[size:40px_40px]"
       />
 
       {/* CONTENT */}
       <div className="relative z-10 pt-24 pb-14 px-4 md:px-8 lg:px-10 space-y-6 md:space-y-8">
-
         {/* SCOUT CARD */}
         {dbUser.applicationStatus === "approved" && (
           <div className="w-full flex justify-center px-1 md:px-0">
@@ -120,21 +108,16 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
         )}
 
         {dbUser.applicationStatus === "under_review" && (
-          <p className="text-gray-600">
-            Application under review
-          </p>
+          <p className="text-gray-600">Application under review</p>
         )}
 
         {dbUser.applicationStatus === "rejected" && (
-          <p className="text-red-500">
-            Application not approved
-          </p>
+          <p className="text-red-500">Application not approved</p>
         )}
 
         {/* APPROVED LISTINGS */}
         {dbUser.applicationStatus === "approved" && (
           <div className="relative bg-gradient-to-br from-white via-[#f8fbf8] to-[#f1f6f1] border border-[#dfe7de] rounded-[28px] overflow-hidden shadow-[0_10px_40px_rgba(75,95,73,0.10),0_0_0_1px_rgba(75,95,73,0.03)]">
-
             {/* UNIFORM GREEN GLOW */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(92,125,89,0.18),transparent_38%)] pointer-events-none" />
 
@@ -142,7 +125,6 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
             <div className="absolute inset-0 rounded-[28px] ring-1 ring-[#4b5f49]/8 shadow-[0_0_55px_rgba(91,121,87,0.10)] pointer-events-none" />
 
             <div className="relative z-10">
-
               {/* HEADER */}
               <button
                 onClick={() => setApprovedOpen(!approvedOpen)}
@@ -186,11 +168,8 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                       transition={{ duration: 0.3 }}
                       className="px-5 md:px-8 pb-8"
                     >
-
                       {properties === undefined && (
-                        <p className="text-gray-500">
-                          Loading listings...
-                        </p>
+                        <p className="text-gray-500">Loading listings...</p>
                       )}
 
                       {properties?.length === 0 && (
@@ -209,12 +188,9 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                             className="group bg-[#fcfdfc] backdrop-blur-sm border border-[#dfe7de] rounded-2xl px-5 md:px-6 py-5 shadow-[0_4px_18px_rgba(75,95,73,0.04)] hover:border-[#4b5f49]/30 transition-all duration-300"
                           >
                             <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
-
                               {/* LEFT */}
                               <div className="flex-1 min-w-0">
-
                                 <div className="flex flex-wrap items-center gap-3">
-
                                   <div className="px-3 py-1 rounded-full bg-[#4b5f49]/10 text-[#4b5f49] text-xs font-medium">
                                     Approved
                                   </div>
@@ -225,7 +201,7 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                                   </div>
                                 </div>
 
-                                <h3 className="mt-4 text-xl md:text-2xl font-serif font-medium  text-stone-900">
+                                <h3 className="mt-4 text-xl md:text-2xl font-serif font-medium text-stone-900">
                                   {p.title}
                                 </h3>
 
@@ -236,9 +212,7 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
 
                               {/* RIGHT */}
                               <div className="flex flex-row xl:flex-col items-start xl:items-end justify-between gap-6 xl:min-w-[220px]">
-
                                 <div className="flex gap-8">
-
                                   <div>
                                     <p className="text-[11px] uppercase tracking-wider text-stone-400">
                                       Area
@@ -277,18 +251,13 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
           </div>
         )}
 
-
-
-
         {/* REQUIREMENTS SECTION */}
         {dbUser.applicationStatus === "approved" && (
           <div className="relative bg-gradient-to-br from-[#fcfdfc] via-[#f8fbf8] to-[#f1f6f1] border border-[#dfe7de] rounded-[28px] overflow-hidden shadow-[0_10px_40px_rgba(75,95,73,0.08)]">
-
             {/* UNIFORM GREEN GLOW */}
             <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(92,125,89,0.14),transparent_40%)] pointer-events-none" />
 
             <div className="relative z-10">
-
               {/* HEADER */}
               <button
                 onClick={() => setRequirementsOpen(!requirementsOpen)}
@@ -327,96 +296,57 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                     className="overflow-hidden bg-gradient-to-br from-[#fcfdfc] via-[#f8fbf8] to-[#f1f6f1] will-change-[height,opacity]"
                   >
                     <div className="px-4 md:px-8 pb-8">
-
-
-
                       {/* REQUIREMENT CATEGORY TABS */}
                       <div className="mb-6">
-
-                        <div className="grid grid-cols-2 w-full max-w-2xl mx-auto md:mx-0 bg-[#eef3ee] p-1 rounded-2xl border border-[#dfe7de]">
+                        <div className="relative grid grid-cols-2 w-full max-w-2xl mx-auto md:mx-0 bg-[#eef3ee] p-1 rounded-2xl border border-[#dfe7de] overflow-hidden">
+                          {/* SLIDING ACTIVE TAB */}
+                          <motion.div
+                            className="absolute top-1 bottom-1 left-1 w-[calc(50%-4px)] bg-[#4b5f49] rounded-xl shadow-[0_3px_10px_rgba(75,95,73,0.14)] z-0"
+                            animate={{
+                              x:
+                                requirementCategory === "live"
+                                  ? "0%"
+                                  : "100%",
+                            }}
+                            transition={{
+                              duration: 0.22,
+                              ease: [0.4, 0, 0.2, 1],
+                            }}
+                          />
 
                           {/* LIVE BRAND REQUIREMENTS */}
                           <button
                             onClick={() => setRequirementCategory("live")}
-                            className="relative px-3 py-3 md:px-6 uppercase md:py-3.5 rounded-xl text-xs sm:text-sm md:text-base font-medium text-center transition-colors duration-300"
+                            className="relative z-10 px-3 py-3 md:px-6 md:py-3.5 rounded-xl text-xs sm:text-sm md:text-base font-medium text-center"
                           >
-                            {requirementCategory === "live" && (
-                              <motion.div
-                                layoutId="requirement-tab"
-                                className="absolute inset-0 bg-[#4b5f49] rounded-xl shadow-[0_4px_14px_rgba(75,95,73,0.20)]"
-                                transition={{
-                                  type: "spring",
-                                  stiffness: 400,
-                                  damping: 30,
-                                }}
-                              />
-                            )}
-
-                            <motion.span
-                              layout
-                              className={`relative z-10 inline-block ${requirementCategory === "size"
-                                  ? "text-stone-600 font-bold normal-case"
-                                  : "text-white font-bold uppercase"
-                                }`}
-                              animate={{
-                                letterSpacing:
-                                  requirementCategory === "size" ? "0.02em" : "0em",
-                                scale:
-                                  requirementCategory === "size" ? 1.01 : 1,
-                              }}
-                              transition={{
-                                duration: 0.25,
-                                ease: "easeOut",
-                              }}
+                            <span
+                              className={
+                                requirementCategory === "live"
+                                  ? "text-white font-bold uppercase"
+                                  : "text-stone-600 font-bold"
+                              }
                             >
                               Live Brand Requirements
-                            </motion.span>
+                            </span>
                           </button>
-
 
                           {/* SIZE BASED REQUIREMENTS */}
                           <button
                             onClick={() => setRequirementCategory("size")}
-                            className="relative px-3 py-3 md:px-6 md:py-3.5 rounded-xl text-xs sm:text-sm md:text-base font-medium text-center transition-colors duration-300"
+                            className="relative z-10 px-3 py-3 md:px-6 md:py-3.5 rounded-xl text-xs sm:text-sm md:text-base font-medium text-center"
                           >
-                            {requirementCategory === "size" && (
-                              <motion.div
-                                layoutId="requirement-tab"
-                                className="absolute inset-0 bg-[#4b5f49] rounded-xl shadow-[0_4px_14px_rgba(75,95,73,0.20)]"
-                                transition={{
-                                  type: "spring",
-                                  stiffness: 400,
-                                  damping: 30,
-                                }}
-                              />
-                            )}
-
-                            <motion.span
-                              layout
-                              className={`relative z-10 inline-block  ${requirementCategory === "size"
+                            <span
+                              className={
+                                requirementCategory === "size"
                                   ? "text-white font-bold uppercase"
-                                  : "text-stone-600 font-bold normal-case"
-                                }`}
-                              animate={{
-                                letterSpacing:
-                                  requirementCategory === "size" ? "0.02em" : "0em",
-                                scale:
-                                  requirementCategory === "size" ? 1.01 : 1,
-                              }}
-                              transition={{
-                                duration: 0.25,
-                                ease: "easeOut",
-                              }}
+                                  : "text-stone-600 font-bold"
+                              }
                             >
                               Size Based Requirements
-                            </motion.span>
+                            </span>
                           </button>
-
                         </div>
-
                       </div>
-
-
 
                       {/* REQUIREMENT HELPER TEXT */}
                       <motion.div
@@ -427,73 +357,79 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                         className="mb-7 rounded-2xl border border-[#dfe7de] bg-[#f4f7f3] px-5 py-5 md:px-6 md:py-6"
                       >
                         <div className="flex items-start gap-3.5">
-
                           {/* INFO ICON */}
                           <div className="mt-0.5 flex h-9 w-9 flex-shrink-0 items-center justify-center rounded-full bg-[#4b5f49]/10">
-                            <Info className="h-4.5 w-4.5 text-[#4b5f49]" strokeWidth={2} />
+                            <Info
+                              className="h-4.5 w-4.5 text-[#4b5f49]"
+                              strokeWidth={2}
+                            />
                           </div>
 
                           {/* TEXT */}
                           <div className="min-w-0">
-
-                            <h3 className="text-base !font-sans font-bold uppercase tracking-[0.08em] text-[#4b5f49]">
+                            <h3 className="text-base !font-sans font-bold tracking-[0.08em] text-[#4b5f49]">
                               {requirementCategory === "live"
                                 ? "Live Brand Requirements"
                                 : "Size-Based Requirements"}
                             </h3>
 
                             <div className="mt-2 space-y-3 text-sm font-medium leading-6 text-stone-600 md:text-[15px] md:leading-7">
-
                               {requirementCategory === "live" ? (
                                 <>
                                   <p>
-                                    Think of the brands shown here as clues about where other
-                                    brands may also want to open stores. If you find an empty
-                                    property in the same market or nearby area, it can be relevant
-                                    — it does not have to be directly beside the brand shown.
+                                    Think of the brands shown here as clues about
+                                    where other brands may also want to open
+                                    stores. If you find an empty property in the
+                                    same market or nearby area, it can be
+                                    relevant — it does not have to be directly
+                                    beside the brand shown.
                                   </p>
 
                                   <p>
-                                    We have also mentioned the recommended size, frontage, floors,
-                                    and location preference for each requirement. Use these numbers
-                                    as a guide while scouting. If a property is close to the
-                                    requirements and has good visibility, frontage, and footfall,
-                                    you can still submit it for our team to review.
+                                    We have also mentioned the recommended size,
+                                    frontage, floors, and location preference
+                                    for each requirement. Use these numbers as a
+                                    guide while scouting. If a property is close
+                                    to the requirements and has good visibility,
+                                    frontage, and footfall, you can still submit
+                                    it for our team to review.
                                   </p>
                                 </>
                               ) : (
                                 <>
                                   <p>
-                                    These requirements help you identify properties based on size and
-                                    format, even if you don&apos;t know which brand they may suit.
-                                    Simply compare your property&apos;s size, frontage, number of
-                                    floors, and location type with the categories listed below. Our
-                                    team will match suitable properties with the most relevant retail
-                                    brands from our network. These categories represent the typical
-                                    space requirements of different retail formats rather than any
+                                    These requirements help you identify
+                                    properties based on size and format, even if
+                                    you don&apos;t know which brand they may
+                                    suit. Simply compare your property&apos;s
+                                    size, frontage, number of floors, and
+                                    location type with the categories listed
+                                    below. Our team will match suitable
+                                    properties with the most relevant retail
+                                    brands from our network. These categories
+                                    represent the typical space requirements of
+                                    different retail formats rather than any
                                     specific brand.
                                   </p>
 
                                   <p>
-                                    Unless mentioned otherwise, ground-floor access is
-                                    expected for almost all retail businesses. If your property has
-                                    excellent visibility, a prominent main-road location, and strong
-                                    commercial potential, it&apos;s always worth submitting — even if
-                                    it doesn&apos;t perfectly fit a category.
+                                    Unless mentioned otherwise, ground-floor
+                                    access is expected for almost all retail
+                                    businesses. If your property has excellent
+                                    visibility, a prominent main-road location,
+                                    and strong commercial potential, it&apos;s
+                                    always worth submitting — even if it
+                                    doesn&apos;t perfectly fit a category.
                                   </p>
                                 </>
                               )}
-
                             </div>
                           </div>
                         </div>
                       </motion.div>
 
-
-
                       {/* REQUIREMENT CARDS */}
                       <div className="space-y-4">
-
                         {requirements === undefined && (
                           <p className="text-stone-500">
                             Loading requirements...
@@ -504,127 +440,193 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                           <p className="text-stone-500 uppercase text-center py-10">
                             {requirementCategory === "live"
                               ? "No live brand requirements yet."
-                              : "No size based requirements yet."
-                            }
+                              : "No size based requirements yet."}
                           </p>
                         )}
 
-                        {filteredRequirements?.map((req, index) => (
-                          <motion.div
-                            key={req._id}
-                            initial={{ opacity: 0, y: 14 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{
-                              duration: 0.24,
-                              delay: index * 0.04,
-                            }}
-                            className="border border-[#e3e9e2] rounded-2xl p-5 md:p-6 bg-[#fcfdfc] hover:border-[#4b5f49]/20 transition-all duration-300"
-                          >
-                            <div className="flex flex-col gap-6">
+                        {filteredRequirements?.map((req, index) => {
+                          const hasLogos = req.logos?.length > 0;
 
-                              {/* TOP */}
-                              <div className="flex flex-col xl:flex-row xl:items-center xl:justify-between gap-6">
+                          return (
+                            <motion.div
+                              key={req._id}
+                              initial={{ opacity: 0, y: 14 }}
+                              animate={{ opacity: 1, y: 0 }}
+                              transition={{
+                                duration: 0.28,
+                                delay: index * 0.04,
+                              }}
+                              className="group relative overflow-hidden rounded-[20px] border border-[#dfe7de] bg-[#fcfdfc] shadow-[0_4px_18px_rgba(75,95,73,0.035)] transition-all duration-300 hover:border-[#4b5f49]/25 hover:shadow-[0_8px_28px_rgba(75,95,73,0.07)]"
+                            >
+                              {/* SUBTLE CARD GLOW */}
+                              <div className="absolute inset-0 pointer-events-none bg-[radial-gradient(circle_at_top_right,rgba(92,125,89,0.06),transparent_35%)] opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
-                                {/* LEFT */}
-                                <div className="flex flex-col lg:flex-row gap-6 flex-1">
+                              <div className="relative z-10 p-5 md:p-6 lg:p-7">
+                                {/* ================= TOP SECTION ================= */}
+                                <div className="flex flex-col xl:flex-row xl:items-start xl:justify-between gap-6">
+                                  {/* LEFT SIDE */}
+                                  <div className="min-w-0 flex-1">
+                                    {/* TITLE */}
+                                    <div>
+                                      <h3 className="text-xl !font-sans md:text-[22px] font-semibold uppercase tracking-[-0.01em] text-stone-900">
+                                        {req.title}
+                                      </h3>
+                                    </div>
 
-                                  {/* LOGO */}
-                                  <div className="w-full sm:w-[170px] h-[90px] bg-[#fcfdfc] border border-stone-200 rounded-xl flex items-center justify-center overflow-hidden mx-auto lg:mx-0">
-                                    {req.logo ? (
-                                      <img
-                                        src={req.logo}
-                                        alt={req.brand}
-                                        className="max-w-[120px] max-h-[50px] object-contain"
-                                      />
-                                    ) : (
-                                      <span className="text-sm font-medium text-stone-400">
-                                        {req.brand}
-                                      </span>
+
+                                    {/* BRAND LOGOS */}
+                                    {hasLogos && (
+                                      <div className="mt-5">
+                                        <div className="flex flex-wrap items-center gap-x-6 gap-y-4 min-h-[52px]">
+
+                                          {req.logos.slice(0, 6).map((logo: string, logoIndex: number) => (
+                                            <div
+                                              key={`${req._id}-logo-${logoIndex}`}
+                                              className="
+                                                  h-[42px]
+                                                  min-w-[70px]
+                                                  max-w-[125px]
+                                                  flex
+                                                  items-center
+                                                  justify-center
+                                                "
+                                            >
+                                              <img
+                                                src={logo}
+                                                alt={`${req.brand} brand ${logoIndex + 1}`}
+                                                className="
+                                                  max-h-[34px]
+                                                  max-w-[115px]
+                                                  w-auto
+                                                  object-contain
+                                                  opacity-90
+                                                  transition-all duration-300
+                                                  group-hover:opacity-100
+                                                "
+                                              />
+                                            </div>
+                                          ))}
+
+                                        </div>
+                                      </div>
                                     )}
                                   </div>
 
-                                  {/* DETAILS */}
-                                  <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-5 flex-1 text-center sm:text-left">
-
-                                    <div>
-                                      <p className="text-lg font-semibold text-stone-900">
-                                        {req.title}
-                                      </p>
-
-                                      <div className="mt-4">
-                                        <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
-                                          Front Width
-                                        </p>
-
-                                        <p className="mt-2 text-stone-800">
-                                          {req.frontage}
-                                        </p>
-                                      </div>
-                                    </div>
-
-                                    <div>
-                                      <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
-                                        Size Required
-                                      </p>
-
-                                      <p className="mt-6 text-stone-800">
-                                        {req.size}
-                                      </p>
-                                    </div>
-
-                                    <div>
-                                      <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
-                                        Floors
-                                      </p>
-
-                                      <p className="mt-6 text-stone-800">
-                                        {req.floors}
-                                      </p>
-                                    </div>
-
-                                    <div>
-                                      <p className="text-xs uppercase font-medium tracking-wide text-stone-400">
-                                        Location Preference
-                                      </p>
-
-                                      <p className="mt-6 font-medium text-stone-800">
-                                        {req.location}
-                                      </p>
-                                    </div>
-                                  </div>
-                                </div>
-
-                                {/* RIGHT */}
-                                <div className="flex flex-col sm:flex-row xl:flex-col items-center xl:items-end gap-4">
-
+                                  {/* RIGHT SIDE */}
                                   <div
-                                    className={`px-4 py-2 rounded-lg text-sm font-medium ${req.priority === "High Priority"
-                                      ? "bg-[#4b5f49]/10 text-[#4b5f49]"
-                                      : "bg-[#f3f5f3] text-stone-700"
+                                    className={`flex flex-row items-center justify-between gap-4 xl:min-w-[175px] ${hasLogos
+                                        ? "xl:flex-col xl:items-end"
+                                        : "xl:flex-row xl:items-center"
                                       }`}
                                   >
-                                    {req.priority}
+                                    {/* PRIORITY */}
+                                    <div
+                                      className={`inline-flex items-center whitespace-nowrap px-4 py-2 rounded-xl text-sm font-medium ${req.priority === "High Priority"
+                                          ? "bg-[#4b5f49]/10 text-[#4b5f49]"
+                                          : "bg-[#f3f5f3] text-stone-700"
+                                        }`}
+                                    >
+                                      {req.priority}
+                                    </div>
+
+                                    {/* SUBMIT */}
+                                    <button
+                                      onClick={() => handleSubmitProperty(req)}
+                                      className="inline-flex items-center justify-center gap-2 px-5 py-3 rounded-xl bg-[#4b5f49] text-white text-sm font-medium whitespace-nowrap transition-all duration-300 hover:bg-[#42533f] hover:gap-3 shadow-[0_4px_12px_rgba(75,95,73,0.12)]"
+                                    >
+                                      Submit Property
+                                      <ArrowRight className="w-4 h-4" />
+                                    </button>
+                                  </div>
+                                </div>
+
+                                {/* ================= DIVIDER ================= */}
+                                <div className="my-6 h-px bg-[#e5ebe4]" />
+
+                                {/* ================= REQUIREMENT DETAILS ================= */}
+                                <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4">
+                                  {/* FRONTAGE */}
+                                  <div className="py-2 sm:pr-5 xl:pr-6">
+                                    <div className="flex items-center gap-2">
+                                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#4b5f49]/8">
+                                        <ArrowRight className="w-3.5 h-3.5 rotate-45 text-[#4b5f49]" />
+                                      </div>
+
+                                      <p className="text-[15px] uppercase tracking-[0.12em] text-stone-500 font-medium">
+                                        Frontage
+                                      </p>
+                                    </div>
+
+                                    <p className="mt-2 text-sm md:text-[15px] font-medium text-stone-800">
+                                      {req.frontage}
+                                    </p>
                                   </div>
 
-                                  <button
-                                    onClick={() => handleSubmitProperty(req)}
-                                    className="w-full mt-5 px-4 py-3 bg-[#4b5f49] text-white rounded-xl hover:bg-[#42533f] transition flex items-center justify-center gap-2 text-sm"
-                                  >
-                                    Submit Property
-                                    <FaWhatsapp className="w-4 h-4" />
-                                  </button>
+                                  {/* SIZE */}
+                                  <div className="py-2 sm:pl-5 sm:border-l sm:border-[#e5ebe4] xl:pl-6">
+                                    <div className="flex items-center gap-2">
+                                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#4b5f49]/8">
+                                        <span className="text-[11px] font-semibold text-[#4b5f49]">
+                                          □
+                                        </span>
+                                      </div>
+
+                                      <p className="text-[15px] uppercase tracking-[0.12em] text-stone-500 font-medium">
+                                        Size Required
+                                      </p>
+                                    </div>
+
+                                    <p className="mt-2 text-sm md:text-[15px] font-medium text-stone-800">
+                                      {req.size}
+                                    </p>
+                                  </div>
+
+                                  {/* FLOORS */}
+                                  <div className="py-2 sm:pr-5 sm:border-l sm:border-[#e5ebe4] xl:pl-6">
+                                    <div className="flex items-center gap-2">
+                                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#4b5f49]/8">
+                                        <span className="text-xs text-[#4b5f49]">
+                                          ♙
+                                        </span>
+                                      </div>
+
+                                      <p className="text-[15px] uppercase tracking-[0.12em] text-stone-500 font-medium">
+                                        Floors
+                                      </p>
+                                    </div>
+
+                                    <p className="mt-2 text-sm md:text-[15px] font-medium text-stone-800 whitespace-pre-line">
+                                      {req.floors}
+                                    </p>
+                                  </div>
+
+                                  {/* LOCATION */}
+                                  <div className="py-2 sm:pl-5 sm:border-l sm:border-[#e5ebe4] xl:pl-6">
+                                    <div className="flex items-center gap-2">
+                                      <div className="flex h-7 w-7 items-center justify-center rounded-full bg-[#4b5f49]/8">
+                                        <MapPin className="w-3.5 h-3.5 text-[#4b5f49]" />
+                                      </div>
+
+                                      <p className="text-[15px] uppercase tracking-[0.12em] text-stone-500 font-medium">
+                                        Location
+                                      </p>
+                                    </div>
+
+                                    <p className="mt-2 text-sm md:text-[15px] font-medium text-stone-800">
+                                      {req.location}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
-                            </div>
-                          </motion.div>
-                        ))}
+                            </motion.div>
+                          );
+                        })}
 
-                        {/* FOOTER CTA */}
+                        {/* ================= FOOTER CTA ================= */}
                         <div className="border border-stone-200 rounded-2xl p-5 md:p-6 flex flex-col lg:flex-row lg:items-center lg:justify-between gap-5 bg-[#fcfdfc]">
-
                           <p className="text-stone-700 text-center lg:text-left leading-7">
-                            Don’t see a matching requirement?
-                            Submit a property anyway.
+                            Don’t see a matching requirement? Submit a property
+                            anyway.
                           </p>
 
                           <button
@@ -635,7 +637,6 @@ linear-gradient(to_bottom,rgba(75,95,73,0.06)_1px,transparent_1px)]
                             <FaWhatsapp className="w-4 h-4" />
                           </button>
                         </div>
-
                       </div>
                     </div>
                   </motion.div>

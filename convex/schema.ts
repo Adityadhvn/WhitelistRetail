@@ -62,12 +62,14 @@ export default defineSchema({
   brandRequirements: defineTable({
     brand: v.string(),
     title: v.string(),
+
     frontage: v.string(),
     size: v.string(),
     floors: v.string(),
     location: v.string(),
     priority: v.string(),
-    logo: v.string(),
+
+    logos: v.array(v.string()),
 
     category: v.union(
       v.literal("live_brand"),
