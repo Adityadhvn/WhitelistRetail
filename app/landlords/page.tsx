@@ -635,9 +635,9 @@ export default function LandlordsPage() {
                         List Your Property
                       </p>
 
-                      <h3 className="mt-4 text-5xl font-semibold tracking-[-0.04em] text-stone-900 leading-none">
+                      <h2 className="text-3xl md:text-4xl mt-4 font-semibold font-serif tracking-tight mb-3">
                         Get Started
-                      </h3>
+                      </h2>
 
                       <p className="mt-7 text-stone-500 leading-8 text-[15px]">
                         Fill in your property details and our leasing team will connect with you shortly.
