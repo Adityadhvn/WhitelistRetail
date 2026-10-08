@@ -23,6 +23,10 @@ export const metadata: Metadata = {
   authors: [{ name: "Aditya Dhawan" }],
   creator: "Aditya Dhawan",
   publisher: "Aditya Dhawan",
+
+  verification: {
+    google: "y81tQGmxvTIKgtBJT6wdTtQYcL9yNx40S5DUxMBcBJg",
+  },
 };
 
 export default function RootLayout({children}: {children: React.ReactNode}) {
