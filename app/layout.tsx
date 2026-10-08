@@ -1,10 +1,10 @@
 import type {Metadata} from 'next';
 import { Playfair_Display, Inter } from 'next/font/google';
 import { ClerkProvider } from '@clerk/nextjs';
-import { ConvexClientProvider } from '@/components/ConvexClientProvider';
 import './globals.css';
 import { Providers } from "./providers";
 import UserSync from "@/components/UserSync";
+import Script from "next/script";
 
 const playfair = Playfair_Display({
   subsets: ['latin'],
@@ -55,10 +55,27 @@ export default function RootLayout({children}: {children: React.ReactNode}) {
         className={`${playfair.variable} ${inter.variable}`}
       >
         <body suppressHydrationWarning className="min-h-screen bg-bone text-charcoal font-sans">
+
           <Providers>
-          <UserSync /> 
+            <UserSync />
             {children}
           </Providers>
+
+          {/* Google Analytics */}
+          <Script
+            src="https://www.googletagmanager.com/gtag/js?id=G-YGQE15KMBJ"
+            strategy="afterInteractive"
+          />
+
+          <Script id="google-analytics">
+            {`
+              window.dataLayer = window.dataLayer || [];
+              function gtag(){window.dataLayer.push(arguments);}
+              gtag('js', new Date());
+              gtag('config', 'G-YGQE15KMBJ');
+            `}
+          </Script>
+
         </body>
       </html>
     </ClerkProvider>
